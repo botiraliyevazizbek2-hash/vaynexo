@@ -1,6 +1,4 @@
 """AI Coach is off by default and cannot be called anonymously."""
-from unittest.mock import AsyncMock
-
 from backend.ai import router as ai_module
 
 
