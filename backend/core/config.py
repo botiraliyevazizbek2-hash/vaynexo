@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     admin_telegram_ids: list[int] = Field(default_factory=list)
     bot_token: str = ""
     mini_app_url: str = ""
+    openai_api_key: str = ""
+    ai_enabled: bool = False
+    ai_model: str = "gpt-4.1-mini"
+    ai_daily_limit: int = Field(default=10, ge=1, le=30)
 
     @model_validator(mode="after")
     def secure_config(self):

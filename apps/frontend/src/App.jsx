@@ -49,6 +49,8 @@ export default function App() {
     [search, setSearch] = useState(""),
     [filter, setFilter] = useState("all");
   const [message, setMessage] = useState("");
+  const [coachQuestion, setCoachQuestion] = useState("");
+  const [coachAnswer, setCoachAnswer] = useState("");
   const orderKey = useRef(null),
     modalRef = useRef(null);
   function chooseLanguage(value) {
@@ -360,14 +362,58 @@ export default function App() {
                       ["arena", Swords],
                       ["news", Newspaper],
                     ].map(([id, Icon]) => (
-                      <div className="future-card" key={id}>
+                      <div className="future-card" key={id} role={id === "coach" ? "button" : undefined} tabIndex={id === "coach" ? 0 : undefined} onClick={() => { if (id === "coach") setTab("coach"); }} onKeyDown={(e) => { if (id === "coach" && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setTab("coach"); } }}>
                         <Icon size={24} />
                         <h3>{t[id]}</h3>
-                        <span className="muted small">{t.soon}</span>
+                        <span className="muted small">{id === "coach" ? t.coachOpen : t.soon}</span>
                       </div>
                     ))}
                   </div>
                 </>
+              )}
+              {tab === "coach" && (
+                <section className="panel form" aria-label={t.coach}>
+                  <div className="page-title">
+                    <span className="eyebrow">VAYNEXO AI CENTER</span>
+                    <h1>{t.coach}</h1>
+                    <p>{t.coachDisclaimer}</p>
+                  </div>
+                  {!token ? (
+                    <p className="warning">{t.coachLogin}</p>
+                  ) : (
+                    <form onSubmit={(e) => {
+                      e.preventDefault();
+                      action(async () => {
+                        const result = await api("/ai/coach", {
+                          token,
+                          method: "POST",
+                          body: { question: coachQuestion, language: lang },
+                        });
+                        setCoachAnswer(result.answer);
+                      });
+                    }}>
+                      <label>
+                        {t.coachPrompt}
+                        <textarea
+                          required
+                          minLength={3}
+                          maxLength={600}
+                          value={coachQuestion}
+                          placeholder={t.coachPlaceholder}
+                          onChange={(e) => setCoachQuestion(e.target.value)}
+                        />
+                      </label>
+                      <button disabled={busy || !coachQuestion.trim()} className="primary">
+                        {busy ? t.loading : t.coachAsk}
+                      </button>
+                    </form>
+                  )}
+                  {coachAnswer && <article className="panel" aria-live="polite">
+                    <h3>{t.coachAnswer}</h3>
+                    <p style={{ whiteSpace: "pre-wrap" }}>{coachAnswer}</p>
+                  </article>}
+                  <button type="button" onClick={() => setTab("home")}>{t.back}</button>
+                </section>
               )}
               {tab === "shop" && (
                 <>
