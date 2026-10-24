@@ -113,3 +113,6 @@ Bu MVP **test rejimidan chiqmaydi**: live to‘lov va supplier adapteri yozilmag
 - AI, turnirlar, yangiliklar, avtomatik bildirishnoma, cashback, referral, haqiqiy ledger/refund va foyda hisobi hali mavjud emas.
 
 O‘yin akkaunti paroli so‘ralmaydi. Demo fayllarda rasmiy Moonton hamkorligi, yetkazish tezligi yoki AI aniqligi haqida tasdiqlanmagan da’volar yo‘q.
+
+## AI Coach preview
+AI Coach code lives on a separate review branch until approved. It is **disabled by default**. Configure a freshly rotated OpenAI API key as server-only `OPENAI_API_KEY`, set `AI_ENABLED=true` only for testing, and choose `AI_MODEL` from models accessible to your OpenAI API account. Never publish secrets in GitHub, chat, or frontend variables. Requires authentication. A preview-only, in-memory request limiter is included; replace it with durable rate-limiting before multi-instance or public production use. The coach is not real-time patch-aware, and real API calls can incur charges.
