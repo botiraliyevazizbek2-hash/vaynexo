@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from backend.admin.router import router as admin
+from backend.ai.router import router as ai
 from backend.auth.router import router as auth
 from backend.catalog.router import router as catalog
 from backend.core.config import get_settings
@@ -12,7 +13,7 @@ from backend.users.router import router as users
 app = FastAPI(
     title="Vaynexo", version="0.1.0", description="Test orders only. No real payments or diamond delivery."
 )
-for router in (auth, users, catalog, orders, support, admin):
+for router in (auth, users, catalog, orders, support, admin, ai):
     app.include_router(router, prefix="/api")
 
 
