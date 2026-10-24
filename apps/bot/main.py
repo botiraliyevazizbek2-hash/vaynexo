@@ -22,7 +22,7 @@ from backend.users.models import User
 
 TEXT = {
     "uz": {
-        "welcome": "Vaynexo’ga xush kelibsiz! Tilni tanlang.",
+        "welcome": "🎮 VAYNEXO’ga xush kelibsiz!\n\nMobile Legends uchun do‘kon va xizmatlar shu yerda.\n🧪 Hozircha test rejimi: haqiqiy to‘lov yoki olmos yetkazish yo‘q.\n\nQuyida tilni tanlang yoki Mini App’ni oching.",
         "open": "Do‘konni ochish",
         "ready": "Vaynexo • TEST REJIMI\nHaqiqiy pul yechilmaydi, olmos yetkazilmaydi.",
         "help": "Yordam uchun Mini App → Yordam bo‘limiga yozing. /language — tilni o‘zgartirish.",
@@ -31,7 +31,7 @@ TEXT = {
         "unknown": "Do‘kon uchun /app, yordam uchun /help buyrug‘ini yuboring.",
     },
     "ru": {
-        "welcome": "Добро пожаловать в Vaynexo! Выберите язык.",
+        "welcome": "🎮 Добро пожаловать в VAYNEXO!\n\nМагазин и сервисы для Mobile Legends.\n🧪 Пока тестовый режим: без реальной оплаты и доставки алмазов.\n\nВыберите язык ниже или откройте Mini App.",
         "open": "Открыть магазин",
         "ready": "Vaynexo • ТЕСТОВЫЙ РЕЖИМ\nДеньги не списываются, алмазы не доставляются.",
         "help": "Поддержка: Mini App → Помощь. /language — сменить язык.",
@@ -40,7 +40,7 @@ TEXT = {
         "unknown": "Магазин: /app. Помощь: /help.",
     },
     "en": {
-        "welcome": "Welcome to Vaynexo! Choose your language.",
+        "welcome": "🎮 Welcome to VAYNEXO!\n\nYour Mobile Legends store and services.\n🧪 This is a test version: no real payments or diamond delivery.\n\nSelect a language below or open the Mini App.",
         "open": "Open shop",
         "ready": "Vaynexo • TEST MODE\nNo money is charged and no diamonds are delivered.",
         "help": "For support, open Mini App → Support. /language — change language.",
@@ -123,7 +123,11 @@ def dispatcher():
     @dp.message(Command("language"))
     async def start(message: Message):
         user = await asyncio.to_thread(user_for, message.from_user)
-        await message.answer(TEXT[user.language]["welcome"], reply_markup=languages())
+        keyboard = languages()
+        app = app_keyboard(user.language)
+        if app:
+            keyboard.inline_keyboard.extend(app.inline_keyboard)
+        await message.answer(TEXT[user.language]["welcome"], reply_markup=keyboard)
 
     @dp.callback_query(F.data.startswith("lang:"))
     async def language(callback: CallbackQuery):
