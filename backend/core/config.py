@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     admin_telegram_ids: list[int] = Field(default_factory=list)
     bot_token: str = ""
     mini_app_url: str = ""
+    news_api_key: str = ""
+    news_cron_secret: str = ""
 
     @model_validator(mode="after")
     def secure_config(self):

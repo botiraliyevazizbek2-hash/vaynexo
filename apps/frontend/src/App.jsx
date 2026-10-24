@@ -49,6 +49,7 @@ export default function App() {
     [search, setSearch] = useState(""),
     [filter, setFilter] = useState("all");
   const [message, setMessage] = useState("");
+  const [newsItems, setNewsItems] = useState([]);
   const orderKey = useRef(null),
     modalRef = useRef(null);
   function chooseLanguage(value) {
@@ -129,6 +130,14 @@ export default function App() {
       active = false;
     };
   }, [token]);
+  useEffect(() => {
+    if (tab !== "news") return;
+    let active = true;
+    api("/news").then((items) => {
+      if (active) setNewsItems(items);
+    }).catch((e) => { if (active) fail(e); });
+    return () => { active = false; };
+  }, [tab]);
   useEffect(() => {
     if (!token) return;
     let active = true;
@@ -360,14 +369,31 @@ export default function App() {
                       ["arena", Swords],
                       ["news", Newspaper],
                     ].map(([id, Icon]) => (
-                      <div className="future-card" key={id}>
+                      <div className="future-card" key={id} role={id === "news" ? "button" : undefined} tabIndex={id === "news" ? 0 : undefined} onClick={() => { if (id === "news") setTab("news"); }} onKeyDown={(e) => { if (id === "news" && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setTab("news"); } }}>
                         <Icon size={24} />
                         <h3>{t[id]}</h3>
-                        <span className="muted small">{t.soon}</span>
+                        <span className="muted small">{id === "news" ? t.newsOpen : t.soon}</span>
                       </div>
                     ))}
                   </div>
                 </>
+              )}
+              {tab === "news" && (
+                <section>
+                  <div className="page-title">
+                    <span className="eyebrow">VAYNEXO ESPORTS</span>
+                    <h1>{t.news}</h1>
+                    <p>{t.newsNote}</p>
+                  </div>
+                  {newsItems.length ? newsItems.map((item) => (
+                    <article key={item.id} className="panel ticket">
+                      <h3>{item.title}</h3>
+                      <p className="muted">{item.source} · {item.published_at.slice(0, 10)}</p>
+                      <a href={item.url} target="_blank" rel="noopener noreferrer">{t.newsSource}</a>
+                    </article>
+                  )) : <p className="muted">{t.newsEmpty}</p>}
+                  <button type="button" onClick={() => setTab("home")}>{t.back}</button>
+                </section>
               )}
               {tab === "shop" && (
                 <>

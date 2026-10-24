@@ -113,3 +113,6 @@ Bu MVP **test rejimidan chiqmaydi**: live to‘lov va supplier adapteri yozilmag
 - AI, turnirlar, yangiliklar, avtomatik bildirishnoma, cashback, referral, haqiqiy ledger/refund va foyda hisobi hali mavjud emas.
 
 O‘yin akkaunti paroli so‘ralmaydi. Demo fayllarda rasmiy Moonton hamkorligi, yetkazish tezligi yoki AI aniqligi haqida tasdiqlanmagan da’volar yo‘q.
+
+## Gaming News preview
+News items are imported into **pending moderation**, never auto-published. An admin may POST `/api/news/admin/import` and review items in the admin panel. Public `/api/news` lists approved items only and links to sources. A scheduler may POST `/api/news/cron/import` with the `X-Vaynexo-Cron-Secret` header matching the private `NEWS_CRON_SECRET`; no scheduler is configured by this branch. Without a NewsAPI key, import uses a fixed Google News RSS search. `NEWS_API_KEY` is assumed to belong to **NewsAPI.org** and is only used for imports in development: its free Developer tier must not be used in production. If the supplied key is from another provider, a separate adapter is required. The original news links and headlines remain attributable to their sources; do not copy full articles or third-party images without permission.

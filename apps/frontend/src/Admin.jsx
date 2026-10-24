@@ -44,13 +44,13 @@ export default function Admin({ lang, chooseLanguage }) {
     }
   }
   async function load() {
-    setData(await api("/admin/" + tab, { token }));
+    setData(await api(tab === "news" ? "/news/admin" : "/admin/" + tab, { token }));
   }
   useEffect(() => {
     if (!token) return;
     let active = true;
     setData(null);
-    api("/admin/" + tab, { token })
+    api(tab === "news" ? "/news/admin" : "/admin/" + tab, { token })
       .then((d) => {
         if (active) setData(d);
       })
@@ -143,6 +143,7 @@ export default function Admin({ lang, chooseLanguage }) {
                 "users",
                 "support",
                 "audit",
+                "news",
               ].map((id) => (
                 <button
                   key={id}
@@ -259,6 +260,29 @@ export default function Admin({ lang, chooseLanguage }) {
                       </p>
                     </div>
                   ))}
+                {tab === "news" && (
+                  <div className="panel">
+                    <p className="muted">{t.newsAdminNote}</p>
+                    <button disabled={busy} onClick={() => run(async () => {
+                      await api("/news/admin/import", { token, method: "POST" });
+                      await load();
+                    })}>{t.newsImport}</button>
+                    {Array.isArray(data) && data.map((item) => (
+                      <article className="ticket" key={item.id}>
+                        <h3>{item.title}</h3>
+                        <p className="muted">{item.source} · {item.published_at.slice(0, 10)}</p>
+                        <a href={item.url} target="_blank" rel="noopener noreferrer">{t.newsSource}</a>
+                        <div className="actions">
+                          <span>{item.approved ? t.newsApproved : t.newsPending}</span>
+                          <button disabled={busy} onClick={() => run(async () => {
+                            await api("/news/admin/" + item.id, { token, method: "PATCH", body: { approved: !item.approved } });
+                            await load();
+                          })}>{item.approved ? t.newsReject : t.newsApprove}</button>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                )}
                 {tab === "audit" && (
                   <div className="table-wrap">
                     <table>

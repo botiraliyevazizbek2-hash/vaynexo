@@ -2,7 +2,8 @@
 from backend.audit.models import Audit
 from backend.catalog.models import Product
 from backend.orders.models import Order
+from backend.news.models import NewsArticle
 from backend.support.models import Ticket
 from backend.users.models import User
 
-__all__ = ["Audit", "Order", "Product", "Ticket", "User"]
+__all__ = ["Audit", "Order", "Product", "Ticket", "User", "NewsArticle"]
