@@ -1,4 +1,6 @@
 """Moderated gaming news API. Never auto-publishes imported sources."""
+import hmac
+
 from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import select
@@ -34,8 +36,27 @@ def pending(db: Session = Depends(get_db)):
 async def import_news(db: Session = Depends(get_db), settings: Settings = Depends(get_settings)):
     try:
         entries = await discover(settings)
-    except (ValueError, Exception) as exc:
+    except Exception:
         # Never expose provider credentials or upstream responses to clients.
+        raise HTTPException(502, "news_source_unavailable") from None
+    return {"staged": stage(db, entries), "published": 0}
+
+
+@router.post("/cron/import")
+async def cron_import(
+    x_vaynexo_cron_secret: str | None = Header(default=None),
+    db: Session = Depends(get_db),
+    settings: Settings = Depends(get_settings),
+):
+    if (
+        not settings.news_cron_secret
+        or not x_vaynexo_cron_secret
+        or not hmac.compare_digest(x_vaynexo_cron_secret, settings.news_cron_secret)
+    ):
+        raise HTTPException(401, "unauthorized")
+    try:
+        entries = await discover(settings)
+    except Exception:
         raise HTTPException(502, "news_source_unavailable") from None
     return {"staged": stage(db, entries), "published": 0}
 
