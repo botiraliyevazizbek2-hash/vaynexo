@@ -1,6 +1,5 @@
 """Authenticated, opt-in gaming coach. Never expose provider credentials to clients."""
 from collections import defaultdict, deque
-from datetime import datetime, timezone
 from threading import Lock
 import time
 
