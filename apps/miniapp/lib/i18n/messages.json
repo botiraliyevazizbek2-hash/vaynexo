@@ -1,0 +1,1146 @@
+{
+  "56 Olmos": {
+    "ru": "56 алмазов",
+    "en": "56 Diamonds"
+  },
+  "Tezkor to‘ldirish": {
+    "ru": "Быстрое пополнение",
+    "en": "Quick top-up"
+  },
+  "Mashhur": {
+    "ru": "Популярное",
+    "en": "Popular"
+  },
+  "172 Olmos": {
+    "ru": "172 алмаза",
+    "en": "172 Diamonds"
+  },
+  "278 + 28 Olmos": {
+    "ru": "278 + 28 алмазов",
+    "en": "278 + 28 Diamonds"
+  },
+  "Bonusli paket": {
+    "ru": "Пакет с бонусом",
+    "en": "Bonus pack"
+  },
+  "Qo‘shimcha bonus": {
+    "ru": "Дополнительный бонус",
+    "en": "Extra bonus"
+  },
+  "Foydali": {
+    "ru": "Выгодно",
+    "en": "Great value"
+  },
+  "568 + 56 Olmos": {
+    "ru": "568 + 56 алмазов",
+    "en": "568 + 56 Diamonds"
+  },
+  "Ko‘proq olmos": {
+    "ru": "Больше алмазов",
+    "en": "More diamonds"
+  },
+  "Haftalik olmos va sovrinlar": {
+    "ru": "Еженедельные алмазы и награды",
+    "en": "Weekly diamonds and rewards"
+  },
+  "Pass": {
+    "ru": "Пропуск",
+    "en": "Pass"
+  },
+  "Tejamkor": {
+    "ru": "Экономия",
+    "en": "Save more"
+  },
+  "Oylik eksklyuziv mukofotlar": {
+    "ru": "Ежемесячные эксклюзивные награды",
+    "en": "Monthly exclusive rewards"
+  },
+  "Salom! Men MLBB bo‘yicha yordamchingizman. Qahramon, build, emblem yoki counter haqida so‘rashingiz mumkin.": {
+    "ru": "Привет! Я ваш помощник по MLBB. Спрашивайте о героях, сборках, эмблемах и контрпиках.",
+    "en": "Hi! I am your MLBB assistant. Ask about heroes, builds, emblems or counters."
+  },
+  "MLBB ID va Server ID ni tekshirib kiriting.": {
+    "ru": "Проверьте MLBB ID и ID сервера.",
+    "en": "Check your MLBB ID and Server ID."
+  },
+  "Demo tekshiruv muvaffaqiyatli. Haqiqiy nik backend/API ulanganda tekshiriladi.": {
+    "ru": "Демо-проверка выполнена. Настоящий ник будет проверяться после подключения API.",
+    "en": "Demo check complete. Real nickname verification requires a connected API."
+  },
+  "Davom etishdan oldin MLBB ID ni tekshiring.": {
+    "ru": "Сначала проверьте MLBB ID.",
+    "en": "Check your MLBB ID before continuing."
+  },
+  "Demo buyurtma yaratildi. Haqiqiy to‘lov ulanmagan.": {
+    "ru": "Демо-заказ создан. Реальная оплата не подключена.",
+    "en": "Demo order created. Real payments are not connected."
+  },
+  "Asosiy": {
+    "ru": "Главная",
+    "en": "Home"
+  },
+  "Do‘kon": {
+    "ru": "Магазин",
+    "en": "Shop"
+  },
+  "AI Murabbiy": {
+    "ru": "AI-тренер",
+    "en": "AI Coach"
+  },
+  "Yangiliklar": {
+    "ru": "Новости",
+    "en": "News"
+  },
+  "Profil": {
+    "ru": "Профиль",
+    "en": "Profile"
+  },
+  "Do‘kon & Olmoslar": {
+    "ru": "Магазин и алмазы",
+    "en": "Shop & Diamonds"
+  },
+  "Turnirlar & Jamoalar": {
+    "ru": "Турниры и команды",
+    "en": "Tournaments & Teams"
+  },
+  "Buyurtma holati": {
+    "ru": "Статус заказа",
+    "en": "Order status"
+  },
+  "O‘yinchilar markazi": {
+    "ru": "Центр игроков",
+    "en": "Player hub"
+  },
+  "MENYU": {
+    "ru": "МЕНЮ",
+    "en": "MENU"
+  },
+  "Turnirlar": {
+    "ru": "Турниры",
+    "en": "Tournaments"
+  },
+  "LIVE": {
+    "ru": "ЭФИР",
+    "en": "LIVE"
+  },
+  "Buyurtmalar": {
+    "ru": "Заказы",
+    "en": "Orders"
+  },
+  "Yordam kerakmi?": {
+    "ru": "Нужна помощь?",
+    "en": "Need help?"
+  },
+  "Operatorimiz sizga yordam beradi.": {
+    "ru": "Наш оператор поможет вам.",
+    "en": "Our support team can help."
+  },
+  "Demo: operator chat integratsiyasi keyin ulanadi.": {
+    "ru": "Демо: чат с оператором пока не подключён.",
+    "en": "Demo: support chat is not connected yet."
+  },
+  "Yordam olish": {
+    "ru": "Получить помощь",
+    "en": "Get help"
+  },
+  "Menyu": {
+    "ru": "Меню",
+    "en": "Menu"
+  },
+  "O‘zbekiston MLBB hamjamiyati": {
+    "ru": "MLBB-сообщество Узбекистана",
+    "en": "Uzbekistan MLBB community"
+  },
+  "demo rejim": {
+    "ru": "демо-режим",
+    "en": "demo mode"
+  },
+  "Bildirishnomalar": {
+    "ru": "Уведомления",
+    "en": "Notifications"
+  },
+  "Hozircha yangi bildirishnoma yo‘q.": {
+    "ru": "Новых уведомлений пока нет.",
+    "en": "No new notifications yet."
+  },
+  "Profilga o‘tish": {
+    "ru": "Открыть профиль",
+    "en": "Open profile"
+  },
+  "Hamjamiyat konsepti · Demo ma’lumotlar": {
+    "ru": "Концепт сообщества · Демо-данные",
+    "en": "Community concept · Demo data"
+  },
+  "Maxfiylik va foydalanish shartlari backend ishga tushishidan oldin qo‘shiladi.": {
+    "ru": "Политика конфиденциальности и условия будут добавлены до запуска сервера.",
+    "en": "Privacy policy and terms will be added before the backend launches."
+  },
+  "Xavfsizlik": {
+    "ru": "Безопасность",
+    "en": "Security"
+  },
+  "Asosiy navigatsiya": {
+    "ru": "Главная навигация",
+    "en": "Main navigation"
+  },
+  "Yopish": {
+    "ru": "Закрыть",
+    "en": "Close"
+  },
+  "MLBB UZ COMMUNITY": {
+    "ru": "СООБЩЕСТВО MLBB UZ",
+    "en": "MLBB UZ COMMUNITY"
+  },
+  "MLBB O‘zbekiston": {
+    "ru": "Добро пожаловать",
+    "en": "Welcome to the"
+  },
+  "hamjamiyatiga": {
+    "ru": "в MLBB-сообщество",
+    "en": "Uzbekistan MLBB"
+  },
+  "xush kelibsiz!": {
+    "ru": "Узбекистана!",
+    "en": "community!"
+  },
+  "Olmoslar, AI murabbiy, turnirlar va jamoalar — barchasi bitta joyda.": {
+    "ru": "Алмазы, AI-тренер, турниры и команды — всё в одном месте.",
+    "en": "Diamonds, AI coaching, tournaments and teams — all in one place."
+  },
+  "Do‘konga o‘tish": {
+    "ru": "В магазин",
+    "en": "Open shop"
+  },
+  "Xavfsiz jarayon": {
+    "ru": "Безопасный процесс",
+    "en": "Safe process"
+  },
+  "Tezkor yordam": {
+    "ru": "Быстрая помощь",
+    "en": "Quick support"
+  },
+  "Yangi mavsum": {
+    "ru": "Новый сезон",
+    "en": "New season"
+  },
+  "Yangi maqsadlar sari": {
+    "ru": "К новым целям",
+    "en": "Towards new goals"
+  },
+  "So‘nggi o‘yinchi": {
+    "ru": "Последний игрок",
+    "en": "Latest player"
+  },
+  "Namuna balans": {
+    "ru": "Демо-баланс",
+    "en": "Sample balance"
+  },
+  "olmos": {
+    "ru": "алмазов",
+    "en": "diamonds"
+  },
+  "Hamjamiyat": {
+    "ru": "Сообщество",
+    "en": "Community"
+  },
+  "Asosiy bo‘limlar": {
+    "ru": "Основные разделы",
+    "en": "Main sections"
+  },
+  "Barchasi": {
+    "ru": "Все",
+    "en": "All"
+  },
+  "Weekly Pass, Twilight va olmos paketlari": {
+    "ru": "Weekly Pass, Twilight и пакеты алмазов",
+    "en": "Weekly Pass, Twilight and diamond packs"
+  },
+  "Build, counter-pick va meta bo‘yicha maslahat": {
+    "ru": "Советы по сборкам, контрпикам и мете",
+    "en": "Build, counter-pick and meta advice"
+  },
+  "MLBB musobaqalari va jamoalar": {
+    "ru": "Соревнования и команды MLBB",
+    "en": "MLBB competitions and teams"
+  },
+  "Patch o‘zgarishlari va yangi qahramonlar": {
+    "ru": "Изменения патчей и новые герои",
+    "en": "Patch changes and new heroes"
+  },
+  "Jamoalar": {
+    "ru": "Команды",
+    "en": "Teams"
+  },
+  "Jamoalar va o‘yinchilar hamjamiyati": {
+    "ru": "Сообщество команд и игроков",
+    "en": "Team and player community"
+  },
+  "Profilim": {
+    "ru": "Мой профиль",
+    "en": "My profile"
+  },
+  "Buyurtmalar, sozlamalar va tarix": {
+    "ru": "Заказы, настройки и история",
+    "en": "Orders, settings and history"
+  },
+  "Hozir trendda": {
+    "ru": "Сейчас популярно",
+    "en": "Trending now"
+  },
+  "Ishonch va xavfsizlik": {
+    "ru": "Доверие и безопасность",
+    "en": "Trust and security"
+  },
+  "Xarid jarayoni tushunarli va kuzatiladigan bo‘lishi kerak.": {
+    "ru": "Процесс покупки должен быть понятным и отслеживаемым.",
+    "en": "Purchases should be clear and easy to track."
+  },
+  "DEMO": {
+    "ru": "ДЕМО",
+    "en": "DEMO"
+  },
+  "ID tekshiruvi": {
+    "ru": "Проверка ID",
+    "en": "ID verification"
+  },
+  "Xariddan oldin ma’lumotni tekshirish oqimi": {
+    "ru": "Проверка данных перед покупкой",
+    "en": "Check account details before buying"
+  },
+  "Buyurtma kuzatuvi": {
+    "ru": "Отслеживание заказов",
+    "en": "Order tracking"
+  },
+  "Holat va xatolar ochiq ko‘rsatiladi": {
+    "ru": "Статусы и ошибки показаны открыто",
+    "en": "Clear statuses and error messages"
+  },
+  "Yordam xizmati": {
+    "ru": "Служба поддержки",
+    "en": "Support"
+  },
+  "Muammo bo‘lsa, operatorga murojaat": {
+    "ru": "При проблемах обратитесь к оператору",
+    "en": "Contact support if you need help"
+  },
+  "To‘lov usullari demo maketi:": {
+    "ru": "Демо-макет способов оплаты:",
+    "en": "Payment methods shown as a demo:"
+  },
+  "Sotib olish": {
+    "ru": "Купить",
+    "en": "Buy"
+  },
+  "MLBB TOP-UP": {
+    "ru": "ПОПОЛНЕНИЕ MLBB",
+    "en": "MLBB TOP-UP"
+  },
+  "Kerakli mahsulotni tanlang, ma’lumotlarni tasdiqlang.": {
+    "ru": "Выберите товар и подтвердите данные.",
+    "en": "Choose a product and confirm your details."
+  },
+  "Tekshiriladigan jarayon": {
+    "ru": "Проверяемый процесс",
+    "en": "Verifiable process"
+  },
+  "MLBB UZ STORE": {
+    "ru": "МАГАЗИН MLBB UZ",
+    "en": "MLBB UZ STORE"
+  },
+  "Sevimli skinlaringizga": {
+    "ru": "Станьте ближе",
+    "en": "Get closer to"
+  },
+  "yaqinroq bo‘ling.": {
+    "ru": "к любимым скинам.",
+    "en": "your favourite skins."
+  },
+  "Mahsulotlar va narxlar — demo ma’lumotlar.": {
+    "ru": "Товары и цены — демонстрационные данные.",
+    "en": "Products and prices are demo data."
+  },
+  "Olmoslar": {
+    "ru": "Алмазы",
+    "en": "Diamonds"
+  },
+  "Passlar": {
+    "ru": "Пропуски",
+    "en": "Passes"
+  },
+  "Top": {
+    "ru": "Топ",
+    "en": "Top"
+  },
+  "Mahsulot qidirish...": {
+    "ru": "Поиск товаров...",
+    "en": "Search products..."
+  },
+  "ta mahsulot": {
+    "ru": "товаров",
+    "en": "products"
+  },
+  "Demo katalog": {
+    "ru": "Демо-каталог",
+    "en": "Demo catalogue"
+  },
+  "Ko‘rsatilgan paketlar va narxlar sinov uchun. Haqiqiy mahsulotlar ta’minotchi API’si bilan sinxronlanadi.": {
+    "ru": "Пакеты и цены приведены для тестирования. Реальные товары будут синхронизироваться с API поставщика.",
+    "en": "Packs and prices are for testing. Real products will be synced with the supplier API."
+  },
+  "BUYURTMA": {
+    "ru": "ЗАКАЗ",
+    "en": "ORDER"
+  },
+  "Xaridni davom ettirish": {
+    "ru": "Продолжить покупку",
+    "en": "Continue purchase"
+  },
+  "Mahsulot tanlang": {
+    "ru": "Выберите товар",
+    "en": "Choose a product"
+  },
+  "Kamaytirish": {
+    "ru": "Уменьшить",
+    "en": "Decrease"
+  },
+  "Ko‘paytirish": {
+    "ru": "Увеличить",
+    "en": "Increase"
+  },
+  "MLBB User ID": {
+    "ru": "MLBB User ID",
+    "en": "MLBB User ID"
+  },
+  "Masalan: 123456789": {
+    "ru": "Например: 123456789",
+    "en": "Example: 123456789"
+  },
+  "Server ID (Zone ID)": {
+    "ru": "ID сервера (Zone ID)",
+    "en": "Server ID (Zone ID)"
+  },
+  "Masalan: 5143": {
+    "ru": "Например: 5143",
+    "en": "Example: 5143"
+  },
+  "ID kiritildi · demo": {
+    "ru": "ID введён · демо",
+    "en": "ID entered · demo"
+  },
+  "ID ni tekshirish": {
+    "ru": "Проверить ID",
+    "en": "Check ID"
+  },
+  "Hozircha haqiqiy o‘yin nikini tekshirish ulangan emas.": {
+    "ru": "Проверка настоящего игрового ника пока не подключена.",
+    "en": "Real in-game nickname verification is not connected yet."
+  },
+  "To‘lov usuli": {
+    "ru": "Способ оплаты",
+    "en": "Payment method"
+  },
+  "Demo": {
+    "ru": "Демо",
+    "en": "Demo"
+  },
+  "Demo tanlov": {
+    "ru": "Демо-выбор",
+    "en": "Demo selection"
+  },
+  "Telegram raqamli savdo oqimi": {
+    "ru": "Цифровые покупки Telegram",
+    "en": "Telegram digital commerce"
+  },
+  "Jami summa": {
+    "ru": "Итоговая сумма",
+    "en": "Total amount"
+  },
+  "Demo buyurtma yaratish": {
+    "ru": "Создать демо-заказ",
+    "en": "Create demo order"
+  },
+  "Haqiqiy to‘lov amalga oshirilmaydi.": {
+    "ru": "Реальная оплата не производится.",
+    "en": "No real payment is made."
+  },
+  "Mahsulot tanlanmagan": {
+    "ru": "Товар не выбран",
+    "en": "No product selected"
+  },
+  "Katalogdan mahsulot tanlang. Keyin MLBB ID, server va buyurtma tafsilotlarini kiriting.": {
+    "ru": "Выберите товар в каталоге. Затем введите MLBB ID, сервер и данные заказа.",
+    "en": "Choose a product, then enter your MLBB ID, server and order details."
+  },
+  "Paket tanlang": {
+    "ru": "Выберите пакет",
+    "en": "Choose a pack"
+  },
+  "ID kiriting": {
+    "ru": "Введите ID",
+    "en": "Enter ID"
+  },
+  "Tasdiqlang": {
+    "ru": "Подтвердите",
+    "en": "Confirm"
+  },
+  "Jungler": {
+    "ru": "Лесник",
+    "en": "Jungler"
+  },
+  "Lylia uchun build": {
+    "ru": "Сборка для Lylia",
+    "en": "Lylia build"
+  },
+  "Jungle counterlar": {
+    "ru": "Контрпики для леса",
+    "en": "Jungle counters"
+  },
+  "Solo rank maslahati": {
+    "ru": "Советы для соло-ранга",
+    "en": "Solo rank tips"
+  },
+  "Emblem tanlash": {
+    "ru": "Выбор эмблемы",
+    "en": "Choose an emblem"
+  },
+  "SMART COACH": {
+    "ru": "УМНЫЙ ТРЕНЕР",
+    "en": "SMART COACH"
+  },
+  "O‘zbek tilida o‘yin bo‘yicha yordam va qo‘llanmalar.": {
+    "ru": "Помощь и руководства по игре на выбранном языке.",
+    "en": "Game help and guides in your selected language."
+  },
+  "Demo AI": {
+    "ru": "Демо-AI",
+    "en": "Demo AI"
+  },
+  "MLBB Coach": {
+    "ru": "MLBB-тренер",
+    "en": "MLBB Coach"
+  },
+  "Qahramonlar · Build · Macro": {
+    "ru": "Герои · Сборки · Макро",
+    "en": "Heroes · Builds · Macro"
+  },
+  "Sinov": {
+    "ru": "Тест",
+    "en": "Trial"
+  },
+  "O‘yin roli": {
+    "ru": "Игровая роль",
+    "en": "Game role"
+  },
+  "Mid Laner": {
+    "ru": "Мидлейнер",
+    "en": "Mid Laner"
+  },
+  "Gold Laner": {
+    "ru": "Голдлейнер",
+    "en": "Gold Laner"
+  },
+  "Roamer": {
+    "ru": "Роумер",
+    "en": "Roamer"
+  },
+  "EXP Laner": {
+    "ru": "EXP-лейнер",
+    "en": "EXP Laner"
+  },
+  "Rank": {
+    "ru": "Ранг",
+    "en": "Rank"
+  },
+  "Salom, o‘yinchi! 👋 Men MLBB bo‘yicha yordamchingizman. Qahramonlar, buildlar, counter-pick va rank bo‘yicha savollaringizni yozing.": {
+    "ru": "Привет, игрок! 👋 Я ваш помощник по MLBB. Задавайте вопросы о героях, сборках, контрпиках и ранге.",
+    "en": "Hello, player! 👋 I am your MLBB assistant. Ask about heroes, builds, counter-picks and rank."
+  },
+  "Demo yordamchi · hozir": {
+    "ru": "Демо-помощник · сейчас",
+    "en": "Demo assistant · now"
+  },
+  "Manba ulangan emas · javobni tekshiring": {
+    "ru": "Источник не подключён · проверяйте ответ",
+    "en": "No source connected · verify the answer"
+  },
+  "Savolingizni yozing...": {
+    "ru": "Напишите вопрос...",
+    "en": "Type your question..."
+  },
+  "Yuborish": {
+    "ru": "Отправить",
+    "en": "Send"
+  },
+  "Tavsiyalar hozircha demo. Patch ma’lumotlari va AI API hali ulanmagan.": {
+    "ru": "Советы пока демонстрационные. Данные патчей и AI API ещё не подключены.",
+    "en": "Advice is a demo. Patch data and the AI API are not connected yet."
+  },
+  "Qanday yordam beradi?": {
+    "ru": "Чем может помочь?",
+    "en": "How can it help?"
+  },
+  "Tanlagan rolingiz va rankingizni hisobga olgan holda savollaringizga yo‘naltirilgan javob berish uchun mo‘ljallangan.": {
+    "ru": "Предназначен для ответов с учётом вашей роли и ранга.",
+    "en": "Designed to answer questions with your role and rank in mind."
+  },
+  "Build va emblem tavsiyalari": {
+    "ru": "Рекомендации сборок и эмблем",
+    "en": "Build and emblem recommendations"
+  },
+  "Counter-pick tushuntirishlari": {
+    "ru": "Объяснение контрпиков",
+    "en": "Counter-pick explanations"
+  },
+  "Patchga bog‘langan maslahatlar": {
+    "ru": "Советы с учётом патча",
+    "en": "Patch-aware advice"
+  },
+  "PATCH HOLATI": {
+    "ru": "СТАТУС ПАТЧА",
+    "en": "PATCH STATUS"
+  },
+  "Ma’lumot manbasi": {
+    "ru": "Источник данных",
+    "en": "Data source"
+  },
+  "Joriy patch raqami va real statistika backend orqali ulanganda ko‘rsatiladi.": {
+    "ru": "Номер текущего патча и статистика появятся после подключения сервера.",
+    "en": "The current patch and real statistics will appear when the backend is connected."
+  },
+  "Patch ma’lumotlari integratsiya bosqichida.": {
+    "ru": "Данные патчей находятся на этапе интеграции.",
+    "en": "Patch data integration is planned."
+  },
+  "Holatni ko‘rish": {
+    "ru": "Посмотреть статус",
+    "en": "View status"
+  },
+  "Patch yangiliklari": {
+    "ru": "Новости патчей",
+    "en": "Patch news"
+  },
+  "Qahramonlar, buyumlar va balans o‘zgarishlarini bir joyda kuzating.": {
+    "ru": "Следите за изменениями героев, предметов и баланса в одном месте.",
+    "en": "Follow hero, item and balance changes in one place."
+  },
+  "Rasmiy manba ulanganidan keyin yangilanadi": {
+    "ru": "Обновится после подключения официального источника",
+    "en": "Updates after an official source is connected"
+  },
+  "Rank uchun foydali qo‘llanma": {
+    "ru": "Полезное руководство для ранга",
+    "en": "A useful ranked guide"
+  },
+  "Draft paytida tarkibni muvozanatlashtirish va rol tanlash bo‘yicha tavsiyalar.": {
+    "ru": "Советы по балансу состава и выбору роли на драфте.",
+    "en": "Tips for balancing your draft and choosing a role."
+  },
+  "Tahririyat materiali": {
+    "ru": "Материал редакции",
+    "en": "Editorial content"
+  },
+  "MLBB eventlar taqvimi": {
+    "ru": "Календарь событий MLBB",
+    "en": "MLBB event calendar"
+  },
+  "Tadbirlar va muddatlarni tekshirilgan manbalar asosida kuzatish.": {
+    "ru": "Следите за событиями и сроками по проверенным источникам.",
+    "en": "Follow events and deadlines from verified sources."
+  },
+  "Kalendar integratsiyasi rejalashtirilgan": {
+    "ru": "Интеграция календаря запланирована",
+    "en": "Calendar integration is planned"
+  },
+  "Mahalliy MLBB hamjamiyati": {
+    "ru": "Местное сообщество MLBB",
+    "en": "Local MLBB community"
+  },
+  "Jamoalar, turnir e’lonlari va musobaqa natijalarini kuzating.": {
+    "ru": "Следите за командами, объявлениями турниров и результатами.",
+    "en": "Follow teams, tournament announcements and results."
+  },
+  "Hamjamiyat bo‘limi": {
+    "ru": "Раздел сообщества",
+    "en": "Community section"
+  },
+  "YANGI MA’LUMOTLAR": {
+    "ru": "СВЕЖИЕ НОВОСТИ",
+    "en": "LATEST UPDATES"
+  },
+  "Yangiliklar & Patch": {
+    "ru": "Новости и патчи",
+    "en": "News & Patches"
+  },
+  "MLBB yangiliklari va o‘yin bo‘yicha foydali kontent.": {
+    "ru": "Новости MLBB и полезные материалы об игре.",
+    "en": "MLBB news and useful game content."
+  },
+  "Demo kontent — yangilanish feed’i hali ulanmagan.": {
+    "ru": "Демо-контент — лента обновлений пока не подключена.",
+    "en": "Demo content — the live news feed is not connected yet."
+  },
+  "MLBB UZ INSIGHTS": {
+    "ru": "ОБЗОРЫ MLBB UZ",
+    "en": "MLBB UZ INSIGHTS"
+  },
+  "O‘YIN QO‘LLANMASI": {
+    "ru": "РУКОВОДСТВО ПО ИГРЕ",
+    "en": "GAME GUIDE"
+  },
+  "Yaxshiroq o‘yna.": {
+    "ru": "Играй лучше.",
+    "en": "Play better."
+  },
+  "Ko‘proq o‘rgan.": {
+    "ru": "Учись больше.",
+    "en": "Learn more."
+  },
+  "Build, counter va strategiyalarni o‘zbek tilida o‘rganish uchun yagona markaz.": {
+    "ru": "Единый центр для изучения сборок, контрпиков и стратегий на выбранном языке.",
+    "en": "One place to learn builds, counters and strategies in your selected language."
+  },
+  "Qo‘llanmalar kontenti bosqichma-bosqich qo‘shiladi.": {
+    "ru": "Руководства будут добавляться постепенно.",
+    "en": "Guides will be added gradually."
+  },
+  "Qo‘llanmalarni ko‘rish": {
+    "ru": "Смотреть руководства",
+    "en": "View guides"
+  },
+  "Patch": {
+    "ru": "Патч",
+    "en": "Patch"
+  },
+  "Event": {
+    "ru": "События",
+    "en": "Event"
+  },
+  "Guide": {
+    "ru": "Руководства",
+    "en": "Guide"
+  },
+  "Esports": {
+    "ru": "Киберспорт",
+    "en": "Esports"
+  },
+  "Bu material demo ko‘rinishida. Kontent boshqaruv tizimi keyin ulanadi.": {
+    "ru": "Это демо-материал. Система управления контентом будет подключена позже.",
+    "en": "This is demo content. A CMS will be connected later."
+  },
+  "Batafsil": {
+    "ru": "Подробнее",
+    "en": "Read more"
+  },
+  "MLBB UZ ESPORTS": {
+    "ru": "КИБЕРСПОРТ MLBB UZ",
+    "en": "MLBB UZ ESPORTS"
+  },
+  "Mahalliy musobaqalar, jamoalar va o‘yinchilar uchun markaz.": {
+    "ru": "Центр местных соревнований, команд и игроков.",
+    "en": "A hub for local competitions, teams and players."
+  },
+  "Reyting": {
+    "ru": "Рейтинг",
+    "en": "Rankings"
+  },
+  "NAMUNA TURNIR": {
+    "ru": "ДЕМО-ТУРНИР",
+    "en": "SAMPLE TOURNAMENT"
+  },
+  "O‘zbekiston": {
+    "ru": "Узбекистан",
+    "en": "Uzbekistan"
+  },
+  "UZBEKISTAN": {
+    "ru": "УЗБЕКИСТАН",
+    "en": "UZBEKISTAN"
+  },
+  "Hamjamiyat uchun turnir maketi": {
+    "ru": "Демо-турнир для сообщества",
+    "en": "Community tournament mockup"
+  },
+  "FORMAT": {
+    "ru": "ФОРМАТ",
+    "en": "FORMAT"
+  },
+  "HOLATI": {
+    "ru": "СТАТУС",
+    "en": "STATUS"
+  },
+  "Rejalashtirilmoqda": {
+    "ru": "Планируется",
+    "en": "Planned"
+  },
+  "SOVRIN": {
+    "ru": "ПРИЗ",
+    "en": "PRIZE"
+  },
+  "Keyin e’lon qilinadi": {
+    "ru": "Будет объявлен позже",
+    "en": "To be announced"
+  },
+  "Ro‘yxatdan o‘tish backend va turnir reglamenti tayyor bo‘lganda yoqiladi.": {
+    "ru": "Регистрация откроется после подготовки сервера и правил турнира.",
+    "en": "Registration opens when the backend and tournament rules are ready."
+  },
+  "Qiziqish bildirish": {
+    "ru": "Выразить интерес",
+    "en": "Express interest"
+  },
+  "Rejalashtirilgan turnirlar": {
+    "ru": "Запланированные турниры",
+    "en": "Planned tournaments"
+  },
+  "Hozircha demo taqvim.": {
+    "ru": "Пока демонстрационный календарь.",
+    "en": "This is a demo calendar."
+  },
+  "Turnir kalendari ulanmagan": {
+    "ru": "Календарь турниров не подключён",
+    "en": "Tournament calendar is not connected"
+  },
+  "Haqiqiy tadbirlar, sanalar va reglamentlar tekshirilgan manbalardan qo‘shiladi.": {
+    "ru": "Настоящие события, даты и правила будут добавлены из проверенных источников.",
+    "en": "Real events, dates and rules will be added from verified sources."
+  },
+  "Jamoa profili uchun namuna": {
+    "ru": "Образец профиля команды",
+    "en": "Sample team profile"
+  },
+  "Jamoa profillari backendga ulanganidan keyin ochiladi.": {
+    "ru": "Профили команд откроются после подключения сервера.",
+    "en": "Team profiles will open when the backend is connected."
+  },
+  "Yangi a’zolarni qidirish — demo": {
+    "ru": "Поиск новых участников — демо",
+    "en": "Recruiting new members — demo"
+  },
+  "Hamjamiyat jamoasi maketi": {
+    "ru": "Макет команды сообщества",
+    "en": "Community team mockup"
+  },
+  "Jamoa yaratish funksiyasi backendga ulangach ishlaydi.": {
+    "ru": "Создание команд заработает после подключения сервера.",
+    "en": "Team creation requires a connected backend."
+  },
+  "O‘z jamoangni yaratish": {
+    "ru": "Создать свою команду",
+    "en": "Create your team"
+  },
+  "O‘zbekiston top o‘yinchilari": {
+    "ru": "Топ игроков Узбекистана",
+    "en": "Uzbekistan top players"
+  },
+  "Reyting interfeysi maketi": {
+    "ru": "Макет рейтинга",
+    "en": "Rankings mockup"
+  },
+  "420 o‘yin": {
+    "ru": "420 игр",
+    "en": "420 matches"
+  },
+  "389 o‘yin": {
+    "ru": "389 игр",
+    "en": "389 matches"
+  },
+  "312 o‘yin": {
+    "ru": "312 игр",
+    "en": "312 matches"
+  },
+  "Ko‘rsatkichlar uydirma namuna. Haqiqiy reyting ishonchli ma’lumot manbasini talab qiladi.": {
+    "ru": "Показатели вымышлены для примера. Реальный рейтинг требует надёжного источника данных.",
+    "en": "Statistics are fictional samples. Real rankings need a reliable data source."
+  },
+  "SHAXSIY KABINET": {
+    "ru": "ЛИЧНЫЙ КАБИНЕТ",
+    "en": "MY ACCOUNT"
+  },
+  "Mening profilim": {
+    "ru": "Мой профиль",
+    "en": "My profile"
+  },
+  "Profil, buyurtmalar va ilova sozlamalari.": {
+    "ru": "Профиль, заказы и настройки приложения.",
+    "en": "Profile, orders and app settings."
+  },
+  "Sozlamalar shu oynada boshqariladi.": {
+    "ru": "Настройки доступны на этой странице.",
+    "en": "Manage settings on this page."
+  },
+  "ID ni nusxalash": {
+    "ru": "Скопировать ID",
+    "en": "Copy ID"
+  },
+  "Nusxalandi": {
+    "ru": "Скопировано",
+    "en": "Copied"
+  },
+  "Profilni MLBB API orqali tasdiqlash hali ulanmagan.": {
+    "ru": "Подтверждение профиля через MLBB API ещё не подключено.",
+    "en": "MLBB API profile verification is not connected yet."
+  },
+  "Sozlash": {
+    "ru": "Настроить",
+    "en": "Edit"
+  },
+  "G‘alaba (WR)": {
+    "ru": "Победы (WR)",
+    "en": "Win rate (WR)"
+  },
+  "Demo statistika": {
+    "ru": "Демо-статистика",
+    "en": "Demo statistics"
+  },
+  "4 kun": {
+    "ru": "4 дня",
+    "en": "4 days"
+  },
+  "Namuna muddat": {
+    "ru": "Пример срока",
+    "en": "Sample duration"
+  },
+  "Ulanmagan": {
+    "ru": "Не подключено",
+    "en": "Not connected"
+  },
+  "Integratsiya kutilmoqda": {
+    "ru": "Ожидается интеграция",
+    "en": "Integration pending"
+  },
+  "Demo balans": {
+    "ru": "Демо-баланс",
+    "en": "Demo balance"
+  },
+  "To‘ldirish": {
+    "ru": "Пополнить",
+    "en": "Top up"
+  },
+  "Bonuslar": {
+    "ru": "Бонусы",
+    "en": "Bonuses"
+  },
+  "Namuna bonus balansi": {
+    "ru": "Демо-бонусный баланс",
+    "en": "Sample bonus balance"
+  },
+  "Bonus ishlatish qoidalari hali sozlanmagan.": {
+    "ru": "Правила использования бонусов пока не настроены.",
+    "en": "Bonus redemption rules are not configured yet."
+  },
+  "Ishlatish": {
+    "ru": "Использовать",
+    "en": "Use"
+  },
+  "Sevimli qahramonlar": {
+    "ru": "Любимые герои",
+    "en": "Favourite heroes"
+  },
+  "Tahrirlash": {
+    "ru": "Изменить",
+    "en": "Edit"
+  },
+  "Qahramonlar ro‘yxati keyingi bosqichda ulanadi.": {
+    "ru": "Список героев будет подключён позже.",
+    "en": "The hero list will be connected later."
+  },
+  "Qotil · Assassin": {
+    "ru": "Ассасин",
+    "en": "Assassin"
+  },
+  "Jangchi · Fighter": {
+    "ru": "Боец",
+    "en": "Fighter"
+  },
+  "Xaridlar tarixi": {
+    "ru": "История покупок",
+    "en": "Purchase history"
+  },
+  "Demo yozuv · 14:52": {
+    "ru": "Демо-запись · 14:52",
+    "en": "Demo entry · 14:52"
+  },
+  "Demo yozuv · 19:10": {
+    "ru": "Демо-запись · 19:10",
+    "en": "Demo entry · 19:10"
+  },
+  "Demo yozuv · 11:05": {
+    "ru": "Демо-запись · 11:05",
+    "en": "Demo entry · 11:05"
+  },
+  "Ilova sozlamalari": {
+    "ru": "Настройки приложения",
+    "en": "App settings"
+  },
+  "Telegram bildirishnomalari": {
+    "ru": "Уведомления Telegram",
+    "en": "Telegram notifications"
+  },
+  "Yangiliklar va buyurtma xabarlari": {
+    "ru": "Новости и сообщения о заказах",
+    "en": "News and order messages"
+  },
+  "Bildirishnomalarni almashtirish": {
+    "ru": "Переключить уведомления",
+    "en": "Toggle notifications"
+  },
+  "Ilova tili": {
+    "ru": "Язык приложения",
+    "en": "App language"
+  },
+  "Hozirgi sozlama": {
+    "ru": "Текущая настройка",
+    "en": "Current setting"
+  },
+  "Ma’lumotlar himoyasi": {
+    "ru": "Защита данных",
+    "en": "Data protection"
+  },
+  "Maxfiylik sozlamalari va shartlar": {
+    "ru": "Настройки конфиденциальности и условия",
+    "en": "Privacy settings and terms"
+  },
+  "Maxfiylik hujjati ishlab chiqish bosqichida.": {
+    "ru": "Политика конфиденциальности разрабатывается.",
+    "en": "Privacy policy is being prepared."
+  },
+  "Ko‘rish": {
+    "ru": "Посмотреть",
+    "en": "View"
+  },
+  "24/7 qo‘llab-quvvatlash": {
+    "ru": "Поддержка 24/7",
+    "en": "24/7 support"
+  },
+  "Telegram operatori": {
+    "ru": "Оператор Telegram",
+    "en": "Telegram support"
+  },
+  "Telegram operatori hali ulanmagan.": {
+    "ru": "Оператор Telegram пока не подключён.",
+    "en": "Telegram support is not connected yet."
+  },
+  "Yordam": {
+    "ru": "Помощь",
+    "en": "Help"
+  },
+  "Demo rejim: haqiqiy akkaunt ulanishi amalga oshirilmagan.": {
+    "ru": "Демо-режим: настоящий аккаунт не подключён.",
+    "en": "Demo mode: no real account is connected."
+  },
+  "Boshqa MLBB hisobga o‘tish": {
+    "ru": "Сменить аккаунт MLBB",
+    "en": "Switch MLBB account"
+  },
+  "Namuna statistika": {
+    "ru": "Пример статистики",
+    "en": "Sample statistics"
+  },
+  "ORDER TRACKING": {
+    "ru": "ОТСЛЕЖИВАНИЕ ЗАКАЗА",
+    "en": "ORDER TRACKING"
+  },
+  "Buyurtma jarayoni va tafsilotlari.": {
+    "ru": "Ход заказа и подробности.",
+    "en": "Order progress and details."
+  },
+  "Demo buyurtma yaratildi": {
+    "ru": "Демо-заказ создан",
+    "en": "Demo order created"
+  },
+  "Bu buyurtma faqat interfeysni sinash uchun. To‘lov ham, yetkazish ham amalga oshirilmadi.": {
+    "ru": "Заказ создан только для тестирования интерфейса. Оплата и доставка не выполнялись.",
+    "en": "This order only tests the interface. No payment or delivery has occurred."
+  },
+  "Buyurtma raqami": {
+    "ru": "Номер заказа",
+    "en": "Order number"
+  },
+  "Buyurtma yaratildi": {
+    "ru": "Заказ создан",
+    "en": "Order created"
+  },
+  "Demo buyurtma mahalliy interfeysda yaratildi.": {
+    "ru": "Демо-заказ создан в локальном интерфейсе.",
+    "en": "Demo order created in the local interface."
+  },
+  "To‘lov kutilmoqda": {
+    "ru": "Ожидание оплаты",
+    "en": "Awaiting payment"
+  },
+  "Haqiqiy to‘lov provayderi ulanmagan.": {
+    "ru": "Настоящий платёжный провайдер не подключён.",
+    "en": "A real payment provider is not connected."
+  },
+  "Yetkazilmoqda": {
+    "ru": "Доставка",
+    "en": "Delivering"
+  },
+  "Yetkazib beruvchi adapteri ulanmagan.": {
+    "ru": "Адаптер поставщика не подключён.",
+    "en": "The supplier adapter is not connected."
+  },
+  "Bajarildi": {
+    "ru": "Выполнено",
+    "en": "Completed"
+  },
+  "Haqiqiy tasdiq kelgandagina bajarilgan deb ko‘rsatiladi.": {
+    "ru": "Завершение показывается только после настоящего подтверждения.",
+    "en": "Completion is shown only after real confirmation."
+  },
+  "Profil va buyurtmalar": {
+    "ru": "Профиль и заказы",
+    "en": "Profile and orders"
+  },
+  "Buyurtma tafsilotlari": {
+    "ru": "Детали заказа",
+    "en": "Order details"
+  },
+  "Miqdor": {
+    "ru": "Количество",
+    "en": "Quantity"
+  },
+  "Server ID": {
+    "ru": "ID сервера",
+    "en": "Server ID"
+  },
+  "Jami": {
+    "ru": "Итого",
+    "en": "Total"
+  },
+  "Demo ma’lumot. Backend ulanmaguncha buyurtma saqlanmaydi.": {
+    "ru": "Демо-данные. Заказ не сохраняется без подключённого сервера.",
+    "en": "Demo data. Orders are not saved until the backend is connected."
+  },
+  "Hozircha buyurtma tanlanmagan": {
+    "ru": "Заказ ещё не выбран",
+    "en": "No order selected yet"
+  },
+  "Do‘kondan paket tanlang. Sinov buyurtmasini yaratganingizdan keyin bu yerda jarayon ko‘rinadi.": {
+    "ru": "Выберите пакет в магазине. После создания тестового заказа здесь появится его ход.",
+    "en": "Choose a pack in the shop. Create a test order to see its progress here."
+  },
+  "Til sinxronlanmadi. Qayta urinib ko‘ring.": {
+    "ru": "Не удалось синхронизировать язык. Повторите попытку.",
+    "en": "Language could not sync. Please try again."
+  },
+  "Savolingiz: “{question}”\n\nDemo yordamchi tavsiyasi: avval tanlagan rolingizni aniqlang, joriy patchga mos builddan foydalaning va raqib tarkibiga qarab counter tanlang. Bu javob hozircha demo; aniq statistika va patch manbalari AI backend ulanganda qo‘shiladi.": {
+    "ru": "Ваш вопрос: «{question}»\n\nДемо-совет: определите свою роль, выберите сборку для текущего патча и учитывайте состав соперника. Это демонстрационный ответ; статистика и источники будут добавлены с AI-сервером.",
+    "en": "Your question: “{question}”\n\nDemo advice: identify your role, use a build for the current patch and counter the enemy team. This is a demo answer; statistics and sources require the AI backend."
+  },
+  "PATCH": {
+    "ru": "Патч",
+    "en": "PATCH"
+  },
+  "GUIDE": {
+    "ru": "Руководства",
+    "en": "GUIDE"
+  },
+  "EVENT": {
+    "ru": "События",
+    "en": "EVENT"
+  },
+  "ESPORTS": {
+    "ru": "Киберспорт",
+    "en": "ESPORTS"
+  }
+}
