@@ -184,6 +184,16 @@ def dispatcher():
     return dp
 
 
+async def ensure_polling_available(bot):
+    webhook = await bot.get_webhook_info()
+    if webhook.url:
+        raise SystemExit(
+            "A Telegram webhook is already configured. Polling was not started. "
+            "Use the existing webhook deployment; do not run both transports for one bot. "
+            "See docs/TELEGRAM_DEPLOYMENT.md."
+        )
+
+
 async def main():
     settings = get_settings()
     if not settings.bot_token:
@@ -192,6 +202,7 @@ async def main():
         raise SystemExit("Set MINI_APP_URL to your HTTPS web deployment")
     bot = Bot(settings.bot_token)
     async with bot:
+        await ensure_polling_available(bot)
         for language, text in TEXT.items():
             await bot.set_my_commands(
                 [

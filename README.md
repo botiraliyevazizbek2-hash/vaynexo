@@ -59,6 +59,11 @@ Vite manzilini oching (odatda http://localhost:5173). `/api` so‘rovlari localh
 
 ## Telegram bot
 
+**Mavjud Vercel botini tekshirish uchun avval [joylashtirish holati va webhook
+yo‘riqnomasini](docs/TELEGRAM_DEPLOYMENT.md) o‘qing.** Vercel’dagi Next.js webhook
+va quyidagi Python polling bot alohida dasturlar; GitHub’ga kod yuklashning o‘zi
+botni ishga tushirmaydi.
+
 1. BotFather tokenini faqat `.env` ichidagi `BOT_TOKEN`ga kiriting.
 2. HTTPS bilan ochiladigan web manzilni `MINI_APP_URL`ga kiriting.
 3. `SESSION_SECRET`ni doimiy, kamida 32 belgili tasodifiy qiymat qiling.
@@ -66,7 +71,9 @@ Vite manzilini oching (odatda http://localhost:5173). `/api` so‘rovlari localh
 5. `docker compose --profile telegram up -d --build` yoki `python -m apps.bot.main`.
 6. Botda `/start` → til → do‘kon. Faqat bitta polling bot nusxasini ishlating.
 
-Birinchi versiya polling ishlatadi; webhook hali qo‘shilmagan. Botni shu ish davomida Telegram’da ishga tushirmadik, chunki token berilmagan.
+Bu repo Python botni polling orqali ishlatadi. Faol webhook topilsa, bot uni
+o‘chirmasdan to‘xtaydi. Mavjud Vercel handler’ini sozlash va tekshirish uchun
+`scripts/telegram-webhook.mjs` bor; u haqiqiy `/start` javobini o‘z-o‘zidan tasdiqlamaydi.
 
 ## Testlar
 
