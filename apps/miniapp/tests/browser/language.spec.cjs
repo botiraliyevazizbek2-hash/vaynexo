@@ -5,7 +5,7 @@ test('all sections, products, checkout, notices and coach follow selected langua
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/?tab=profile');
  await page.locator('select[aria-label="Ilova tili"]').last().selectOption('ru');
- await expect(page.getByRole('heading',{name:'Мой профиль'})).toBeVisible();
+ await expect(page.locator('.profile-page .page-intro')).toHaveCount(0);
  await expect(page.getByRole('heading',{name:'Настройки приложения',exact:true})).toBeVisible();
  await expect(page.locator('.profile-stat-grid, .profile-wallet-grid, .hero-favorites, .demo-history, .logout-button')).toHaveCount(0);
  await page.locator('.side-nav').getByRole('button',{name:'Магазин',exact:true}).click();
@@ -47,5 +47,5 @@ test('Telegram saved language overrides device defaults and a new selection sync
  await page.locator('.topbar select').selectOption('en');
  await expect.poll(()=>writes).toEqual(['en']);
  await page.reload();await expect(page.locator('.topbar select')).toHaveValue('en');
- await expect(page.getByRole('heading',{name:'My profile'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'App settings',exact:true})).toBeVisible();
 });

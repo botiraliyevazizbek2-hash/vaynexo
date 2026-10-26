@@ -24,3 +24,10 @@ test('browser visits and old register URL open the app without inventing a Teleg
  let calls=0;await page.route('**/api/account',r=>{calls++;return r.fulfill({status:401,json:{ok:false}});});await page.goto('/register?lang=en');await expect(page.locator('.app-shell')).toBeVisible();await expect(page.locator('.profile-name-line')).toContainText(/Mehmon|Guest/);expect(calls).toBe(0);
  await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();await page.screenshot({path:'../optional-phone-review.png',fullPage:true});
 });
+test('profile displays Telegram photo above the name, without duplicate heading or top avatar',async({page})=>{
+ await fixture(page);await page.route('**/api/registration',r=>r.fulfill({json:{ok:true,registered:false}}));
+ await page.route('**/api/account',r=>r.fulfill({json:{ok:true,account:{telegramId:42,firstName:'Ozodbek',lastName:'Qosimov',username:'ozodbek',photoUrl:'https://t.me/i/userpic/320/test.jpg'}}}));
+ await page.route('https://t.me/i/userpic/320/test.jpg',r=>r.fulfill({contentType:'image/jpeg',body:require('node:fs').readFileSync('public/images/hero-banner.jpg')}));
+ await page.goto('/?tab=profile&lang=en');await expect(page.getByRole('img',{name:'Telegram profile photo'})).toBeVisible();await expect.poll(()=>page.locator('.profile-avatar img').evaluate(img=>img.naturalWidth>0)).toBeTruthy();await expect(page.locator('.profile-page .page-intro,.top-avatar')).toHaveCount(0);
+ await page.setViewportSize({width:390,height:844});const photo=await page.locator('.profile-avatar').boundingBox(),name=await page.locator('.profile-name-line').boundingBox();expect(photo.y+photo.height).toBeLessThan(name.y);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();await page.screenshot({path:'../telegram-photo-review.png',fullPage:true});
+});

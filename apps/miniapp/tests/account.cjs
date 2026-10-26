@@ -18,9 +18,9 @@ test('account API trusts only signed Telegram identity and never request-body id
  try{
  await db.exec(fs.readFileSync('migrations/miniapp/003_telegram_accounts.sql','utf8'));database.catalogDatabase=()=>({query:(s,v)=>db.query(s,v)});
  const {POST}=require('../app/api/account/route.ts');assert.equal((await POST(new Request('https://test',{method:'POST',body:'{"id":42}'}))).status,401);
- const p=new URLSearchParams({auth_date:String(Math.floor(Date.now()/1000)),user:JSON.stringify({id:42,first_name:'Verified',username:'owner'})});const check=[...p.entries()].sort(([a],[b])=>a<b?-1:1).map(([k,v])=>`${k}=${v}`).join('\n');const key=crypto.createHmac('sha256','WebAppData').update(process.env.TELEGRAM_BOT_TOKEN).digest();p.set('hash',crypto.createHmac('sha256',key).update(check).digest('hex'));
+ const p=new URLSearchParams({auth_date:String(Math.floor(Date.now()/1000)),user:JSON.stringify({id:42,first_name:'Verified',username:'owner',photo_url:'https://t.me/i/userpic/320/test.jpg'})});const check=[...p.entries()].sort(([a],[b])=>a<b?-1:1).map(([k,v])=>`${k}=${v}`).join('\n');const key=crypto.createHmac('sha256','WebAppData').update(process.env.TELEGRAM_BOT_TOKEN).digest();p.set('hash',crypto.createHmac('sha256',key).update(check).digest('hex'));
  const request=()=>new Request('https://test',{method:'POST',headers:{'X-Telegram-Init-Data':p.toString()},body:JSON.stringify({id:99,first_name:'Forged'})});
- const result=await POST(request());assert.equal(result.status,200);assert.deepEqual((await result.json()).account,{telegramId:42,firstName:'Verified',lastName:'',username:'owner'});
+ const result=await POST(request());assert.equal(result.status,200);assert.deepEqual((await result.json()).account,{telegramId:42,firstName:'Verified',lastName:'',username:'owner',photoUrl:'https://t.me/i/userpic/320/test.jpg'});
  assert.equal((await POST(request())).status,200);assert.equal((await db.query('SELECT * FROM vaynexo_accounts')).rows.length,1);
  assert.equal((await db.query('SELECT * FROM vaynexo_accounts WHERE telegram_id=99')).rows.length,0);
  p.set('user',JSON.stringify({id:99}));assert.equal((await POST(request())).status,401);

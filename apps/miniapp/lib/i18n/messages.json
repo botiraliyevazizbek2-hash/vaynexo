@@ -1446,5 +1446,13 @@
   "Profil va ilova sozlamalari.": {
     "ru": "Профиль и настройки приложения.",
     "en": "Profile and app settings."
+  },
+  "Telegram profil rasmi": {
+    "ru": "Фото профиля Telegram",
+    "en": "Telegram profile photo"
+  },
+  "Profil rasmi yo‘q": {
+    "ru": "Нет фото профиля",
+    "en": "No profile photo"
   }
 }
