@@ -1454,5 +1454,181 @@
   "Profil rasmi yo‘q": {
     "ru": "Нет фото профиля",
     "en": "No profile photo"
+  },
+  "Akkaunt savdosi": {
+    "ru": "Торговля аккаунтами",
+    "en": "Account marketplace"
+  },
+  "Sotib olish va sotish": {
+    "ru": "Покупка и продажа",
+    "en": "Buy and sell"
+  },
+  "Boost xizmati": {
+    "ru": "Услуги буста",
+    "en": "Boost service"
+  },
+  "Rank ko‘tarish": {
+    "ru": "Повышение ранга",
+    "en": "Rank boosting"
+  },
+  "Akkauntlar ijarasi": {
+    "ru": "Аренда аккаунтов",
+    "en": "Account rental"
+  },
+  "Vaqtincha foydalanish": {
+    "ru": "Временное использование",
+    "en": "Temporary access"
+  },
+  "Telegram xizmatlari": {
+    "ru": "Услуги Telegram",
+    "en": "Telegram services"
+  },
+  "Telegram Stars va Premium": {
+    "ru": "Telegram Stars и Premium",
+    "en": "Telegram Stars and Premium"
+  },
+  "Sun’iy intellekt": {
+    "ru": "Искусственный интеллект",
+    "en": "Artificial intelligence"
+  },
+  "AI xizmatlari": {
+    "ru": "Услуги ИИ",
+    "en": "AI services"
+  },
+  "Olmoslar va passlar": {
+    "ru": "Алмазы и пропуски",
+    "en": "Diamonds and passes"
+  },
+  "O‘yiningizga yangi kuch.": {
+    "ru": "Новая сила для игры.",
+    "en": "Power up your game."
+  },
+  "Olmoslar va passlarni bitta katalogda ko‘ring.": {
+    "ru": "Алмазы и пропуски в одном каталоге.",
+    "en": "Explore diamonds and passes in one catalog."
+  },
+  "Katalogni ochish": {
+    "ru": "Открыть каталог",
+    "en": "Open catalog"
+  },
+  "TEZ KUNDA": {
+    "ru": "СКОРО",
+    "en": "COMING SOON"
+  },
+  "Telegram imkoniyatlari.": {
+    "ru": "Возможности Telegram.",
+    "en": "More from Telegram."
+  },
+  "Stars va Premium — VAYNEXO’da.": {
+    "ru": "Stars и Premium — в VAYNEXO.",
+    "en": "Stars and Premium at VAYNEXO."
+  },
+  "Xizmatlarni ko‘rish": {
+    "ru": "Посмотреть услуги",
+    "en": "Explore services"
+  },
+  "AI YORDAMCHI": {
+    "ru": "ИИ-ПОМОЩНИК",
+    "en": "AI ASSISTANT"
+  },
+  "Yangi fikr. Yangi strategiya.": {
+    "ru": "Новая мысль. Новая стратегия.",
+    "en": "New ideas. New strategies."
+  },
+  "MLBB bo‘yicha AI murabbiy bilan tanishing.": {
+    "ru": "Познакомьтесь с ИИ-тренером по MLBB.",
+    "en": "Meet the MLBB AI coach."
+  },
+  "Bo‘limni ochish": {
+    "ru": "Открыть раздел",
+    "en": "Open section"
+  },
+  "Karusel": {
+    "ru": "Карусель",
+    "en": "Carousel"
+  },
+  "VAYNEXO takliflari": {
+    "ru": "Предложения VAYNEXO",
+    "en": "VAYNEXO offers"
+  },
+  "Banner {number}": {
+    "ru": "Баннер {number}",
+    "en": "Banner {number}"
+  },
+  "Oldingi banner": {
+    "ru": "Предыдущий баннер",
+    "en": "Previous banner"
+  },
+  "Keyingi banner": {
+    "ru": "Следующий баннер",
+    "en": "Next banner"
+  },
+  "Bannerlarni davom ettirish": {
+    "ru": "Продолжить показ баннеров",
+    "en": "Resume banners"
+  },
+  "Bannerlarni to‘xtatish": {
+    "ru": "Остановить баннеры",
+    "en": "Pause banners"
+  },
+  "Xizmat yoki bo‘lim qidirish...": {
+    "ru": "Поиск услуг и разделов...",
+    "en": "Search services or categories..."
+  },
+  "Qidiruvni tozalash": {
+    "ru": "Очистить поиск",
+    "en": "Clear search"
+  },
+  "Bo‘limlar": {
+    "ru": "Разделы",
+    "en": "Categories"
+  },
+  "VAYNEXO XIZMATLARI": {
+    "ru": "УСЛУГИ VAYNEXO",
+    "en": "VAYNEXO SERVICES"
+  },
+  "Bo‘lim topilmadi": {
+    "ru": "Раздел не найден",
+    "en": "No categories found"
+  },
+  "Boshqa so‘z bilan qidirib ko‘ring.": {
+    "ru": "Попробуйте другое слово.",
+    "en": "Try a different search."
+  },
+  "Bo‘limlarga qaytish": {
+    "ru": "Вернуться к разделам",
+    "en": "Back to categories"
+  },
+  "Tez kunda": {
+    "ru": "Скоро",
+    "en": "Coming soon"
+  },
+  "Ushbu xizmat tayyorlanmoqda. Ishga tushganda shu yerda foydalanishingiz mumkin.": {
+    "ru": "Эта услуга готовится к запуску. После запуска она будет доступна здесь.",
+    "en": "This service is being prepared. It will be available here when launched."
+  },
+  "Mobile Legends do‘koni": {
+    "ru": "Магазин Mobile Legends",
+    "en": "Mobile Legends shop"
+  },
+  "Raqamli xizmatlar platformasi": {
+    "ru": "Платформа цифровых услуг",
+    "en": "Digital services platform"
+  },
+  "O‘yinlar va raqamli xizmatlar": {
+    "ru": "Игры и цифровые услуги",
+    "en": "Games and digital services"
+  },
+  "Shaxsiy kabinet": {
+    "ru": "Личный кабинет",
+    "en": "My account"
+  },
+  "VAYNEXO INSIGHTS": {
+    "ru": "VAYNEXO INSIGHTS",
+    "en": "VAYNEXO INSIGHTS"
+  },
+  "VAYNEXO ARENA": {
+    "ru": "VAYNEXO АРЕНА",
+    "en": "VAYNEXO ARENA"
   }
 }

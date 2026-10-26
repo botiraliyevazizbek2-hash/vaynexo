@@ -1,0 +1,21 @@
+const {test,expect}=require('@playwright/test');
+const {mockCatalog}=require('./catalog-fixture.cjs');
+test.beforeEach(async({page})=>{await page.route('https://telegram.org/**',r=>r.fulfill({body:''}));await mockCatalog(page);});
+test('premium home has six two-column services, working search and all destinations',async({page})=>{
+ await page.setViewportSize({width:390,height:844});await page.goto('/?lang=en');
+ await expect(page.locator('.topbar h1')).toHaveText('VAYNEXO');await expect(page.locator('.v-service-card')).toHaveCount(6);await expect(page.locator('.stats-strip,.hero-card,.product-row,.trust-panel')).toHaveCount(0);await expect(page.locator('.bottom-nav button')).toHaveCount(5);
+ const boxes=await page.locator('.v-service-card').evaluateAll(nodes=>nodes.map(e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y};}));for(let i=0;i<6;i+=2){expect(boxes[i].y).toBe(boxes[i+1].y);expect(boxes[i].x).toBeLessThan(boxes[i+1].x);if(i>0)expect(boxes[i].y).toBeGreaterThan(boxes[i-2].y);}
+ await page.getByPlaceholder('Search services or categories...').fill('Stars');await expect(page.locator('.v-service-card')).toHaveCount(1);await page.locator('.v-service-card').click();await expect(page.locator('.v-service-detail h2')).toHaveText('Telegram services');await expect(page.locator('.v-telegram-options')).toContainText('Telegram Premium');await page.getByRole('button',{name:'Back to categories'}).click();
+ for(const title of ['Account marketplace','Boost service','Account rental']){await page.locator('.v-service-card').filter({hasText:title}).click();await expect(page.locator('.v-service-detail h2')).toHaveText(title);await expect(page.locator('.v-service-status')).toHaveText('Coming soon');await page.getByRole('button',{name:'Back to categories'}).click();}
+ await page.getByPlaceholder('Search services or categories...').fill('not-a-service');await expect(page.getByRole('heading',{name:'No categories found'})).toBeVisible();await page.getByRole('button',{name:'Clear search',exact:true}).last().click();await page.locator('.v-service-card').filter({hasText:'Artificial intelligence'}).click();await expect(page.getByPlaceholder('Type your question...')).toBeVisible();
+});
+test('banners rotate, navigate and respect manual pause and reduced motion',async({page})=>{
+ await page.clock.install();await page.goto('/?lang=en');const active=page.locator('.v-promotion-slide.active');await expect(active).toContainText('Power up your game.');await page.clock.fastForward(5100);await expect(active).toContainText('More from Telegram.');await page.getByRole('button',{name:'Banner 3',exact:true}).click();await expect(active).toContainText('New ideas. New strategies.');
+ await page.getByRole('button',{name:'Pause banners'}).click();await page.getByPlaceholder('Search services or categories...').focus();await page.mouse.move(0,0);await page.clock.fastForward(11000);await expect(active).toContainText('New ideas. New strategies.');
+ await page.getByRole('button',{name:'Resume banners'}).click();await page.getByPlaceholder('Search services or categories...').focus();await page.mouse.move(0,0);await page.clock.fastForward(5100);await expect(active).toContainText('Power up your game.');await active.getByRole('button',{name:'Open catalog'}).click();await expect(page.locator('.product-card')).toHaveCount(4);
+ await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/?lang=en');await page.clock.fastForward(11000);await expect(page.locator('.v-promotion-slide.active')).toContainText('Power up your game.');
+});
+test('home stays within 320px in all languages and keeps its two-column grid',async({page})=>{
+ for(const language of ['uz','ru','en']){await page.setViewportSize({width:320,height:844});await page.goto('/?lang='+language);await expect(page.locator('.v-service-card')).toHaveCount(6);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();expect(await page.locator('.v-services-grid').evaluate(e=>getComputedStyle(e).gridTemplateColumns.split(' ').length)).toBe(2);}
+ await page.setViewportSize({width:390,height:844});await page.goto('/?lang=uz');await expect(page.locator('.v-service-card')).toHaveCount(6);await page.screenshot({path:'../vaynexo-home-review.png',fullPage:true});
+});

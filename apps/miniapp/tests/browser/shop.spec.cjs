@@ -13,8 +13,8 @@ test('one supplier catalog supports search, filters, sorting and selection with 
  await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
  const color=await page.locator('.product-card p').first().evaluate(e=>getComputedStyle(e).color);expect(color).toBe('rgb(138, 154, 185)');
 });
-test('home highlights and shop use identical API offers and prices',async({page})=>{
- await page.goto('/?lang=en');await expect(page.locator('.product-row .product-card')).toHaveCount(3);await page.locator('.product-row .product-card').first().getByRole('button',{name:'Select',exact:true}).click();await expect(page.locator('.selected-product-name')).toContainText('12 Diamonds');await expect(page.locator('.checkout-total')).toContainText('3 258 UZS');
+test('home Mobile Legends card opens the supplier catalog',async({page})=>{
+ await page.goto('/?lang=en');await page.locator('.v-service-card').filter({hasText:'Mobile Legends'}).click();await expect(page.locator('.catalog-grid .product-card')).toHaveCount(4);await expect(page.locator('.catalog-grid')).toContainText('12 Diamonds');
 });
 test('refresh updates selected retail price and clears offers removed by supplier',async({page})=>{
  let current=products;
@@ -40,7 +40,7 @@ test('server row defaults to Global, isolates duplicate packages and clears sele
  await page.locator('.product-card').first().getByRole('button',{name:'Select',exact:true}).click();await expect(page.locator('.selected-product-name')).toContainText('12 Diamonds');
  await tabs.getByRole('button',{name:'SG',exact:true}).click();await expect(page.locator('.product-card')).toHaveCount(1);await expect(page.locator('.product-card')).toContainText('Singapore');await expect(page.locator('.selected-product')).toHaveCount(0);
  await page.getByPlaceholder('Search products...').fill('missing');await tabs.getByRole('button',{name:'RU',exact:true}).click();await expect(page.getByPlaceholder('Search products...')).toBeEmpty();await expect(page.locator('.product-card')).toContainText('Mobile Legends (RU)');
- await page.locator('.side-nav').getByRole('button',{name:'Home',exact:true}).click();await expect(page.locator('.product-row .product-card')).toHaveCount(1);await expect(page.locator('.product-row')).toContainText('50 Diamonds');
+ await page.locator('.side-nav').getByRole('button',{name:'Home',exact:true}).click();await page.locator('.v-service-card').filter({hasText:'Mobile Legends'}).click();await expect(page.locator('.catalog-grid .product-card')).toHaveCount(1);await expect(page.locator('.catalog-grid')).toContainText('50 Diamonds');
  await page.locator('.side-nav').getByRole('button',{name:'Shop',exact:true}).click();await expect(tabs.getByRole('button',{name:'RU',exact:true})).toHaveAttribute('aria-pressed','true');
  await page.setViewportSize({width:390,height:844});await tabs.getByRole('button',{name:'Turkey',exact:true}).click();await expect(page.locator('.product-card')).toContainText('11 Diamonds');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();await page.screenshot({path:'../server-tabs-review.png',fullPage:true,timeout:10000});
 });

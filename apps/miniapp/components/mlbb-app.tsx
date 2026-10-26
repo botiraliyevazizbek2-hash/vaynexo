@@ -1,19 +1,18 @@
 'use client';
-import { useLiveCatalog, type LiveCatalog } from './shop/use-live-catalog';
+import { HomePage } from './home/home-page';
+import { ServicePage } from './home/service-page';
+import { useLiveCatalog } from './shop/use-live-catalog';
 import { useTelegramAccount, type AccountState } from './registration/use-telegram-account';
 import { PhoneSettings } from './registration/phone-settings';
 import { PricingPanel } from './admin/pricing-panel';
 import { useI18n } from './language-provider';
-import { formatPrice, type Product } from '../lib/shop/catalog';
 import { ShopPage } from './shop/shop-page';
 import { OrdersPage } from './shop/orders-page';
-import { ProductCard } from './shop/product-card';
 import { useDemoShop } from './shop/use-demo-shop';
 import type { Language } from '../lib/i18n/core';
 import { useEffect, useState } from 'react';
 import { Activity, ArrowDownLeft, ArrowRight, Bell, BookOpen, Bot, CalendarDays, Check, CheckCircle2, ChevronDown, ChevronRight, ClipboardList, Clock3, Copy, Crown, Diamond, Flame, Gamepad2, Gift, Headphones, History, Home, Info, Languages, Menu, Newspaper, Plus, Send, Settings, Shield, ShieldCheck, Sparkles, Star, Swords, Ticket, Trophy, UserRound, Users, X, Zap } from 'lucide-react';
-const heroBanner = '/images/hero-banner.jpg';
-type Tab = 'home' | 'shop' | 'coach' | 'news' | 'tournaments' | 'profile' | 'order' | 'admin';
+type Tab = 'home' | 'shop' | 'coach' | 'news' | 'tournaments' | 'profile' | 'order' | 'admin' | 'marketplace' | 'boost' | 'rental' | 'telegram';
 function useTelegramWebApp() {
     useEffect(() => {
         const tg = (window as Window & {
@@ -48,7 +47,7 @@ function App({phoneAvailable=false}:{phoneAvailable?:boolean}) {
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     useEffect(() => {
         const requested = new URLSearchParams(window.location.search).get('tab');
-        const deepLinkTabs: Tab[] = ['home', 'shop', 'coach', 'news', 'tournaments', 'profile', 'order', 'admin'];
+        const deepLinkTabs: Tab[] = ['home', 'shop', 'coach', 'news', 'tournaments', 'profile', 'order', 'admin', 'marketplace', 'boost', 'rental', 'telegram'];
         if (requested && deepLinkTabs.includes(requested as Tab))
             setTab(requested as Tab);
     }, []);
@@ -60,7 +59,6 @@ function App({phoneAvailable=false}:{phoneAvailable?:boolean}) {
     }, [toast]);
     const notify = (message: string) => setToast(message);
     const goToShop = () => setTab('shop');
-    const buyProduct = (product: Product) => { shop.buyProduct(product); setTab('shop'); };
     const copyId = async () => {
         if (!userId || !serverId) { notify('Avval do‘konda MLBB ID va serverni kiriting.'); return; }
         try {
@@ -91,11 +89,11 @@ function App({phoneAvailable=false}:{phoneAvailable?:boolean}) {
         { id: 'profile', label: 'Profil', icon: UserRound },
     ];
     const currentTitle: Record<Tab, string> = {
-        admin: 'Katalog va ustama', home: 'MLBB Uz', shop: 'Do‘kon & Olmoslar', coach: 'AI Murabbiy', news: 'Yangiliklar', tournaments: 'Turnirlar & Jamoalar', profile: 'Profil', order: 'Buyurtma holati',
+        marketplace:'Akkaunt savdosi',boost:'Boost xizmati',rental:'Akkauntlar ijarasi',telegram:'Telegram xizmatlari',admin: 'Katalog va ustama', home: 'VAYNEXO', shop: 'Do‘kon & Olmoslar', coach: 'AI Murabbiy', news: 'Yangiliklar', tournaments: 'Turnirlar & Jamoalar', profile: 'Profil', order: 'Buyurtma holati',
     };
     return (<div className="app-shell">
       <aside className="desktop-sidebar">
-        <div className="brand-lockup"><div className="brand-mark"><Gamepad2 size={22}/></div><div><b>{t("MLBB") + " "}<span>{t("UZ")}</span></b><small>{t("O\u2018yinchilar markazi")}</small></div></div>
+        <div className="brand-lockup"><div className="brand-mark v-brand-mark"><img src="/vaynexo-logo-square.svg" alt=""/></div><div><b>VAYNEXO</b><small>{t("O\u2018yinchilar markazi")}</small></div></div>
         <div className="sidebar-label">{t("MENYU")}</div>
         <nav className="side-nav">
           {navItems.map((item) => <button key={item.id} className={`side-link ${tab === item.id ? 'active' : ''}`} onClick={() => { setTab(item.id); }}><item.icon size={18}/><span>{t(item.label)}</span>{item.id === 'shop' && <i className="nav-dot"/>}</button>)}
@@ -104,20 +102,21 @@ function App({phoneAvailable=false}:{phoneAvailable?:boolean}) {
         </nav>
         <div className="sidebar-spacer"/>
         <div className="help-card"><div className="help-icon"><Headphones size={19}/></div><b>{t("Yordam kerakmi?")}</b><p>{t("Operatorimiz sizga yordam beradi.")}</p><button className="button secondary small" onClick={() => notify('Demo: operator chat integratsiyasi keyin ulanadi.')}>{t("Yordam olish") + " "}<ArrowRight size={14}/></button></div>
-        <div className="sidebar-user"><div className="avatar avatar-small">{t("S")}</div><div><b>{t("Shadow_7")}</b><small>{t("Mythic Immortal")}</small></div><button className="icon-button mini" aria-label={t("Profil")} onClick={() => setTab('profile')}><ChevronDown size={16}/></button></div>
+        <button className="v-sidebar-account" onClick={()=>setTab('profile')}><UserRound size={19}/><span><b>{account.user?.firstName||t('Profil')}</b><small>{account.user?.username?'@'+account.user.username:t('Shaxsiy kabinet')}</small></span><ChevronRight size={16}/></button>
       </aside>
 
       <main className="main-area">
         <header className="topbar">
-          <div className="topbar-title"><button className="mobile-menu icon-button" aria-label={t("Menyu")} onClick={() => setShowMobileMenu(!showMobileMenu)}>{showMobileMenu ? <X size={20}/> : <Menu size={20}/>}</button><div className="brand-mark mini-mark"><Gamepad2 size={17}/></div><div><h1>{t(currentTitle[tab])}</h1><p><span className="status-dot"/>{" " + t("O\u2018zbekiston MLBB hamjamiyati")}</p></div></div>
-          <div className="topbar-actions"><select aria-label={t("Ilova tili")} value={language} onChange={e => setLanguage(e.target.value as Language)}><option value="uz">UZ</option><option value="ru">RU</option><option value="en">EN</option></select><div className="online-pill"><span className="status-dot"/>{" " + t("Moonton API:") + " "}<b>{t("demo rejim")}</b></div><button className="icon-button notification-button" aria-label={t("Bildirishnomalar")} onClick={() => notify('Hozircha yangi bildirishnoma yo‘q.')}><Bell size={18}/><i /></button></div>
+          <div className="topbar-title"><button className="mobile-menu icon-button" aria-label={t("Menyu")} onClick={() => setShowMobileMenu(!showMobileMenu)}>{showMobileMenu ? <X size={20}/> : <Menu size={20}/>}</button><div className="brand-mark mini-mark"><Gamepad2 size={17}/></div><div><h1>{t(currentTitle[tab])}</h1><p><span className="status-dot"/>{" " + t('Raqamli xizmatlar platformasi')}</p></div></div>
+          <div className="topbar-actions"><select aria-label={t("Ilova tili")} value={language} onChange={e => setLanguage(e.target.value as Language)}><option value="uz">UZ</option><option value="ru">RU</option><option value="en">EN</option></select><button className="icon-button notification-button" aria-label={t("Bildirishnomalar")} onClick={() => notify('Hozircha yangi bildirishnoma yo‘q.')}><Bell size={18}/><i /></button></div>
         </header>
 
         {showMobileMenu && <div className="mobile-menu-panel">{navItems.map((item) => <button key={item.id} onClick={() => { setTab(item.id); setShowMobileMenu(false); }}><item.icon size={17}/>{t(item.label)}</button>)}<button onClick={() => { setTab('tournaments'); setShowMobileMenu(false); }}><Trophy size={17}/>{t("Turnirlar")}</button><button onClick={() => {setTab('order');setShowMobileMenu(false);}}><ClipboardList size={17}/>{t("Buyurtmalar")}</button></div>}
 
         {syncFailed && <div role="status" className="disclaimer">{t("Til sinxronlanmadi. Qayta urinib ko‘ring.")}</div>}<div className="page-content">
           {tab === 'admin' && <PricingPanel/>}
-          {tab === 'home' && <HomePage catalog={catalog} goToShop={goToShop} setTab={setTab} buyProduct={buyProduct} notify={notify}/>}
+          {(tab==='marketplace'||tab==='boost'||tab==='rental'||tab==='telegram')&&<ServicePage service={tab} onBack={()=>setTab('home')} onShop={goToShop}/>}
+          {tab === 'home' && <HomePage onNavigate={setTab}/>}
           {tab === 'shop' && <ShopPage catalog={catalog} shop={shop} onOrders={() => setTab('order')}/>}
           {tab === 'coach' && <CoachPage question={coachQuestion} setQuestion={setCoachQuestion} reply={coachReply} submit={submitCoach} notify={notify}/>}
           {tab === 'news' && <NewsPage notify={notify}/>}
@@ -125,7 +124,7 @@ function App({phoneAvailable=false}:{phoneAvailable?:boolean}) {
           {tab === 'profile' && <ProfilePage account={account} phoneAvailable={phoneAvailable} userId={userId} serverId={serverId} copyId={copyId} copied={copied} notify={notify}/>}
           {tab === 'order' && <OrdersPage shop={shop} onShop={goToShop}/>}
         </div>
-        <footer className="app-footer"><div className="footer-logo"><div className="brand-mark mini-mark"><Gamepad2 size={15}/></div><b>{t("MLBB UZ")}</b></div><span>{t("Hamjamiyat konsepti \u00B7 Demo ma\u2019lumotlar")}</span><button onClick={() => notify('Maxfiylik va foydalanish shartlari backend ishga tushishidan oldin qo‘shiladi.')}><ShieldCheck size={14}/>{" " + t("Xavfsizlik")}</button></footer>
+        <footer className="app-footer"><div className="footer-logo"><div className="brand-mark mini-mark"><Gamepad2 size={15}/></div><b>{"VAYNEXO"}</b></div><span>{t('O‘yinlar va raqamli xizmatlar')}</span><button onClick={() => notify('Maxfiylik va foydalanish shartlari backend ishga tushishidan oldin qo‘shiladi.')}><ShieldCheck size={14}/>{" " + t("Xavfsizlik")}</button></footer>
       </main>
 
       <nav className="bottom-nav" aria-label={t("Asosiy navigatsiya")}>
@@ -142,65 +141,6 @@ function SectionTitle({ icon: Icon, title, aside, onAside }: {
 }) {
     const { t } = useI18n();
     return <div className="section-title"><div className="section-title-main"><Icon size={18}/><h2>{t(title)}</h2></div>{aside && <button onClick={onAside}>{t(aside)}<ArrowRight size={14}/></button>}</div>;
-}
-function HomePage({ goToShop, setTab, buyProduct, notify, catalog }: {
-    catalog: LiveCatalog;
-    goToShop: () => void;
-    setTab: (tab: Tab) => void;
-    buyProduct: (p: Product) => void;
-    notify: (msg: string) => void;
-}) {
-    const { t } = useI18n();
-    const featured = [...catalog.regionProducts].sort((a,b)=>a.price-b.price).slice(0,3);
-    return <>
-    <section className="hero-card">
-      <div className="hero-copy"><div className="eyebrow"><Zap size={13} fill="currentColor"/>{" " + t("MLBB UZ COMMUNITY") + " "}<span className="eyebrow-line"/></div><h2>{t("MLBB O\u2018zbekiston")}<br /><span>{t("hamjamiyatiga")}</span><br />{t("xush kelibsiz!")}</h2><p>{t("Olmoslar, AI murabbiy, turnirlar va jamoalar \u2014 barchasi bitta joyda.")}</p><div className="hero-actions"><button className="button primary" onClick={goToShop}>{t("Do\u2018konga o\u2018tish") + " "}<ArrowRight size={16}/></button><button className="button ghost" onClick={() => setTab('tournaments')}><Trophy size={16}/>{" " + t("Turnirlar")}</button></div><div className="hero-proof"><span><ShieldCheck size={14}/>{" " + t("Xavfsiz jarayon")}</span><span><Zap size={14}/>{" " + t("Tezkor yordam")}</span></div></div>
-      <div className="hero-art" style={{ backgroundImage: `linear-gradient(90deg, rgba(9,14,31,.2), rgba(9,14,31,.02)), url(${heroBanner})` }}><div className="hero-art-top"><span className="live-tag"><i />{" " + t("MLBB UZ")}</span><span className="rank-chip"><Crown size={13}/>{" " + t("MYTHIC")}</span></div><div className="hero-art-bottom"><div className="hero-diamond"><Diamond size={22}/></div><div><b>{t("Yangi mavsum")}</b><small>{t("Yangi maqsadlar sari")}</small></div><Sparkles size={19} className="sparkle"/></div></div>
-      <div className="hero-glow"/>
-    </section>
-
-    <section className="stats-strip">
-      <div className="stat-player"><div className="avatar avatar-blue">{t("S")}</div><div><small>{t("So\u2018nggi o\u2018yinchi")}</small><b>{t("Shadow_7") + " "}<span className="verified">{t("\u2713")}</span></b><small>{t("ID: 84219\u2022\u2022\u2022") + " "}<span className="tiny-server">{t("(5143)")}</span></small></div></div>
-      <div className="stat-mini"><span className="stat-icon cyan"><Diamond size={17}/></span><div><small>{t("Namuna balans")}</small><b>{t("125") + " "}<small>{t("olmos")}</small></b></div></div>
-      <div className="stat-mini"><span className="stat-icon purple"><Trophy size={17}/></span><div><small>{t("Hamjamiyat")}</small><b>{t("MLBB Uz")}</b></div></div>
-    </section>
-
-    <SectionTitle icon={Gamepad2} title={t("Asosiy bo\u2018limlar")} aside={t("Barchasi")} onAside={() => setTab('shop')}/>
-    <div className="feature-grid">
-      <FeatureCard icon={Diamond} tone="cyan" label={t("Do\u2018kon & Olmoslar")} desc={t("Weekly Pass, Twilight va olmos paketlari")} badge="TOP" onClick={goToShop}/>
-      <FeatureCard icon={Bot} tone="purple" label={t("AI Murabbiy")} desc={t("Build, counter-pick va meta bo\u2018yicha maslahat")} badge="AI" onClick={() => setTab('coach')}/>
-      <FeatureCard icon={Trophy} tone="gold" label={t("Turnirlar")} desc={t("MLBB musobaqalari va jamoalar")} badge="UZ" onClick={() => setTab('tournaments')}/>
-      <FeatureCard icon={Newspaper} tone="blue" label={t("Yangiliklar")} desc={t("Patch o\u2018zgarishlari va yangi qahramonlar")} badge="NEWS" onClick={() => setTab('news')}/>
-      <FeatureCard icon={Users} tone="violet" label={t("Jamoalar")} desc={t("Jamoalar va o\u2018yinchilar hamjamiyati")} badge="UZB" onClick={() => setTab('tournaments')}/>
-      <FeatureCard icon={UserRound} tone="slate" label={t("Profilim")} desc={t("Buyurtmalar, sozlamalar va tarix")} badge="ME" onClick={() => setTab('profile')}/>
-    </div>
-
-    <SectionTitle icon={Flame} title={t("Hozir trendda")} aside={t("Do\u2018konga o\u2018tish")} onAside={goToShop}/>
-    <div className="product-row">{featured.map((product,index)=><ProductCard key={product.id} product={product} onBuy={()=>buyProduct(product)} featured={index===0}/>)}</div>
-    {catalog.status==='loading'&&<p className="disclaimer" role="status">{t('Yuklanmoqda...')}</p>}
-    {catalog.status!=='loading'&&!featured.length&&<p className="disclaimer">{t(catalog.status==='awaiting_pricing'?'Admin ustama foizi va kursni belgilagach paketlar chiqadi.':'Katalog vaqtincha mavjud emas. Keyinroq qayta urinib ko‘ring.')}</p>}
-
-    <section className="trust-panel"><div className="trust-heading"><div className="trust-shield"><ShieldCheck size={20}/></div><div><h3>{t("Ishonch va xavfsizlik")}</h3><p>{t("Xarid jarayoni tushunarli va kuzatiladigan bo\u2018lishi kerak.")}</p></div><span className="demo-badge">{t("DEMO")}</span></div><div className="trust-items"><TrustItem icon={Shield} title={t("ID tekshiruvi")} desc={t("Xariddan oldin ma\u2019lumotni tekshirish oqimi")}/><TrustItem icon={Zap} title={t("Buyurtma kuzatuvi")} desc={t("Holat va xatolar ochiq ko\u2018rsatiladi")}/><TrustItem icon={Headphones} title={t("Yordam xizmati")} desc={t("Muammo bo\u2018lsa, operatorga murojaat")}/></div><div className="payment-footnote"><span>{t("To\u2018lov usullari demo maketi:")}</span><div className="payment-logos"><b>{t("CLICK")}</b><b>{t("Payme")}</b><b>{t("UZCARD")}</b></div></div></section>
-  </>;
-}
-function FeatureCard({ icon: Icon, tone, label, desc, badge, onClick }: {
-    icon: typeof Home;
-    tone: string;
-    label: string;
-    desc: string;
-    badge: string;
-    onClick: () => void;
-}) {
-    const { t } = useI18n();
-    return <button className="feature-card" onClick={onClick}><div className={`feature-icon ${tone}`}><Icon size={21}/></div><span className={`feature-badge ${tone}`}>{t(badge)}</span><h3>{t(label)}</h3><p>{t(desc)}</p><span className="feature-arrow"><ArrowRight size={15}/></span></button>;
-}
-function TrustItem({ icon: Icon, title, desc }: {
-    icon: typeof Home;
-    title: string;
-    desc: string;
-}) {
-    const { t } = useI18n();
-    return <div className="trust-item"><div className="trust-icon"><Icon size={17}/></div><div><b>{t(title)}</b><p>{t(desc)}</p></div></div>;
 }
 function CoachPage({ question, setQuestion, reply, submit, notify }: {
     question: string;
@@ -231,7 +171,7 @@ function NewsPage({ notify }: {
     ];
     const filtered = news.filter(n => filter === 'Barchasi' || n.tag.toLowerCase() === filter.toLowerCase());
     return <div className="content-stack"><div className="page-intro"><div><div className="eyebrow small-eyebrow"><Flame size={13}/>{" " + t("YANGI MA\u2019LUMOTLAR")}</div><h2>{t("Yangiliklar & Patch")}</h2><p>{t("MLBB yangiliklari va o\u2018yin bo\u2018yicha foydali kontent.")}</p></div><button className="icon-button" onClick={() => notify('Demo kontent — yangilanish feed’i hali ulanmagan.')}><Activity size={17}/></button></div>
-    <div className="news-feature"><div className="news-feature-art"><div className="news-orbit orbit-a"/><div className="news-orbit orbit-b"/><div className="news-gem"><Sparkles size={44}/></div><span className="news-art-label">{t("MLBB UZ INSIGHTS")}</span></div><div className="news-feature-copy"><span className="tag-pill cyan-tag">{t("O\u2018YIN QO\u2018LLANMASI")}</span><h3>{t("Yaxshiroq o\u2018yna.")}<br /><span>{t("Ko\u2018proq o\u2018rgan.")}</span></h3><p>{t("Build, counter va strategiyalarni o\u2018zbek tilida o\u2018rganish uchun yagona markaz.")}</p><button className="button primary" onClick={() => notify('Qo‘llanmalar kontenti bosqichma-bosqich qo‘shiladi.')}>{t("Qo\u2018llanmalarni ko\u2018rish") + " "}<ArrowRight size={15}/></button></div></div>
+    <div className="news-feature"><div className="news-feature-art"><div className="news-orbit orbit-a"/><div className="news-orbit orbit-b"/><div className="news-gem"><Sparkles size={44}/></div><span className="news-art-label">{t("VAYNEXO INSIGHTS")}</span></div><div className="news-feature-copy"><span className="tag-pill cyan-tag">{t("O\u2018YIN QO\u2018LLANMASI")}</span><h3>{t("Yaxshiroq o\u2018yna.")}<br /><span>{t("Ko\u2018proq o\u2018rgan.")}</span></h3><p>{t("Build, counter va strategiyalarni o\u2018zbek tilida o\u2018rganish uchun yagona markaz.")}</p><button className="button primary" onClick={() => notify('Qo‘llanmalar kontenti bosqichma-bosqich qo‘shiladi.')}>{t("Qo\u2018llanmalarni ko\u2018rish") + " "}<ArrowRight size={15}/></button></div></div>
     <div className="category-pills news-filters">{['Barchasi', 'Patch', 'Event', 'Guide', 'Esports'].map(f => <button key={f} className={filter === f ? 'selected' : ''} onClick={() => setFilter(f)}>{t(f)}</button>)}</div><div className="news-grid">{filtered.map((item, i) => <article className="news-card" key={item.tag}><div className={`news-thumb ${item.art}`}><span className={`tag-pill ${item.color}-tag`}>{t(item.tag)}</span><div className="news-thumb-icon">{item.art === 'patch' ? <Swords size={27}/> : item.art === 'guide' ? <BookOpen size={27}/> : item.art === 'event' ? <CalendarDays size={27}/> : <Trophy size={27}/>}</div><span className="news-thumb-number">{t("0")}{i + 1}</span></div><div className="news-card-body"><span className="news-date"><Clock3 size={12}/>{t(item.date)}</span><h3>{t(item.title)}</h3><p>{t(item.desc)}</p><button onClick={() => notify('Bu material demo ko‘rinishida. Kontent boshqaruv tizimi keyin ulanadi.')}>{t("Batafsil") + " "}<ArrowRight size={14}/></button></div></article>)}</div>
   </div>;
 }
@@ -240,7 +180,7 @@ function TournamentsPage({ notify }: {
 }) {
     const { t } = useI18n();
     const [section, setSection] = useState('Turnirlar');
-    return <div className="content-stack"><div className="page-intro"><div><div className="eyebrow small-eyebrow"><Trophy size={13}/>{" " + t("MLBB UZ ESPORTS")}</div><h2>{t("Turnirlar & Jamoalar")}</h2><p>{t("Mahalliy musobaqalar, jamoalar va o\u2018yinchilar uchun markaz.")}</p></div><span className="secure-chip"><Users size={14}/>{" " + t("Hamjamiyat")}</span></div>
+    return <div className="content-stack"><div className="page-intro"><div><div className="eyebrow small-eyebrow"><Trophy size={13}/>{" " + t("VAYNEXO ARENA")}</div><h2>{t("Turnirlar & Jamoalar")}</h2><p>{t("Mahalliy musobaqalar, jamoalar va o\u2018yinchilar uchun markaz.")}</p></div><span className="secure-chip"><Users size={14}/>{" " + t("Hamjamiyat")}</span></div>
     <div className="segmented-tabs">{['Turnirlar', 'Jamoalar', 'Reyting'].map(s => <button key={s} className={section === s ? 'selected' : ''} onClick={() => setSection(s)}>{s === 'Turnirlar' ? <Trophy size={15}/> : s === 'Jamoalar' ? <Users size={15}/> : <Activity size={15}/>} {t(s)}</button>)}</div>
     {section === 'Turnirlar' && <><section className="tournament-hero"><div className="tourney-overlay"><span className="tag-pill red-tag"><i />{" " + t("NAMUNA TURNIR")}</span><span className="region-tag"><Activity size={12}/>{" " + t("O\u2018zbekiston")}</span><h3>{t("UZBEKISTAN")}<br /><span>{t("MLBB CUP")}</span></h3><p>{t("Hamjamiyat uchun turnir maketi")}</p><div className="tourney-stats"><div><small>{t("FORMAT")}</small><b>{t("5v5 Draft")}</b></div><div><small>{t("HOLATI")}</small><b className="cyan-text">{t("Rejalashtirilmoqda")}</b></div><div><small>{t("SOVRIN")}</small><b>{t("Keyin e\u2019lon qilinadi")}</b></div></div><button className="button primary" onClick={() => notify('Ro‘yxatdan o‘tish backend va turnir reglamenti tayyor bo‘lganda yoqiladi.')}>{t("Qiziqish bildirish") + " "}<ArrowRight size={15}/></button></div><div className="tourney-art"><div className="trophy-glow"><Trophy size={77}/></div><div className="tourney-ring ring-1"/><div className="tourney-ring ring-2"/></div></section><SectionTitle icon={CalendarDays} title={t("Rejalashtirilgan turnirlar")} aside={t("Barchasi")} onAside={() => notify('Hozircha demo taqvim.')}/><div className="empty-state compact-empty"><div className="empty-icon"><CalendarDays size={24}/></div><h3>{t("Turnir kalendari ulanmagan")}</h3><p>{t("Haqiqiy tadbirlar, sanalar va reglamentlar tekshirilgan manbalardan qo\u2018shiladi.")}</p></div></>}
     {section === 'Jamoalar' && <><div className="team-grid"><TeamCard name={t("Toshkent Cyber Wolves")} initials="TW" rank="Mythic" detail={t("Jamoa profili uchun namuna")} color="blue" onClick={() => notify('Jamoa profillari backendga ulanganidan keyin ochiladi.')}/><TeamCard name={t("Samarqand Titans")} initials="ST" rank="Glory" detail={t("Yangi a\u2019zolarni qidirish \u2014 demo")} color="purple" onClick={() => notify('Jamoa profillari backendga ulanganidan keyin ochiladi.')}/><TeamCard name={t("Buxoro MLBB Club")} initials="BC" rank="Mythic" detail={t("Hamjamiyat jamoasi maketi")} color="gold" onClick={() => notify('Jamoa profillari backendga ulanganidan keyin ochiladi.')}/></div><button className="button secondary full" onClick={() => notify('Jamoa yaratish funksiyasi backendga ulangach ishlaydi.')}><Plus size={16}/>{" " + t("O\u2018z jamoangni yaratish")}</button></>}

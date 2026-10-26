@@ -4,13 +4,14 @@ import { Inter, Manrope } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
 import './mlbb.css'
+import './home.css'
 
 const inter = Inter({ subsets: ['latin', 'cyrillic'], variable: '--font-inter' })
 const manrope = Manrope({ subsets: ['latin', 'cyrillic'], variable: '--font-manrope' })
 
 export const metadata: Metadata = {
-  title: 'MLBB Uz — O‘zbekiston MLBB hamjamiyati',
-  description: 'MLBB Uz — Mobile Legends: Bang Bang o‘yinchilari uchun hamjamiyat va do‘kon konsepti.',
+  title: 'VAYNEXO — O‘yinlar va raqamli xizmatlar',
+  description: 'VAYNEXO — Mobile Legends, Telegram va sun’iy intellekt xizmatlari.',
   generator: 'v0.app',
   icons: {
     icon: [
