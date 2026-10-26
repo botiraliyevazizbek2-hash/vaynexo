@@ -1,4 +1,5 @@
 import { createResellcodesClient } from '../suppliers/resellcodes';
+import { isMLBBCategory } from '../shop/regions';
 import { sellingPrice } from './pricing';
 export type Query=(sql:string,values?:unknown[])=>Promise<{rows:any[]}>;
 type Category=Awaited<ReturnType<ReturnType<typeof createResellcodesClient>['getTopupOffers']>>;
@@ -10,7 +11,7 @@ export function catalogService(query:Query,client=()=>createResellcodesClient())
   try {
    const api=client();
    if(!(await api.getProfile()).active)throw Error('inactive');
-   const cats=(await api.getTopupCategories()).filter(p=>/mobile[\s_-]*legends|\bmlbb\b/i.test(p.id+' '+p.name));
+   const cats=(await api.getTopupCategories()).filter(isMLBBCategory);
    if(!cats.length||cats.length>20)throw Error('invalid_catalog');
    const result:Category[]=[];
    for(const c of cats) result.push(await api.getTopupOffers(c.id));
@@ -24,9 +25,9 @@ export function catalogService(query:Query,client=()=>createResellcodesClient())
   const settings=(await query('SELECT * FROM vaynexo_catalog_settings WHERE id=true')).rows[0];
   const cache=(await query('SELECT *, synced_at>now()-interval \'1 hour\' AS fresh FROM vaynexo_catalog_cache WHERE id=true')).rows[0];
   const configured=settings?.markup_bps!==null&&settings?.markup_bps!==undefined&&settings?.usd_uzs;
-  const cats:Category[]=cache?.payload??[];
+  const cats:Category[]=(cache?.payload??[]).filter(isMLBBCategory);
   const products=configured&&cache?.fresh?cats.flatMap(c=>c.offers.filter(o=>Number(o.supplierPriceUSD)>0).map(o=>({
-   id:`rsc:${c.id}:${o.id}`,title:o.name,subtitle:c.name,diamonds:/pass|starlight/i.test(o.name)?'Pass':o.name,
+   id:`rsc:${c.id}:${o.id}`,categoryId:c.id,categoryName:c.name,title:o.name,subtitle:c.name,diamonds:/pass|starlight/i.test(o.name)?'Pass':o.name,
    icon:/pass|starlight/i.test(o.name)?'ticket':'diamond', price:sellingPrice(o.supplierPriceUSD,settings.markup_bps,String(settings.usd_uzs)),supplier:'resellcodes',
    ...(admin?{supplierPriceUSD:o.supplierPriceUSD}:{}),
   }))):[];

@@ -34,6 +34,7 @@ export function useDemoShop(products: Product[]) {
     if(!products.some(p=>p.id===product.id))return;
     select(product.id); updateQuantity(1); confirmFormat(false); resetConfirmation();
   }
+  function clearProduct(){select(null);confirmFormat(false);updateQuantity(1);resetConfirmation();}
   function setUserId(value: string) { updateUser(value); confirmFormat(false); resetConfirmation(); }
   function setServerId(value: string) { updateServer(value); confirmFormat(false); resetConfirmation(); }
   function setQuantity(value: number) { if(validQuantity(value)) { updateQuantity(value); resetConfirmation(); } }
@@ -53,6 +54,6 @@ export function useDemoShop(products: Product[]) {
     catch { setStorageFailed(true); }
     return order;
   }
-  return {selectedProduct,buyProduct,userId,setUserId,serverId,setServerId,idVerified,verifyPlayer,confirmed,setConfirmed:confirmDetails,quantity,setQuantity,payment,setPayment,orders,activeOrder:orders.find(o=>o.id===activeId)??null,setActiveId,ready,storageFailed,createOrder};
+  return {selectedProduct,buyProduct,clearProduct,userId,setUserId,serverId,setServerId,idVerified,verifyPlayer,confirmed,setConfirmed:confirmDetails,quantity,setQuantity,payment,setPayment,orders,activeOrder:orders.find(o=>o.id===activeId)??null,setActiveId,ready,storageFailed,createOrder};
 }
 export type DemoShop = ReturnType<typeof useDemoShop>;

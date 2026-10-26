@@ -16,3 +16,13 @@ test('local history keeps snapshots, rejects corrupt entries and bounds storage'
  const many=Array.from({length:30},(_,i)=>({...order,id:`5c47d67c-a6c9-4086-a932-${String(i).padStart(12,'0')}`}));
  assert.equal(parseHistory(saved(many)).length,20);
 });
+test('catalog groups preserve supplier IDs, prefer Global and exclude Adventure',()=>{
+ const {productRegion,catalogRegions,isMLBBCategory}=require('../lib/shop/regions.ts');
+ const p=(id,name)=>({id:'rsc:'+id+':5',subtitle:name});
+ assert.deepEqual(productRegion(p('mobile_legends_singapore','Mobile Legends (Singapore)')),{id:'mobile_legends_singapore',label:'SG'});
+ const list=catalogRegions([p('sg','Mobile Legends (Singapore)'),p('global','Mobile Legends (Global)'),p('ru','Mobile Legends (RU)'),p('sg','Mobile Legends (Singapore)'),p('special','Mobile Legends (Special)')]);
+ assert.deepEqual(list.map(r=>r.id),['global','ru','sg','special']);
+ assert.equal(isMLBBCategory({id:'mobile_legends_adventure',name:'Mobile Legends: Adventure'}),false);
+ assert.equal(isMLBBCategory({id:'mobile_legends_global',name:'Mobile Legends (Global)'}),true);
+ assert.equal(isMLBBCategory({id:'free_fire',name:'Free Fire'}),false);
+});

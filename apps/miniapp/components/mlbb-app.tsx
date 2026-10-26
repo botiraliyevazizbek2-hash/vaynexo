@@ -35,7 +35,7 @@ function App() {
     useTelegramWebApp();
     const [tab, setTab] = useState<Tab>('home');
     const catalog = useLiveCatalog();
-    const shop = useDemoShop(catalog.products);
+    const shop = useDemoShop(catalog.regionProducts);
     const { userId, serverId } = shop;
     const [coachQuestion, setCoachQuestion] = useState('');
     const [coachReplyQuestion, setCoachReplyQuestion] = useState('');
@@ -148,7 +148,7 @@ function HomePage({ goToShop, setTab, buyProduct, notify, catalog }: {
     notify: (msg: string) => void;
 }) {
     const { t } = useI18n();
-    const featured = [...catalog.products].sort((a,b)=>a.price-b.price).slice(0,3);
+    const featured = [...catalog.regionProducts].sort((a,b)=>a.price-b.price).slice(0,3);
     return <>
     <section className="hero-card">
       <div className="hero-copy"><div className="eyebrow"><Zap size={13} fill="currentColor"/>{" " + t("MLBB UZ COMMUNITY") + " "}<span className="eyebrow-line"/></div><h2>{t("MLBB O\u2018zbekiston")}<br /><span>{t("hamjamiyatiga")}</span><br />{t("xush kelibsiz!")}</h2><p>{t("Olmoslar, AI murabbiy, turnirlar va jamoalar \u2014 barchasi bitta joyda.")}</p><div className="hero-actions"><button className="button primary" onClick={goToShop}>{t("Do\u2018konga o\u2018tish") + " "}<ArrowRight size={16}/></button><button className="button ghost" onClick={() => setTab('tournaments')}><Trophy size={16}/>{" " + t("Turnirlar")}</button></div><div className="hero-proof"><span><ShieldCheck size={14}/>{" " + t("Xavfsiz jarayon")}</span><span><Zap size={14}/>{" " + t("Tezkor yordam")}</span></div></div>

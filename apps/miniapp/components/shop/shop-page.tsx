@@ -10,15 +10,14 @@ export function ShopPage({shop,catalog,onOrders}: {shop:DemoShop;catalog:LiveCat
   const {t,language}=useI18n();
   const [search,setSearch]=useState('');
   const [category,setCategory]=useState('all');
-  const [sort,setSort]=useState('default');
   const [attempted,setAttempted]=useState(false);
   const {selectedProduct:p,userId,serverId,idVerified,quantity}=shop;
-  const products=catalog.products;
+  const products=catalog.regionProducts;
   const filtered=useMemo(()=>{
     const query=search.trim().toLocaleLowerCase(language);
     const list=products.filter(p=>(category==='all'||(category==='diamonds'?p.icon==='diamond':p.icon!=='diamond')) && `${t(p.title)} ${t(p.subtitle)} ${p.diamonds}`.toLocaleLowerCase(language).includes(query));
-    return [...list].sort((a,b)=>sort==='high'?b.price-a.price:a.price-b.price);
-  },[search,category,sort,language,t,products]);
+    return [...list].sort((a,b)=>a.price-b.price);
+  },[search,category,language,t,products]);
   const userError=attempted&&!/^[1-9]\d{4,19}$/.test(userId);
   const serverError=attempted&&!/^[1-9]\d{1,7}$/.test(serverId);
   function choose(product:Product) {
@@ -27,10 +26,11 @@ export function ShopPage({shop,catalog,onOrders}: {shop:DemoShop;catalog:LiveCat
   }
   return <div className="content-stack">
     <div className="page-intro"><div><div className="eyebrow small-eyebrow"><Diamond size={13}/> MLBB TOP-UP</div><h2>{t('Do‘kon & Olmoslar')}</h2><p>{t('Kerakli mahsulotni tanlang, ma’lumotlarni tasdiqlang.')}</p></div><button className="button secondary small" onClick={onOrders}><ClipboardList size={15}/>{t('Buyurtmalar')} ({shop.orders.length})</button></div>
-    <div className="shop-promo"><div className="promo-symbol"><Diamond size={26}/></div><div><span className="mini-label">VAYNEXO STORE</span><h3>{t('Paket tanlang. Tafsilotlarni tekshiring.')}</h3><p>{t('Narxlar avtomatik yangilanadi.')}</p></div></div>
+
     <div className="filter-toolbar"><div className="category-pills">{[['all','Barchasi'],['diamonds','Olmoslar'],['passes','Passlar']].map(([id,label])=><button key={id} className={category===id?'selected':''} aria-pressed={category===id} onClick={()=>setCategory(id)}>{t(label)}</button>)}</div><label className="search-box"><Search size={16}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('Mahsulot qidirish...')} aria-label={t('Mahsulot qidirish...')} maxLength={100}/></label></div>
-    <div className="catalog-meta"><span>{t('Mahsulotlar soni: {count}',{count:String(filtered.length)})}</span><select className="shop-sort" value={sort} onChange={e=>setSort(e.target.value)} aria-label={t('Saralash')}><option value="default">{t('Tavsiya etilgan')}</option><option value="low">{t('Avval arzonlari')}</option><option value="high">{t('Avval qimmatlari')}</option></select></div>
-    <div className="shop-layout"><div className="shop-products"><div className="catalog-grid">{filtered.map(product=><ProductCard key={product.id} product={product} onBuy={()=>choose(product)}/>)}</div>{catalog.status==='loading'&&<p className="disclaimer" role="status">{t('Yuklanmoqda...')}</p>}{catalog.status!=='ready'&&catalog.status!=='loading'&&<div className="empty-state" role="status"><p>{t(catalog.status==='awaiting_pricing'?'Admin ustama foizi va kursni belgilagach paketlar chiqadi.':'Katalog vaqtincha mavjud emas. Keyinroq qayta urinib ko‘ring.')}</p><button className="button secondary" onClick={catalog.reload}>{t('Yangilash')}</button></div>}{catalog.status==='ready'&&filtered.length===0&&<div className="empty-state"><Search size={26}/><h3>{t('Mahsulot topilmadi')}</h3><p>{t('Boshqa so‘z bilan qidiring yoki filtrlarni tozalang.')}</p><button className="button secondary" onClick={()=>{setSearch('');setCategory('all');setSort('default');}}>{t('Filtrlarni tozalash')}</button></div>}<div className="disclaimer"><Info size={15}/><span>{t('To‘lov va yetkazish hali yoqilmagan.')}</span></div></div>
+    {catalog.regions.length>0&&<section className="server-picker" aria-label={t('Serverni tanlang')}><span className="step-label">{t('Serverni tanlang')}</span><div className="server-tabs" role="group" aria-label={t('Serverlar')}>{catalog.regions.map(region=><button key={region.id} type="button" aria-pressed={catalog.regionId===region.id} onClick={()=>{shop.clearProduct();setSearch('');setCategory('all');setAttempted(false);catalog.setRegion(region.id);}}>{t(region.label)}</button>)}</div></section>}
+    <div className="catalog-meta"><span>{t('Mahsulotlar soni: {count}',{count:String(filtered.length)})}</span></div>
+    <div className="shop-layout"><div className="shop-products"><div className="catalog-grid">{filtered.map(product=><ProductCard key={product.id} product={product} onBuy={()=>choose(product)}/>)}</div>{catalog.status==='loading'&&<p className="disclaimer" role="status">{t('Yuklanmoqda...')}</p>}{catalog.status!=='ready'&&catalog.status!=='loading'&&<div className="empty-state" role="status"><p>{t(catalog.status==='awaiting_pricing'?'Admin ustama foizi va kursni belgilagach paketlar chiqadi.':'Katalog vaqtincha mavjud emas. Keyinroq qayta urinib ko‘ring.')}</p><button className="button secondary" onClick={catalog.reload}>{t('Yangilash')}</button></div>}{catalog.status==='ready'&&filtered.length===0&&<div className="empty-state"><Search size={26}/><h3>{t('Mahsulot topilmadi')}</h3><p>{t('Boshqa so‘z bilan qidiring yoki filtrlarni tozalang.')}</p><button className="button secondary" onClick={()=>{setSearch('');setCategory('all');}}>{t('Filtrlarni tozalash')}</button></div>}<div className="disclaimer"><Info size={15}/><span>{t('To‘lov va yetkazish hali yoqilmagan.')}</span></div></div>
       <aside className="checkout-card" id="checkout-card"><div className="checkout-header"><div><span className="step-label">{t('BUYURTMA')}</span><h3>{p?t('Xaridni davom ettirish'):t('Mahsulot tanlang')}</h3></div><LockKeyhole size={18}/></div>
       {p?<>
         <div className="selected-product"><div className="selected-product-icon"><Diamond size={23}/></div><div className="selected-product-name"><b>{t(p.title)}</b><small>{formatPrice(p.price)}</small></div><div className="quantity-control"><button disabled={quantity<=1} aria-label={t('Kamaytirish')} onClick={()=>shop.setQuantity(quantity-1)}><Minus size={12}/></button><b aria-live="polite">{quantity}</b><button disabled={quantity>=10} aria-label={t('Ko‘paytirish')} onClick={()=>shop.setQuantity(quantity+1)}><Plus size={12}/></button></div></div>

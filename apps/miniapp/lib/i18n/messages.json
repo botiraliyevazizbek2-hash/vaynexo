@@ -1398,5 +1398,17 @@
   "Narxlar avtomatik yangilanadi.": {
     "ru": "Цены обновляются автоматически.",
     "en": "Prices update automatically."
+  },
+  "Serverni tanlang": {
+    "ru": "Выберите сервер",
+    "en": "Choose a server"
+  },
+  "Serverlar": {
+    "ru": "Серверы",
+    "en": "Servers"
+  },
+  "Turkiya": {
+    "ru": "Турция",
+    "en": "Turkey"
   }
 }

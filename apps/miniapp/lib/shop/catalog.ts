@@ -1,5 +1,7 @@
 export type Product = {
     supplier?: 'resellcodes';
+    categoryId?: string;
+    categoryName?: string;
     id: string;
     title: string;
     subtitle: string;

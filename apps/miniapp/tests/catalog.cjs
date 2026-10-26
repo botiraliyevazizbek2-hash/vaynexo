@@ -40,7 +40,7 @@ test('signed admin request saves to Postgres and public route returns marked-up 
  const oldToken=process.env.TELEGRAM_BOT_TOKEN,oldAdmins=process.env.ADMIN_TELEGRAM_IDS;
  try{
  await db.exec(fs.readFileSync('migrations/miniapp/002_supplier_catalog.sql','utf8'));
- await db.query('UPDATE vaynexo_catalog_cache SET synced_at=now(),payload=$1::jsonb',[JSON.stringify([{id:'mlbb',name:'Global',fields:[],offers:[{id:'one',name:'55 Diamonds',supplierPriceUSD:'1.0000'}]}])]);
+ await db.query('UPDATE vaynexo_catalog_cache SET synced_at=now(),payload=$1::jsonb',[JSON.stringify([{id:'mlbb',name:'Global',fields:[],offers:[{id:'one',name:'55 Diamonds',supplierPriceUSD:'1.0000'}]},{id:'mobile_legends_adventure',name:'Mobile Legends: Adventure',fields:[],offers:[{id:'wrong',name:'Adventure Diamonds',supplierPriceUSD:'1.0000'}]}])]);
  database.catalogDatabase=()=>({query:(s,v)=>db.query(s,v)});
  process.env.TELEGRAM_BOT_TOKEN='test:token';process.env.ADMIN_TELEGRAM_IDS='42';
  function req(id,body){const p=new URLSearchParams({auth_date:String(Math.floor(Date.now()/1000)),user:JSON.stringify({id})});const check=[...p.entries()].sort(([a],[b])=>a<b?-1:1).map(([k,v])=>`${k}=${v}`).join('\n');const key=crypto.createHmac('sha256','WebAppData').update(process.env.TELEGRAM_BOT_TOKEN).digest();p.set('hash',crypto.createHmac('sha256',key).update(check).digest('hex'));return new Request('https://test',{method:body?'POST':'GET',headers:{'X-Telegram-Init-Data':p.toString()},...(body?{body:JSON.stringify(body)}:{})});}
@@ -50,7 +50,7 @@ test('signed admin request saves to Postgres and public route returns marked-up 
  assert.equal((await admin.POST(req(42,{markup:'-1',rate:'13000',version:0}))).status,400);
  assert.equal((await admin.POST(req(42,{markup:'10',rate:'13000',version:0}))).status,200);
  assert.equal((await admin.POST(req(42,{markup:'20',rate:'13000',version:0}))).status,409);
- const response=await publicApi.GET(),payload=await response.json();assert.equal(payload.products[0].price,14300);assert.equal(payload.products[0].supplierPriceUSD,undefined);
+ const response=await publicApi.GET(),payload=await response.json();assert.equal(payload.products.length,1);assert.equal(payload.products[0].categoryId,'mlbb');assert.equal(payload.products[0].price,14300);assert.equal(payload.products[0].supplierPriceUSD,undefined);
  assert.equal((await db.query('SELECT telegram_id FROM vaynexo_catalog_audit')).rows[0].telegram_id,42);
  }finally{database.catalogDatabase=original;if(oldToken===undefined)delete process.env.TELEGRAM_BOT_TOKEN;else process.env.TELEGRAM_BOT_TOKEN=oldToken;if(oldAdmins===undefined)delete process.env.ADMIN_TELEGRAM_IDS;else process.env.ADMIN_TELEGRAM_IDS=oldAdmins;await db.close();}
 });
