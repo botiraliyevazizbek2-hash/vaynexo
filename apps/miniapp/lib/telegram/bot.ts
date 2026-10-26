@@ -35,7 +35,7 @@ export function buildReply(command:string|null,firstName:string|undefined,isPriv
  const t=text[language];const name=escapeHtml(firstName?.slice(0,64)||t.player);
  if(command==='language')return {text:t.language,reply_markup:{inline_keyboard:[languageButtons()]}};
  if(command==='help')return {text:`<b>${t.help}</b>\n\n${commandList(language).map(c=>`/${c.command} — ${c.description}`).join('\n')}`};
- if(command==='start')return {text:`<b>${t.welcome}</b>, ${name}!\n\n${t.intro}\n\n• <b>${t.shop}</b> — ${t.shopInfo}\n• <b>${t.coach}</b> — ${t.coachInfo}\n• <b>${t.arena}</b> — ${t.arenaInfo}\n• <b>${t.news}</b> — ${t.newsInfo}\n\n<i>${t.demo}</i>`,reply_markup:{inline_keyboard:[[openButton(t.open,undefined,language,isPrivate)],[openButton(t.shop,'shop',language,isPrivate),openButton(t.coach,'coach',language,isPrivate)],...(isPrivate?[languageButtons()]:[]) ]}};
+ if(command==='start')return {text:`<b>${t.welcome}</b>, ${name}!\n\n${t.intro}\n\n• <b>${t.shop}</b> — ${t.shopInfo}\n• <b>${t.coach}</b> — ${t.coachInfo}\n• <b>${t.arena}</b> — ${t.arenaInfo}\n• <b>${t.news}</b> — ${t.newsInfo}\n\n<i>${t.demo}</i>`,reply_markup:{inline_keyboard:[[openButton(t.open,undefined,language,isPrivate)]]}};
  const sections:Record<string,{title:string;info:string;tab?:string}>={app:{title:t.open,info:t.appInfo},shop:{title:t.shop,info:t.shopInfo,tab:'shop'},coach:{title:t.coach,info:t.coachInfo,tab:'coach'},arena:{title:t.arena,info:t.arenaInfo,tab:'tournaments'},news:{title:t.news,info:t.newsInfo,tab:'news'}};
  const section=command?sections[command]:undefined;
  if(section)return {text:`<b>${section.title}</b>\n${section.info}\n\n<i>${t.demo}</i>`,reply_markup:{inline_keyboard:[[openButton(t.open,section.tab,language,isPrivate)]]}};
