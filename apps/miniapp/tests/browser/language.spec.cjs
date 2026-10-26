@@ -12,13 +12,15 @@ test('all sections, products, checkout, notices and coach follow selected langua
  await page.getByPlaceholder('Поиск товаров...').fill('алмаз');
  await expect(page.locator('.catalog-grid .product-card')).toHaveCount(5);
  await page.locator('.catalog-grid').getByRole('button',{name:'Купить',exact:true}).first().click();
- await page.getByRole('button',{name:'Проверить ID',exact:true}).click();
- await expect(page.getByRole('status')).toContainText('Демо-проверка выполнена');
+ await page.locator('#mlbb-id').fill('842190334');
+ await page.locator('#server-id').fill('5143');
+ await page.getByRole('button',{name:'Проверить формат',exact:true}).click();
+ await page.locator('.shop-confirm input').check();
  await page.getByRole('button',{name:'Создать демо-заказ',exact:true}).click();
  await expect(page.getByRole('heading',{name:'Демо-заказ создан',exact:true})).toBeVisible();
  await page.locator('.topbar select').selectOption('en');
  await expect(page.getByRole('heading',{name:'Demo order created',exact:true})).toBeVisible();
- await expect(page.getByText('Awaiting payment',{exact:true})).toBeVisible();
+ await expect(page.getByText('Demo recorded. Payments and delivery are not connected.',{exact:true})).toBeVisible();
  await page.reload();
  await expect(page.locator('.topbar select')).toHaveValue('en');
  await page.locator('.side-nav').getByRole('button',{name:'News',exact:true}).click();

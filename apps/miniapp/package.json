@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node --test tests/language.cjs",
+    "test": "node --test tests/*.cjs",
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit"
   },

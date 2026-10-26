@@ -37,3 +37,12 @@ pnpm test:e2e
 Unit testlar tarjimalar, bot javoblari, imzo tekshiruvi, foydalanuvchilar ajratilishi va webhookni tekshiradi. Brauzer testlari til almashishi, qayta ochish, mahsulot qidiruvi, demo buyurtma, yangilik filtri, jamoalar, murabbiy va mobil ko‘rinishni tekshiradi. Telegram sinxronlash testi tashqi APIni taqlid qiladi; haqiqiy botda tekshirish uchun `/language` orqali til tanlab `/help` yuboring.
 
 Haqiqiy to‘lov, olmos yetkazish, buyurtmalar va AI integratsiyasi ulanmagan — mavjud demo rejimi saqlangan. Next.js xavfsizlik tuzatishlari uchun 16.4.3 versiyasiga yangilangan.
+
+## Do‘kon oqimi
+
+- Katalog bitta `lib/shop/catalog.ts` manbasidan olinadi; qidiruv, kategoriya va narx bo‘yicha saralash birga ishlaydi.
+- User ID va Server ID bo‘sh boshlanadi. Tekshiruv faqat format uchun: mos ravishda 5–20 va 2–8 raqam, boshida nol bo‘lmasligi kerak. Bu MOONTON tekshiruvi yoki O‘zbekiston serverini tasdiqlash emas. Ta’minotchi bilan haqiqiy akkaunt tekshiruvi keyingi integratsiya hisoblanadi.
+- Miqdor 1–10; summa katalog narxidan hisoblanadi. Tafsilotlarni tasdiqlash shart. ID, server, miqdor yoki to‘lov usuli tahrir qilinsa yakuniy tasdiq bekor bo‘ladi; ID/server tahriri format tasdig‘ini ham bekor qiladi.
+- Demo buyurtma o‘zining paket, narx, miqdor, ID va server nusxasini oladi. Keyingi forma tahriri oldingi buyurtmani o‘zgartirmaydi. Takroriy bosish bitta forma uchun yangi nusxa yaratmaydi.
+- Oxirgi 20 ta demo yozuv versiyalangan localStorage tarixida saqlanadi; qayta ochilganda Buyurtmalar va Profil orqali ko‘rinadi. Telegram akkaunt ID’si bo‘yicha qurilma ichida ajratilgan, lekin bu server autentifikatsiyasi yoki himoyalangan savdo bazasi emas. Oddiy brauzerdagi tarix shu brauzer profiliga tegishli. Qurilma ma’lumotlari tozalansa tarix o‘chadi; boshqa qurilmaga sinxronlanmaydi.
+- Saqlash ishlamasa ogohlantirish chiqadi. Haqiqiy to‘lov, avtomatik yetkazish va server buyurtmalari hali yoqilmagan; narxlar sinov ma’lumotlari.

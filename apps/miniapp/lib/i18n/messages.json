@@ -1142,5 +1142,93 @@
   "ESPORTS": {
     "ru": "Киберспорт",
     "en": "ESPORTS"
+  },
+  "Paket tanlang. Tafsilotlarni tekshiring.": {
+    "ru": "Выберите пакет. Проверьте данные.",
+    "en": "Choose a pack. Review your details."
+  },
+  "Mahsulotlar soni: {count}": {
+    "ru": "Товаров: {count}",
+    "en": "Products: {count}"
+  },
+  "Saralash": {
+    "ru": "Сортировка",
+    "en": "Sort"
+  },
+  "Tavsiya etilgan": {
+    "ru": "Рекомендуемые",
+    "en": "Recommended"
+  },
+  "Avval arzonlari": {
+    "ru": "Сначала дешевле",
+    "en": "Price: low to high"
+  },
+  "Avval qimmatlari": {
+    "ru": "Сначала дороже",
+    "en": "Price: high to low"
+  },
+  "Mahsulot topilmadi": {
+    "ru": "Товары не найдены",
+    "en": "No products found"
+  },
+  "Boshqa so‘z bilan qidiring yoki filtrlarni tozalang.": {
+    "ru": "Попробуйте другой запрос или сбросьте фильтры.",
+    "en": "Try another search or clear the filters."
+  },
+  "Filtrlarni tozalash": {
+    "ru": "Сбросить фильтры",
+    "en": "Clear filters"
+  },
+  "User ID: 5–20 ta raqam, boshida 0 bo‘lmasin.": {
+    "ru": "User ID: 5–20 цифр, без нуля в начале.",
+    "en": "User ID: 5–20 digits, no leading zero."
+  },
+  "Server ID: 2–8 ta raqam, boshida 0 bo‘lmasin.": {
+    "ru": "Server ID: 2–8 цифр, без нуля в начале.",
+    "en": "Server ID: 2–8 digits, no leading zero."
+  },
+  "Format tekshirildi": {
+    "ru": "Формат проверен",
+    "en": "Format checked"
+  },
+  "Formatni tekshirish": {
+    "ru": "Проверить формат",
+    "en": "Check format"
+  },
+  "ID va server o‘yindagi profilingizda ko‘rinadi. Hozir faqat raqamlar formati tekshiriladi; nik va hudud tasdiqlanmaydi.": {
+    "ru": "ID и сервер указаны в вашем игровом профиле. Сейчас проверяется только формат цифр; ник и регион не подтверждаются.",
+    "en": "Find your ID and server in your game profile. Only the number format is checked; your nickname and region are not verified."
+  },
+  "Faqat demo tanlov, pul yechilmaydi.": {
+    "ru": "Только демо-выбор, деньги не списываются.",
+    "en": "Demo selection only; no money is charged."
+  },
+  "Paket, miqdor, User ID va Server ID ni tekshirdim. Bu demo ekanini tushunaman.": {
+    "ru": "Я проверил пакет, количество, User ID и Server ID. Я понимаю, что это демо.",
+    "en": "I have checked the pack, quantity, User ID and Server ID. I understand this is a demo."
+  },
+  "Hozircha demo buyurtmalar yo‘q.": {
+    "ru": "Демо-заказов пока нет.",
+    "en": "No demo orders yet."
+  },
+  "Oxirgi 20 ta demo buyurtma shu qurilmada saqlanadi. Bu serverdagi haqiqiy buyurtmalar tarixi emas.": {
+    "ru": "Последние 20 демо-заказов хранятся на этом устройстве. Это не история реальных заказов на сервере.",
+    "en": "The last 20 demo orders are stored on this device. This is not a server record of real purchases."
+  },
+  "Qurilmaga saqlab bo‘lmadi. Sahifa yopilsa yangi demo buyurtmalar yo‘qolishi mumkin.": {
+    "ru": "Не удалось сохранить на устройстве. Новые демо-заказы могут исчезнуть при закрытии страницы.",
+    "en": "Could not save to this device. New demo orders may be lost when you close the page."
+  },
+  "Demo saqlandi. To‘lov va yetkazish ulanmagan.": {
+    "ru": "Демо сохранено. Оплата и доставка не подключены.",
+    "en": "Demo recorded. Payments and delivery are not connected."
+  },
+  "Format tekshirildi. O‘yin akkaunti tasdiqlanmagan.": {
+    "ru": "Формат проверен. Игровой аккаунт не подтверждён.",
+    "en": "Format checked. The game account has not been verified."
+  },
+  "Avval do‘konda MLBB ID va serverni kiriting.": {
+    "ru": "Сначала введите MLBB ID и сервер в магазине.",
+    "en": "Enter your MLBB ID and server in the shop first."
   }
 }

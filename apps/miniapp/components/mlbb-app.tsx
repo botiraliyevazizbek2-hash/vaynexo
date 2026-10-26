@@ -1,29 +1,15 @@
 'use client';
 import { useI18n } from './language-provider';
+import { products, formatPrice, type Product } from '../lib/shop/catalog';
+import { ShopPage } from './shop/shop-page';
+import { OrdersPage, OrderHistory } from './shop/orders-page';
+import { ProductCard } from './shop/product-card';
+import { useDemoShop, type DemoShop } from './shop/use-demo-shop';
 import type { Language } from '../lib/i18n/core';
-import { useEffect, useMemo, useState } from 'react';
-import { Activity, ArrowDownLeft, ArrowLeft, ArrowRight, Bell, BookOpen, Bot, CalendarDays, Check, CheckCircle2, ChevronDown, ChevronRight, CircleHelp, ClipboardList, Clock3, Copy, Crown, Diamond, ExternalLink, Flame, Gamepad2, Gift, Headphones, History, Home, Info, Languages, LockKeyhole, Menu, MessageCircle, Minus, Newspaper, Plus, Search, Send, Settings, Shield, ShieldCheck, ShoppingBag, ShoppingCart, Sparkles, Star, Swords, Ticket, Trophy, UserRound, Users, Wallet, X, Zap, } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Activity, ArrowDownLeft, ArrowRight, Bell, BookOpen, Bot, CalendarDays, Check, CheckCircle2, ChevronDown, ChevronRight, ClipboardList, Clock3, Copy, Crown, Diamond, Flame, Gamepad2, Gift, Headphones, History, Home, Info, Languages, Menu, Newspaper, Plus, Send, Settings, Shield, ShieldCheck, Sparkles, Star, Swords, Ticket, Trophy, UserRound, Users, X, Zap } from 'lucide-react';
 const heroBanner = '/images/hero-banner.jpg';
 type Tab = 'home' | 'shop' | 'coach' | 'news' | 'tournaments' | 'profile' | 'order';
-type Product = {
-    id: string;
-    title: string;
-    subtitle: string;
-    diamonds: string;
-    price: number;
-    oldPrice?: number;
-    badge?: string;
-    icon: 'diamond' | 'ticket' | 'crown';
-};
-const products: Product[] = [
-    { id: 'd56', title: '56 Olmos', subtitle: 'Tezkor to‘ldirish', diamonds: '56', price: 14000, badge: 'Mashhur', icon: 'diamond' },
-    { id: 'd172', title: '172 Olmos', subtitle: 'Bonusli paket', diamonds: '172', price: 39000, oldPrice: 42000, badge: '-7%', icon: 'diamond' },
-    { id: 'd278', title: '278 + 28 Olmos', subtitle: 'Qo‘shimcha bonus', diamonds: '306', price: 69000, badge: 'Foydali', icon: 'diamond' },
-    { id: 'd568', title: '568 + 56 Olmos', subtitle: 'Ko‘proq olmos', diamonds: '624', price: 139000, icon: 'diamond' },
-    { id: 'weekly', title: 'Weekly Diamond Pass', subtitle: 'Haftalik olmos va sovrinlar', diamonds: 'Pass', price: 24000, oldPrice: 29000, badge: 'Tejamkor', icon: 'ticket' },
-    { id: 'starlight', title: 'Starlight Pass', subtitle: 'Oylik eksklyuziv mukofotlar', diamonds: 'Pass', price: 78000, icon: 'crown' },
-];
-const formatPrice = (price: number) => `${price.toLocaleString('en-US').replace(/,/g, ' ')} UZS`;
 function useTelegramWebApp() {
     useEffect(() => {
         const tg = (window as Window & {
@@ -46,15 +32,8 @@ function App() {
     const { t, language, setLanguage, syncFailed } = useI18n();
     useTelegramWebApp();
     const [tab, setTab] = useState<Tab>('home');
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-    const [userId, setUserId] = useState('842190334');
-    const [serverId, setServerId] = useState('5143');
-    const [idVerified, setIdVerified] = useState(false);
-    const [demoOrderNumber, setDemoOrderNumber] = useState('');
-    const [payment, setPayment] = useState('click');
-    const [quantity, setQuantity] = useState(1);
-    const [orderCreated, setOrderCreated] = useState(false);
-    const [search, setSearch] = useState('');
+    const shop = useDemoShop();
+    const { userId, serverId } = shop;
     const [coachQuestion, setCoachQuestion] = useState('');
     const [coachReplyQuestion, setCoachReplyQuestion] = useState('');
     const coachReply = coachReplyQuestion ? t('Savolingiz: “{question}”\n\nDemo yordamchi tavsiyasi: avval tanlagan rolingizni aniqlang, joriy patchga mos builddan foydalaning va raqib tarkibiga qarab counter tanlang. Bu javob hozircha demo; aniq statistika va patch manbalari AI backend ulanganda qo‘shiladi.', { question: coachReplyQuestion }) : t('Salom! Men MLBB bo‘yicha yordamchingizman. Qahramon, build, emblem yoki counter haqida so‘rashingiz mumkin.');
@@ -63,11 +42,10 @@ function App() {
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     useEffect(() => {
         const requested = new URLSearchParams(window.location.search).get('tab');
-        const deepLinkTabs: Tab[] = ['home', 'shop', 'coach', 'news', 'tournaments', 'profile'];
+        const deepLinkTabs: Tab[] = ['home', 'shop', 'coach', 'news', 'tournaments', 'profile', 'order'];
         if (requested && deepLinkTabs.includes(requested as Tab))
             setTab(requested as Tab);
     }, []);
-    const visibleProducts = useMemo(() => products.filter((p) => `${t(p.title)} ${t(p.subtitle)}`.toLowerCase().includes(search.toLowerCase())), [search, language]);
     useEffect(() => {
         if (!toast)
             return;
@@ -75,41 +53,14 @@ function App() {
         return () => window.clearTimeout(timer);
     }, [toast]);
     const notify = (message: string) => setToast(message);
-    const goToShop = () => { setSelectedProduct(null); setOrderCreated(false); setDemoOrderNumber(''); setTab('shop'); };
-    const buyProduct = (product: Product) => {
-        setSelectedProduct(product);
-        setQuantity(1);
-        setIdVerified(false);
-        setOrderCreated(false);
-        setDemoOrderNumber('');
-        setTab('shop');
-        window.setTimeout(() => document.getElementById('checkout-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
-    };
-    const verifyPlayer = () => {
-        if (userId.trim().length < 5 || serverId.trim().length < 2) {
-            notify('MLBB ID va Server ID ni tekshirib kiriting.');
-            setIdVerified(false);
-            return;
-        }
-        setIdVerified(true);
-        notify('Demo tekshiruv muvaffaqiyatli. Haqiqiy nik backend/API ulanganda tekshiriladi.');
-    };
+    const goToShop = () => setTab('shop');
+    const buyProduct = (product: Product) => { shop.buyProduct(product); setTab('shop'); };
     const placeDemoOrder = () => {
-        if (!selectedProduct)
-            return;
-        if (!idVerified) {
-            notify('Davom etishdan oldin MLBB ID ni tekshiring.');
-            return;
-        }
-        setDemoOrderNumber(`DEMO-ML-${Math.floor(100000 + Math.random() * 900000)}`);
-        setOrderCreated(true);
-        setTab('order');
-        notify('Demo buyurtma yaratildi. Haqiqiy to‘lov ulanmagan.');
+        const order = shop.createOrder();
+        if (order) { setTab('order'); notify('Demo buyurtma yaratildi. Haqiqiy to‘lov ulanmagan.'); }
     };
-    // The demo ID confirmation becomes invalid whenever either ID changes.
-    const updateUserId = (value: string) => { setUserId(value); setIdVerified(false); };
-    const updateServerId = (value: string) => { setServerId(value); setIdVerified(false); };
     const copyId = async () => {
+        if (!userId || !serverId) { notify('Avval do‘konda MLBB ID va serverni kiriting.'); return; }
         try {
             await navigator.clipboard.writeText(`${userId} (${serverId})`);
             setCopied(true);
@@ -145,7 +96,7 @@ function App() {
         <div className="brand-lockup"><div className="brand-mark"><Gamepad2 size={22}/></div><div><b>{t("MLBB") + " "}<span>{t("UZ")}</span></b><small>{t("O\u2018yinchilar markazi")}</small></div></div>
         <div className="sidebar-label">{t("MENYU")}</div>
         <nav className="side-nav">
-          {navItems.map((item) => <button key={item.id} className={`side-link ${tab === item.id ? 'active' : ''}`} onClick={() => { setTab(item.id); setSelectedProduct(null); }}><item.icon size={18}/><span>{t(item.label)}</span>{item.id === 'shop' && <i className="nav-dot"/>}</button>)}
+          {navItems.map((item) => <button key={item.id} className={`side-link ${tab === item.id ? 'active' : ''}`} onClick={() => { setTab(item.id); }}><item.icon size={18}/><span>{t(item.label)}</span>{item.id === 'shop' && <i className="nav-dot"/>}</button>)}
           <button className={`side-link ${tab === 'tournaments' ? 'active' : ''}`} onClick={() => setTab('tournaments')}><Trophy size={18}/><span>{t("Turnirlar")}</span><span className="side-tag">{t("LIVE")}</span></button>
           <button className={`side-link ${tab === 'order' ? 'active' : ''}`} onClick={() => setTab('order')}><ClipboardList size={18}/><span>{t("Buyurtmalar")}</span></button>
         </nav>
@@ -160,23 +111,22 @@ function App() {
           <div className="topbar-actions"><select aria-label={t("Ilova tili")} value={language} onChange={e => setLanguage(e.target.value as Language)}><option value="uz">UZ</option><option value="ru">RU</option><option value="en">EN</option></select><div className="online-pill"><span className="status-dot"/>{" " + t("Moonton API:") + " "}<b>{t("demo rejim")}</b></div><button className="icon-button notification-button" aria-label={t("Bildirishnomalar")} onClick={() => notify('Hozircha yangi bildirishnoma yo‘q.')}><Bell size={18}/><i /></button><button className="top-avatar" aria-label={t("Profilga o\u2018tish")} onClick={() => setTab('profile')}>{t("S")}</button></div>
         </header>
 
-        {showMobileMenu && <div className="mobile-menu-panel">{navItems.map((item) => <button key={item.id} onClick={() => { setTab(item.id); setShowMobileMenu(false); }}><item.icon size={17}/>{t(item.label)}</button>)}<button onClick={() => { setTab('tournaments'); setShowMobileMenu(false); }}><Trophy size={17}/>{t("Turnirlar")}</button></div>}
+        {showMobileMenu && <div className="mobile-menu-panel">{navItems.map((item) => <button key={item.id} onClick={() => { setTab(item.id); setShowMobileMenu(false); }}><item.icon size={17}/>{t(item.label)}</button>)}<button onClick={() => { setTab('tournaments'); setShowMobileMenu(false); }}><Trophy size={17}/>{t("Turnirlar")}</button><button onClick={() => {setTab('order');setShowMobileMenu(false);}}><ClipboardList size={17}/>{t("Buyurtmalar")}</button></div>}
 
         {syncFailed && <div role="status" className="disclaimer">{t("Til sinxronlanmadi. Qayta urinib ko‘ring.")}</div>}<div className="page-content">
           {tab === 'home' && <HomePage goToShop={goToShop} setTab={setTab} buyProduct={buyProduct} notify={notify}/>}
-          {tab === 'shop' && <ShopPage products={visibleProducts} search={search} setSearch={setSearch} selectedProduct={selectedProduct} buyProduct={buyProduct} userId={userId} setUserId={updateUserId} serverId={serverId} setServerId={updateServerId} idVerified={idVerified} verifyPlayer={verifyPlayer} payment={payment} setPayment={setPayment} quantity={quantity} setQuantity={setQuantity} placeDemoOrder={placeDemoOrder}/>}
+          {tab === 'shop' && <ShopPage shop={shop} onCreate={placeDemoOrder} onOrders={() => setTab('order')}/>}
           {tab === 'coach' && <CoachPage question={coachQuestion} setQuestion={setCoachQuestion} reply={coachReply} submit={submitCoach} notify={notify}/>}
           {tab === 'news' && <NewsPage notify={notify}/>}
           {tab === 'tournaments' && <TournamentsPage notify={notify}/>}
-          {tab === 'profile' && <ProfilePage userId={userId} serverId={serverId} copyId={copyId} copied={copied} setTab={setTab} notify={notify}/>}
-          {tab === 'order' && <OrderPage orderNumber={demoOrderNumber} orderCreated={orderCreated} selectedProduct={selectedProduct} quantity={quantity} payment={payment} userId={userId} serverId={serverId} setTab={setTab} goToShop={goToShop}/>}
+          {tab === 'profile' && <ProfilePage userId={userId} serverId={serverId} copyId={copyId} copied={copied} setTab={setTab} notify={notify} shop={shop}/>}
+          {tab === 'order' && <OrdersPage shop={shop} onShop={goToShop}/>}
         </div>
         <footer className="app-footer"><div className="footer-logo"><div className="brand-mark mini-mark"><Gamepad2 size={15}/></div><b>{t("MLBB UZ")}</b></div><span>{t("Hamjamiyat konsepti \u00B7 Demo ma\u2019lumotlar")}</span><button onClick={() => notify('Maxfiylik va foydalanish shartlari backend ishga tushishidan oldin qo‘shiladi.')}><ShieldCheck size={14}/>{" " + t("Xavfsizlik")}</button></footer>
       </main>
 
       <nav className="bottom-nav" aria-label={t("Asosiy navigatsiya")}>
-        {navItems.map((item) => <button key={item.id} className={tab === item.id ? 'active' : ''} onClick={() => { setTab(item.id); if (item.id !== 'shop')
-        setSelectedProduct(null); }}><item.icon size={19}/><span>{t(item.label)}</span></button>)}
+        {navItems.map((item) => <button key={item.id} className={tab === item.id ? 'active' : ''} onClick={() => { setTab(item.id); }}><item.icon size={19}/><span>{t(item.label)}</span></button>)}
       </nav>
       {toast && <div className="toast" role="status"><Info size={17}/><span>{t(toast)}</span><button onClick={() => setToast('')} aria-label={t("Yopish")}><X size={15}/></button></div>}
     </div>);
@@ -242,15 +192,6 @@ function FeatureCard({ icon: Icon, tone, label, desc, badge, onClick }: {
     const { t } = useI18n();
     return <button className="feature-card" onClick={onClick}><div className={`feature-icon ${tone}`}><Icon size={21}/></div><span className={`feature-badge ${tone}`}>{t(badge)}</span><h3>{t(label)}</h3><p>{t(desc)}</p><span className="feature-arrow"><ArrowRight size={15}/></span></button>;
 }
-function ProductCard({ product, onBuy, featured = false }: {
-    product: Product;
-    onBuy: () => void;
-    featured?: boolean;
-}) {
-    const { t } = useI18n();
-    const Icon = product.icon === 'ticket' ? Ticket : product.icon === 'crown' ? Crown : Diamond;
-    return <article className={`product-card ${featured ? 'product-featured' : ''}`}><div className="product-card-top"><div className="product-icon"><Icon size={23}/></div>{product.badge && <span className="product-badge">{t(product.badge)}</span>}</div><h3>{t(product.title)}</h3><p>{t(product.subtitle)}</p><div className="product-price">{formatPrice(product.price)}</div>{product.oldPrice && <div className="old-price">{formatPrice(product.oldPrice)}</div>}<button className="button primary full" onClick={onBuy}><ShoppingCart size={15}/>{" " + t("Sotib olish")}</button></article>;
-}
 function TrustItem({ icon: Icon, title, desc }: {
     icon: typeof Home;
     title: string;
@@ -258,40 +199,6 @@ function TrustItem({ icon: Icon, title, desc }: {
 }) {
     const { t } = useI18n();
     return <div className="trust-item"><div className="trust-icon"><Icon size={17}/></div><div><b>{t(title)}</b><p>{t(desc)}</p></div></div>;
-}
-function ShopPage({ products: shownProducts, search, setSearch, selectedProduct, buyProduct, userId, setUserId, serverId, setServerId, idVerified, verifyPlayer, payment, setPayment, quantity, setQuantity, placeDemoOrder }: {
-    products: Product[];
-    search: string;
-    setSearch: (s: string) => void;
-    selectedProduct: Product | null;
-    buyProduct: (p: Product) => void;
-    userId: string;
-    setUserId: (s: string) => void;
-    serverId: string;
-    setServerId: (s: string) => void;
-    idVerified: boolean;
-    verifyPlayer: () => void;
-    payment: string;
-    setPayment: (s: string) => void;
-    quantity: number;
-    setQuantity: (n: number) => void;
-    placeDemoOrder: () => void;
-}) {
-    const { t } = useI18n();
-    const [category, setCategory] = useState('all');
-    const filtered = shownProducts.filter(p => category === 'all' || (category === 'diamonds' ? p.icon === 'diamond' : category === 'passes' ? p.icon !== 'diamond' : p.badge === 'Mashhur'));
-    return <div className="content-stack">
-    <div className="page-intro"><div><div className="eyebrow small-eyebrow"><Diamond size={13}/>{" " + t("MLBB TOP-UP")}</div><h2>{t("Do\u2018kon & Olmoslar")}</h2><p>{t("Kerakli mahsulotni tanlang, ma\u2019lumotlarni tasdiqlang.")}</p></div><div className="secure-chip"><ShieldCheck size={15}/>{" " + t("Tekshiriladigan jarayon")}</div></div>
-    <div className="shop-promo"><div className="promo-symbol"><Diamond size={26}/><Sparkles size={15}/></div><div><span className="mini-label">{t("MLBB UZ STORE")}</span><h3>{t("Sevimli skinlaringizga")}<br />{t("yaqinroq bo\u2018ling.")}</h3><p>{t("Mahsulotlar va narxlar \u2014 demo ma\u2019lumotlar.")}</p></div><div className="promo-decoration"><div className="promo-orb orb-one"/><div className="promo-orb orb-two"/><Diamond size={62}/></div></div>
-    <div className="filter-toolbar"><div className="category-pills"><button className={category === 'all' ? 'selected' : ''} onClick={() => setCategory('all')}>{t("Barchasi")}</button><button className={category === 'diamonds' ? 'selected' : ''} onClick={() => setCategory('diamonds')}>{t("Olmoslar")}</button><button className={category === 'passes' ? 'selected' : ''} onClick={() => setCategory('passes')}>{t("Passlar")}</button><button className={category === 'popular' ? 'selected' : ''} onClick={() => setCategory('popular')}>{t("Top")}</button></div><label className="search-box"><Search size={16}/><input value={search} onChange={e => setSearch(e.target.value)} placeholder={t("Mahsulot qidirish...")}/></label></div>
-    <div className="shop-layout"><div className="shop-products"><div className="catalog-meta"><span>{filtered.length}{" " + t("ta mahsulot")}</span><span><span className="status-dot"/>{" " + t("Demo katalog")}</span></div><div className="catalog-grid">{filtered.map(p => <ProductCard key={p.id} product={p} onBuy={() => buyProduct(p)}/>)}</div><div className="disclaimer"><Info size={15}/><span>{t("Ko\u2018rsatilgan paketlar va narxlar sinov uchun. Haqiqiy mahsulotlar ta\u2019minotchi API\u2019si bilan sinxronlanadi.")}</span></div></div>
-      <aside className="checkout-card" id="checkout-card"><div className="checkout-header"><div><span className="step-label">{t("BUYURTMA")}</span><h3>{selectedProduct ? t("Xaridni davom ettirish") : t("Mahsulot tanlang")}</h3></div><div className="checkout-lock"><LockKeyhole size={18}/></div></div>
-        {selectedProduct ? <><div className="selected-product"><div className="selected-product-icon"><Diamond size={23}/></div><div className="selected-product-name"><b>{t(selectedProduct.title)}</b><small>{t(selectedProduct.subtitle)}</small></div><div className="quantity-control"><button aria-label={t("Kamaytirish")} onClick={() => setQuantity(Math.max(1, quantity - 1))}><Minus size={12}/></button><b>{quantity}</b><button aria-label={t("Ko\u2018paytirish")} onClick={() => setQuantity(Math.min(10, quantity + 1))}><Plus size={12}/></button></div></div>
-        <div className="form-section"><label htmlFor="mlbb-id">{t("MLBB User ID")}</label><input id="mlbb-id" value={userId} onChange={e => { setUserId(e.target.value.replace(/\D/g, '').slice(0, 20)); }} placeholder={t("Masalan: 123456789")} inputMode="numeric"/><label htmlFor="server-id">{t("Server ID (Zone ID)")}</label><input id="server-id" value={serverId} onChange={e => { setServerId(e.target.value.replace(/\D/g, '').slice(0, 8)); }} placeholder={t("Masalan: 5143")} inputMode="numeric"/><button className={`button ${idVerified ? 'success' : 'secondary'} full verify-button`} onClick={verifyPlayer}>{idVerified ? <CheckCircle2 size={16}/> : <ShieldCheck size={16}/>} {idVerified ? t("ID kiritildi \u00B7 demo") : t("ID ni tekshirish")}</button><div className="field-note"><Info size={13}/>{" " + t("Hozircha haqiqiy o\u2018yin nikini tekshirish ulangan emas.")}</div></div>
-        <div className="form-section payment-section"><label>{t("To\u2018lov usuli") + " "}<span>{t("Demo")}</span></label><button className={`payment-option ${payment === 'click' ? 'chosen' : ''}`} onClick={() => setPayment('click')}><span className="pay-brand click-brand">{t("C")}</span><span><b>{t("Click")}</b><small>{t("Demo tanlov")}</small></span>{payment === 'click' && <CheckCircle2 size={17}/>}</button><button className={`payment-option ${payment === 'payme' ? 'chosen' : ''}`} onClick={() => setPayment('payme')}><span className="pay-brand payme-brand">{t("P")}</span><span><b>{t("Payme")}</b><small>{t("Demo tanlov")}</small></span>{payment === 'payme' && <CheckCircle2 size={17}/>}</button><button className={`payment-option ${payment === 'stars' ? 'chosen' : ''}`} onClick={() => setPayment('stars')}><span className="pay-brand stars-brand">{t("\u2605")}</span><span><b>{t("Telegram Stars")}</b><small>{t("Telegram raqamli savdo oqimi")}</small></span>{payment === 'stars' && <CheckCircle2 size={17}/>}</button></div>
-        <div className="checkout-total"><span>{t("Jami summa")}</span><b>{formatPrice(selectedProduct.price * quantity)}</b></div><button className="button primary full pay-button" onClick={placeDemoOrder}>{t("Demo buyurtma yaratish") + " "}<ArrowRight size={16}/></button><p className="checkout-footnote"><ShieldCheck size={13}/>{" " + t("Haqiqiy to\u2018lov amalga oshirilmaydi.")}</p></> : <div className="empty-checkout"><div className="empty-icon"><ShoppingBag size={24}/></div><b>{t("Mahsulot tanlanmagan")}</b><p>{t("Katalogdan mahsulot tanlang. Keyin MLBB ID, server va buyurtma tafsilotlarini kiriting.")}</p><div className="empty-steps"><span><i>{t("1")}</i>{" " + t("Paket tanlang")}</span><span><i>{t("2")}</i>{" " + t("ID kiriting")}</span><span><i>{t("3")}</i>{" " + t("Tasdiqlang")}</span></div></div>}
-      </aside></div>
-  </div>;
 }
 function CoachPage({ question, setQuestion, reply, submit, notify }: {
     question: string;
@@ -349,13 +256,14 @@ function TeamCard({ name, initials, rank, detail, color, onClick }: {
     const { t } = useI18n();
     return <button className="team-card" onClick={onClick}><div className={`team-logo ${color}`}>{initials}</div><div className="team-card-main"><b>{t(name)}</b><span><Trophy size={12}/>{rank}</span><small>{t(detail)}</small></div><ChevronRight size={17}/></button>;
 }
-function ProfilePage({ userId, serverId, copyId, copied, setTab, notify }: {
+function ProfilePage({ userId, serverId, copyId, copied, setTab, notify, shop }: {
     userId: string;
     serverId: string;
     copyId: () => void;
     copied: boolean;
     setTab: (tab: Tab) => void;
     notify: (msg: string) => void;
+    shop: DemoShop;
 }) {
     const { t, language, setLanguage } = useI18n();
     const [notifications, setNotifications] = useState(true);
@@ -364,7 +272,7 @@ function ProfilePage({ userId, serverId, copyId, copied, setTab, notify }: {
     <div className="profile-stat-grid"><ProfileStat icon={Activity} title={t("G\u2018alaba (WR)")} value="68.4%" foot={t("Demo statistika")} color="cyan"/><ProfileStat icon={CalendarDays} title={t("Weekly Pass")} value="4 kun" foot={t("Namuna muddat")} color="gold"/><ProfileStat icon={ShieldCheck} title={t("MLBB API")} value="Ulanmagan" foot={t("Integratsiya kutilmoqda")} color="purple"/></div>
     <div className="profile-wallet-grid"><div className="wallet-card diamonds-wallet"><div><span>{t("Olmoslar")}</span><Diamond size={17}/></div><b>{t("125") + " "}<small>{t("DM")}</small></b><small>{t("Demo balans")}</small><button className="button cyan-button full" onClick={() => setTab('shop')}><Plus size={15}/>{" " + t("To\u2018ldirish")}</button></div><div className="wallet-card cashback-wallet"><div><span>{t("Bonuslar")}</span><Gift size={17}/></div><b>{t("14 500") + " "}<small>{t("UZS")}</small></b><small>{t("Namuna bonus balansi")}</small><button className="button amber-button full" onClick={() => notify('Bonus ishlatish qoidalari hali sozlanmagan.')}><Ticket size={15}/>{" " + t("Ishlatish")}</button></div></div>
     <SectionTitle icon={Star} title={t("Sevimli qahramonlar")} aside={t("Tahrirlash")} onAside={() => notify('Qahramonlar ro‘yxati keyingi bosqichda ulanadi.')}/><div className="hero-favorites"><FavoriteHero name={t("Gusion")} role={t("Qotil \u00B7 Assassin")} win="69%" tone="hero-purple"/><FavoriteHero name={t("Fanny")} role={t("Qotil \u00B7 Assassin")} win="64%" tone="hero-blue"/><FavoriteHero name={t("Chou")} role={t("Jangchi \u00B7 Fighter")} win="71%" tone="hero-gold"/></div>
-    <SectionTitle icon={History} title={t("Xaridlar tarixi")} aside={t("Barchasi")} onAside={() => setTab('order')}/><div className="history-list"><HistoryRow icon={CalendarDays} name={t("Weekly Diamond Pass")} date="Demo yozuv · 14:52" price="24 000 UZS" state={t("Demo")}/><HistoryRow icon={Diamond} name={t("278 + 28 Olmos")} date="Demo yozuv · 19:10" price="69 000 UZS" state={t("Demo")}/><HistoryRow icon={Sparkles} name={t("Starlight Pass")} date="Demo yozuv · 11:05" price="78 000 UZS" state={t("Demo")}/></div>
+    <SectionTitle icon={History} title={t("Xaridlar tarixi")} aside={t("Barchasi")} onAside={() => setTab('order')}/><OrderHistory orders={shop.orders.slice(0,3)} onSelect={id => {shop.setActiveId(id);setTab('order');}}/>
     <SectionTitle icon={Settings} title={t("Ilova sozlamalari")}/><div className="settings-card"><div className="setting-row"><div className="setting-icon"><Bell size={17}/></div><div className="setting-copy"><b>{t("Telegram bildirishnomalari")}</b><small>{t("Yangiliklar va buyurtma xabarlari")}</small></div><button className={`toggle ${notifications ? 'on' : ''}`} onClick={() => setNotifications(!notifications)} aria-label={t("Bildirishnomalarni almashtirish")}><span /></button></div><div className="setting-row"><div className="setting-icon"><Languages size={17}/></div><div className="setting-copy"><b>{t("Ilova tili")}</b><small>{t("Hozirgi sozlama")}</small></div><select value={language} onChange={e => setLanguage(e.target.value as Language)} aria-label={t("Ilova tili")}><option value="uz">{t("O\u2018zbekcha (Lotin)")}</option><option value="ru">{t("\u0420\u0443\u0441\u0441\u043A\u0438\u0439")}</option><option value="en">{t("English")}</option></select></div><div className="setting-row"><div className="setting-icon"><Shield size={17}/></div><div className="setting-copy"><b>{t("Ma\u2019lumotlar himoyasi")}</b><small>{t("Maxfiylik sozlamalari va shartlar")}</small></div><button className="plain-link" onClick={() => notify('Maxfiylik hujjati ishlab chiqish bosqichida.')}>{t("Ko\u2018rish") + " "}<ChevronRight size={15}/></button></div><div className="setting-row"><div className="setting-icon"><Headphones size={17}/></div><div className="setting-copy"><b>{t("24/7 qo\u2018llab-quvvatlash")}</b><small>{t("Telegram operatori")}</small></div><button className="plain-link" onClick={() => notify('Telegram operatori hali ulanmagan.')}>{t("Yordam") + " "}<ChevronRight size={15}/></button></div></div>
     <button className="button danger-outline full logout-button" onClick={() => notify('Demo rejim: haqiqiy akkaunt ulanishi amalga oshirilmagan.')}><ArrowDownLeft size={16}/>{" " + t("Boshqa MLBB hisobga o\u2018tish")}</button>
   </div>;
@@ -382,33 +290,4 @@ function FavoriteHero({ name, role, win, tone }: {
     win: string;
     tone: string;
 }) { const { t } = useI18n(); return <div className="favorite-card"><div className={`hero-portrait ${tone}`}><span>{name.slice(0, 1)}</span><Sparkles size={18}/></div><b>{t(name)}</b><small>{t(role)}</small><div className="hero-win"><span>{win}{" " + t("WR")}</span><span className="win-track"><i style={{ width: win }}/></span></div><small className="muted-match">{t("Namuna statistika")}</small></div>; }
-function HistoryRow({ icon: Icon, name, date, price, state }: {
-    icon: typeof Home;
-    name: string;
-    date: string;
-    price: string;
-    state: string;
-}) { const { t } = useI18n(); return <div className="history-row"><div className="history-icon"><Icon size={18}/></div><div className="history-main"><b>{t(name)}</b><small>{t(date)}</small></div><div className="history-right"><b>{price}</b><small><CheckCircle2 size={12}/>{t(state)}</small></div></div>; }
-function OrderPage({ orderNumber, orderCreated, selectedProduct, quantity, payment, userId, serverId, setTab, goToShop }: {
-    orderNumber: string;
-    orderCreated: boolean;
-    selectedProduct: Product | null;
-    quantity: number;
-    payment: string;
-    userId: string;
-    serverId: string;
-    setTab: (tab: Tab) => void;
-    goToShop: () => void;
-}) {
-    const { t } = useI18n();
-    return <div className="content-stack"><div className="page-intro"><div><div className="eyebrow small-eyebrow"><ClipboardList size={13}/>{" " + t("ORDER TRACKING")}</div><h2>{t("Buyurtma holati")}</h2><p>{t("Buyurtma jarayoni va tafsilotlari.")}</p></div><span className="demo-badge">{t("DEMO")}</span></div>
-    {orderCreated && selectedProduct ? <div className="order-detail-layout"><section className="order-main-card"><div className="order-success"><div className="success-mark"><Check size={28}/></div><div><h3>{t("Demo buyurtma yaratildi")}</h3><p>{t("Bu buyurtma faqat interfeysni sinash uchun. To\u2018lov ham, yetkazish ham amalga oshirilmadi.")}</p></div></div><div className="order-reference"><span>{t("Buyurtma raqami")}</span><b>{orderNumber}</b></div><div className="order-timeline"><TimelineItem active done title={t("Buyurtma yaratildi")} desc={t("Demo buyurtma mahalliy interfeysda yaratildi.")}/><TimelineItem active title={t("To\u2018lov kutilmoqda")} desc={t("Haqiqiy to\u2018lov provayderi ulanmagan.")}/><TimelineItem title={t("Yetkazilmoqda")} desc={t("Yetkazib beruvchi adapteri ulanmagan.")}/><TimelineItem title={t("Bajarildi")} desc={t("Haqiqiy tasdiq kelgandagina bajarilgan deb ko\u2018rsatiladi.")}/></div><button className="button secondary full" onClick={() => setTab('profile')}><History size={15}/>{" " + t("Profil va buyurtmalar")}</button></section><aside className="order-summary-card"><h3>{t("Buyurtma tafsilotlari")}</h3><div className="summary-product"><div className="selected-product-icon"><Diamond size={22}/></div><div><b>{t(selectedProduct.title)}</b><small>{t(selectedProduct.subtitle)}</small></div></div><div className="summary-line"><span>{t("Miqdor")}</span><b>{quantity}{" " + t("\u00D7")}</b></div><div className="summary-line"><span>{t("MLBB User ID")}</span><b>{userId}</b></div><div className="summary-line"><span>{t("Server ID")}</span><b>{serverId}</b></div><div className="summary-line"><span>{t("To\u2018lov usuli")}</span><b>{payment.toUpperCase()}</b></div><div className="summary-line total-line"><span>{t("Jami")}</span><b>{formatPrice(selectedProduct.price * quantity)}</b></div><div className="disclaimer"><Info size={14}/><span>{t("Demo ma\u2019lumot. Backend ulanmaguncha buyurtma saqlanmaydi.")}</span></div></aside></div> : <div className="empty-state order-empty"><div className="empty-icon"><ClipboardList size={27}/></div><h3>{t("Hozircha buyurtma tanlanmagan")}</h3><p>{t("Do\u2018kondan paket tanlang. Sinov buyurtmasini yaratganingizdan keyin bu yerda jarayon ko\u2018rinadi.")}</p><button className="button primary" onClick={goToShop}>{t("Do\u2018konga o\u2018tish") + " "}<ArrowRight size={15}/></button></div>}
-  </div>;
-}
-function TimelineItem({ active = false, done = false, title, desc }: {
-    active?: boolean;
-    done?: boolean;
-    title: string;
-    desc: string;
-}) { const { t } = useI18n(); return <div className={`timeline-item ${active ? 'active' : ''} ${done ? 'done' : ''}`}><div className="timeline-marker">{done ? <Check size={13}/> : active ? <span /> : null}</div><div><b>{t(title)}</b><p>{t(desc)}</p></div></div>; }
 export default App;
