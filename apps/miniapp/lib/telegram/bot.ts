@@ -2,7 +2,7 @@ import { timingSafeEqual } from 'node:crypto';
 import { isLanguage, normalizeLanguage, type Language } from '../i18n/core';
 const DEFAULT_WEBAPP_URL = 'https://null-alpha-orcin.vercel.app';
 type Sender = { id:number; first_name?:string; is_bot?:boolean; language_code?:string };
-export type TelegramUpdate = {update_id:number; message?:{message_id:number;chat:{id:number;type:string};from?:Sender;text?:string};callback_query?:{id:string;from:Sender;data?:string;message?:{message_id:number;chat:{id:number;type:string}}}};
+export type TelegramUpdate = {update_id:number; message?:{message_id:number;chat:{id:number;type:string};from?:Sender;text?:string;contact?:{user_id?:number;phone_number?:string};forward_origin?:unknown};callback_query?:{id:string;from:Sender;data?:string;message?:{message_id:number;chat:{id:number;type:string}}}};
 type Button = {text:string;web_app?:{url:string};url?:string;callback_data?:string};
 export type BotReply = {text:string;reply_markup?:{inline_keyboard:Button[][]}};
 const text = {

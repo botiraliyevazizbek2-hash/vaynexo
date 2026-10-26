@@ -46,3 +46,17 @@ Haqiqiy to‘lov, olmos yetkazish, buyurtmalar va AI integratsiyasi ulanmagan �
 - Demo buyurtma o‘zining paket, narx, miqdor, ID va server nusxasini oladi. Keyingi forma tahriri oldingi buyurtmani o‘zgartirmaydi. Takroriy bosish bitta forma uchun yangi nusxa yaratmaydi.
 - Oxirgi 20 ta demo yozuv versiyalangan localStorage tarixida saqlanadi; qayta ochilganda Buyurtmalar va Profil orqali ko‘rinadi. Telegram akkaunt ID’si bo‘yicha qurilma ichida ajratilgan, lekin bu server autentifikatsiyasi yoki himoyalangan savdo bazasi emas. Oddiy brauzerdagi tarix shu brauzer profiliga tegishli. Qurilma ma’lumotlari tozalansa tarix o‘chadi; boshqa qurilmaga sinxronlanmaydi.
 - Saqlash ishlamasa ogohlantirish chiqadi. Haqiqiy to‘lov, avtomatik yetkazish va server buyurtmalari hali yoqilmagan; narxlar sinov ma’lumotlari.
+
+## Telegram raqami bilan ro‘yxatdan o‘tish
+
+`/register` — uch tildagi ro‘yxatdan o‘tish oynasi. `PHONE_REGISTRATION_ENABLED=true` bo‘lsa asosiy Mini App ham ro‘yxatdan o‘tmagan foydalanuvchiga shu oynani ko‘rsatadi. Alohida SMS ishlatilmaydi: foydalanuvchi rozilik beradi va Telegramning `requestContact` oynasida o‘z raqamini ulashadi.
+
+**Ishga tushirish talablari:** production PostgreSQL ulanishini `DATABASE_URL` ga, maxfiy 32 baytli kalitni 64 ta kichik hex belgisi ko‘rinishida `PHONE_DATA_KEY` ga yozing. `pnpm db:migrate` ni bajaring; keyin `PHONE_REGISTRATION_ENABLED=true` qilib qayta deployment qiling. Mavjud Telegram token va webhook secret saqlanadi. Muhit qiymatlarini chat yoki GitHubga yubormang. Mavjud bazaga xavfsiz, alohida `vaynexo_phone_registrations` jadvali qo‘shiladi; boshqa jadvallar o‘zgarmaydi. Kalitni almashtirishdan oldin shifrlangan raqamlar uchun migratsiya kerak. Ma’lumotlar bilan birga kalitni ham xavfsiz zaxiralang.
+
+Hozir bazasi ulanmagan deploymentda funksiya faollashtirilmagan. `/register` buni ochiq ko‘rsatadi; u muvaffaqiyatli ro‘yxatdan o‘tishni taqlid qilmaydi. Baza ulangach, ro‘yxatdan o‘tmaganlar kirish oynasidan o‘tadi; oldin tasdiqlanganlar serverdagi holati tekshirilgach ochiladi.
+
+Server Mini App initData imzosidan olingan Telegram ID bilan ishlaydi. Kontakt faqat maxfiy webhook orqali qabul qilinadi: shaxsiy chat, jo‘natuvchi ID, kontakt user_id va chat ID bir xil bo‘lishi, forward bo‘lmasligi hamda 5 daqiqalik rozilik so‘rovi faol bo‘lishi shart. So‘rovlar bazada 30 soniyalik limitga ega. Kontakt oynasining callback’i yoki localStorage flag’i ro‘yxatdan o‘tishga dalil hisoblanmaydi. Ilova server holati kelmaguncha ochilmaydi.
+
+Telefon AES-256-GCM bilan shifrlanadi; server faqat oxirgi 4 raqamni qaytaradi. Telefonni URL, log, brauzer localStorage yoki botning menyu URL’iga yozmaymiz. Ro‘yxatdan o‘tish jadvali Telegram hisobiga telefonni bog‘laydi; telefon bilan SMS orqali alohida login, akkauntni tiklash va raqamni almashtirish hali kiritilmagan. Haqiqiy savdo API’lari qo‘shilganda har bir himoyalangan endpoint signed Telegram identity va serverdagi registration holatini tekshirishi kerak; UI oynasi yolg‘iz o‘zi server avtorizatsiyasini almashtirmaydi.
+
+`pnpm test` PGlite ichidagi haqiqiy PostgreSQL mexanizmida rozilik, limit, shifrlash va qayta ishlashni tekshiradi. `pnpm test:e2e:registration` alohida test konfiguratsiyasida (test bazasi URL’i va soxta API javoblari bilan) kontakt callback’i kirishni ocha olmasligi, server tasdig‘i, rad etish, tarjima va oddiy brauzer cheklovini tekshiradi. Bu testlar production ro‘yxatdan o‘tishni faollashtirmaydi.

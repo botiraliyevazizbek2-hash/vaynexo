@@ -1230,5 +1230,81 @@
   "Avval do‘konda MLBB ID va serverni kiriting.": {
     "ru": "Сначала введите MLBB ID и сервер в магазине.",
     "en": "Enter your MLBB ID and server in the shop first."
+  },
+  "Telefon raqami bilan ro‘yxatdan o‘tish": {
+    "ru": "Регистрация по номеру телефона",
+    "en": "Register with your phone number"
+  },
+  "Ilovaga kirish uchun Telegram hisobingizga ulangan raqamni ulashing.": {
+    "ru": "Для входа поделитесь номером, привязанным к вашему Telegram.",
+    "en": "Share the phone number linked to your Telegram account to enter the app."
+  },
+  "Alohida SMS-kod kerak emas.": {
+    "ru": "Отдельный SMS-код не нужен.",
+    "en": "No separate SMS code is needed."
+  },
+  "Faqat o‘zingizga tegishli Telegram kontakti qabul qilinadi.": {
+    "ru": "Принимается только ваш собственный контакт Telegram.",
+    "en": "Only your own Telegram contact is accepted."
+  },
+  "Ro‘yxatdan o‘tish holati tekshirilmoqda...": {
+    "ru": "Проверяем статус регистрации...",
+    "en": "Checking registration status..."
+  },
+  "Telefon orqali ro‘yxatdan o‘tish tayyorlanmoqda. Xizmat hali faollashtirilmagan.": {
+    "ru": "Регистрация по телефону готовится. Сервис ещё не активирован.",
+    "en": "Phone registration is being prepared. The service is not active yet."
+  },
+  "Raqamingizni xavfsiz ulash uchun ilovani Telegram bot ichida oching.": {
+    "ru": "Для безопасной передачи номера откройте приложение внутри Telegram-бота.",
+    "en": "Open the app inside the Telegram bot to share your number securely."
+  },
+  "Telegram botni ochish": {
+    "ru": "Открыть Telegram-бота",
+    "en": "Open Telegram bot"
+  },
+  "Telegramni yangilab, ilovani qayta oching. Kontakt ulashish bu qurilmada ishlamayapti.": {
+    "ru": "Обновите Telegram и откройте приложение снова. Передача контакта на этом устройстве недоступна.",
+    "en": "Update Telegram and reopen the app. Contact sharing is unavailable on this device."
+  },
+  "Tasdiqlash xizmati bilan bog‘lanib bo‘lmadi. Qayta urinib ko‘ring.": {
+    "ru": "Не удалось связаться с сервисом подтверждения. Попробуйте ещё раз.",
+    "en": "Could not reach the verification service. Please try again."
+  },
+  "Qayta tekshirish": {
+    "ru": "Проверить снова",
+    "en": "Check again"
+  },
+  "Raqamimni ro‘yxatdan o‘tish va profilimga bog‘lash uchun saqlashga roziman.": {
+    "ru": "Я согласен на сохранение номера для регистрации и привязки к моему профилю.",
+    "en": "I agree to have my number stored for registration and linking to my profile."
+  },
+  "Telegram tasdig‘i kutilmoqda...": {
+    "ru": "Ожидаем подтверждение Telegram...",
+    "en": "Waiting for Telegram confirmation..."
+  },
+  "Telegram raqamimni ulashish": {
+    "ru": "Поделиться моим номером Telegram",
+    "en": "Share my Telegram number"
+  },
+  "Telegram oynasida raqamni ulashishga ruxsat bering. Tasdiq kelgach ilova ochiladi.": {
+    "ru": "Разрешите передачу номера в окне Telegram. Приложение откроется после подтверждения.",
+    "en": "Allow number sharing in the Telegram dialog. The app opens once confirmation arrives."
+  },
+  "Raqamingiz ochiq katalogda ko‘rsatilmaydi. Uni brauzer xotirasiga yozmaymiz.": {
+    "ru": "Ваш номер не отображается в публичном каталоге и не сохраняется в памяти браузера.",
+    "en": "Your number is not shown in the public catalogue or saved in browser storage."
+  },
+  "Tasdiq kelmadi. Qayta urinib ko‘ring.": {
+    "ru": "Подтверждение не получено. Попробуйте ещё раз.",
+    "en": "No confirmation received. Please try again."
+  },
+  "Ko‘p urinish bo‘ldi. 30 soniyadan keyin qayta urinib ko‘ring.": {
+    "ru": "Слишком много попыток. Повторите через 30 секунд.",
+    "en": "Too many attempts. Please try again in 30 seconds."
+  },
+  "Raqam ulashilmadi. Davom etish uchun o‘z raqamingizni ulashing.": {
+    "ru": "Номер не передан. Для продолжения поделитесь своим номером.",
+    "en": "No number was shared. Share your own number to continue."
   }
 }

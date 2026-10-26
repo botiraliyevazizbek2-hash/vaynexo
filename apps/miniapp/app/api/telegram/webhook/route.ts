@@ -1,3 +1,4 @@
+import { registrationReady, registrationService } from '../../../../lib/registration/database';
 import { buildReply, getSavedLanguage, isValidSecret, parseCommand, saveLanguage, sendMessage, telegramCall, type TelegramUpdate } from '../../../../lib/telegram/bot';
 import { isLanguage, normalizeLanguage } from '../../../../lib/i18n/core';
 export const runtime='nodejs';
@@ -21,6 +22,10 @@ export async function POST(request:Request){
    return Response.json({ok:true});
   }
   const message=update.message;
+  if(message?.contact){
+   if(registrationReady())await registrationService().accept(message);
+   return Response.json({ok:true});
+  }
   if(!message?.text||message.from?.is_bot||!message.chat)return Response.json({ok:true});
   const isPrivate=message.chat.type==='private',command=parseCommand(message.text);
   if(!isPrivate&&!command)return Response.json({ok:true});

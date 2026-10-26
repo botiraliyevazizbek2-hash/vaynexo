@@ -757,3 +757,16 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .demo-history .history-right{flex-shrink:0}
 .order-reference b{overflow-wrap:anywhere;text-align:right}
 @media(max-width:480px){.demo-history .history-row{padding:12px;gap:8px}.demo-history .history-icon{display:none}.demo-history .history-right b{font-size:12px}.shop-sort{max-width:165px}.catalog-meta{gap:8px}.shop-promo h3{font-size:20px}.shop-order-player{grid-template-columns:1fr}.shop-order-player b{text-align:left}}
+
+.registration-shell{min-height:100dvh;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at top,#1b2150 0,#080d1b 65%);color:#e3eaf6}
+.registration-card{width:100%;max-width:440px;background:#10192b;border:1px solid #283453;border-radius:24px;padding:28px;box-shadow:0 24px 80px #0005}
+.registration-top{display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:800;letter-spacing:2px;margin-bottom:32px}
+.registration-top select{background:#15223a;color:#e3eaf6;border:1px solid #334766;border-radius:9px;padding:8px;font:inherit;letter-spacing:0}
+.registration-icon{display:grid;place-items:center;width:66px;height:66px;color:#35d9f8;background:#173547;border:1px solid #246180;border-radius:20px;margin-bottom:22px}
+.registration-card h1{font-size:26px;line-height:1.3;font-weight:750;margin-bottom:14px}
+.registration-card p{font-size:14px;color:#acbbd4;line-height:1.7;margin:16px 0}
+.registration-steps{display:grid;gap:14px;margin:24px 0;font-size:13px;line-height:1.5}
+.registration-steps span{display:flex;align-items:flex-start;gap:10px}.registration-steps svg{flex-shrink:0;color:#51d2cb}
+.registration-card>small{display:block;font-size:11px;line-height:1.7;color:#8497b5;margin-top:24px}
+.registration-card button:disabled{opacity:.4;cursor:not-allowed}.registration-card .button{min-height:48px;text-align:center;white-space:normal}.registration-card .shop-confirm input{min-width:16px}
+@media(max-width:440px){.registration-shell{padding:16px}.registration-card{padding:24px}.registration-card h1{font-size:24px}}
