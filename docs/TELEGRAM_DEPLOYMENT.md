@@ -11,6 +11,21 @@
 | Webhook siri | Production muhitiga to‘g‘rilangan; kalitsiz so‘rov 401 qaytarishi tekshirilgan |
 | Haqiqiy `/start` javobi | Faqat HTTP 401 tekshiruvi bilan tasdiqlab bo‘lmaydi; Telegram ro‘yxatdan o‘tishi va javob yuborishi alohida tekshiriladi |
 
+### 2026-10-26 tekshiruv natijasi
+
+Server ichidagi `getMe` token aynan `@VaynexoBot`niki ekanini tasdiqladi.
+`getWebhookInfo` dastlab webhook umuman ro‘yxatdan o‘tmaganini ko‘rsatdi.
+Mavjud webhook sirining formati ham Telegram talabiga mos kelmagan.
+Sir yangi URL-safe tasodifiy qiymatga almashtirildi, Production qayta joylashtirildi
+va shu server qiymati bilan `setWebhook` bajarildi. Kalit qiymatlari GitHub’ga
+yoki hisobotga yozilmadi.
+
+Qayta tekshiruvda `webhookMatches=true`, `messagesEnabled=true`,
+`callbacksEnabled=true`, `handlerChecksPassed=true` qaytdi. Kalitsiz POST 401,
+to‘g‘ri sirli xabarsiz update 2xx va to‘g‘ri sirli buzilgan JSON 400 bo‘lishi
+tekshirildi. Telegram oxirgi yetkazish xatosini qaytarmadi. Bu tekshiruv
+foydalanuvchining Telegram ichida javobni olganini hali tasdiqlamaydi.
+
 Bir bot uchun webhook va polling bir paytda ishlatilmaydi. Python bot endi
 faol webhook borligini ko‘rsa, uni o‘chirmasdan aniq xabar bilan to‘xtaydi.
 Vercel’dagi botni tuzatish uchun shu repodagi polling’ni parallel ishga tushirmang.
