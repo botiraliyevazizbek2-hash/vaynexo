@@ -74,3 +74,7 @@ npx --yes neon@latest deploy
 Finish CLI authentication in the browser when requested. An unauthenticated offline link is not evidence that the project was verified or services deployed. No claimable replacement project is created if login fails.
 
 `neon deploy` pulls secrets to the ignored `.env.local` (or existing `.env`). The application uses the pooled `DATABASE_URL` with `pg`; on Vercel, `attachDatabasePool` manages idle connections before Fluid Compute suspension. Migration scripts load local env files and prefer the direct `DATABASE_URL_UNPOOLED` connection. Run `npm run db:migrate`, then `npm run build`. Environment files and `.neon` are ignored by git. Keep the private encryption key and the existing Telegram secrets outside source control.
+
+## Production registration verification
+
+After private production env variables are configured, deploy with `npm run db:migrate && npm run build && npm run verify:registration`. The last command starts the built application on loopback, authenticates a synthetic test identity in-process, tests registration HTTP endpoints against the real Neon database, verifies contact ownership and encrypted storage, and deletes only its own synthetic record. It never contacts a real Telegram user, publishes test credentials, or adds a diagnostic endpoint. A failed verification exits nonzero so the deployment is not promoted. Phone registration remains dependent on valid Telegram initData and the authenticated contact webhook.
