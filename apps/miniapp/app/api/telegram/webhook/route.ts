@@ -1,3 +1,5 @@
+import { isCatalogAdmin } from '../../../../lib/catalog/pricing';
+import { getWebAppUrl } from '../../../../lib/telegram/bot';
 import { registrationReady, registrationService } from '../../../../lib/registration/database';
 import { buildReply, getSavedLanguage, isValidSecret, parseCommand, saveLanguage, sendMessage, telegramCall, type TelegramUpdate } from '../../../../lib/telegram/bot';
 import { isLanguage, normalizeLanguage } from '../../../../lib/i18n/core';
@@ -31,6 +33,12 @@ export async function POST(request:Request){
   if(!isPrivate&&!command)return Response.json({ok:true});
   let language=normalizeLanguage(message.from?.language_code);
   if(isPrivate)language=await getSavedLanguage(message.chat.id,message.from?.language_code);
+  if(command==='admin'&&isPrivate&&message.from?.id===message.chat.id){
+   const allowed=isCatalogAdmin(message.from.id);
+   const labels={uz:'Katalog va ustama',ru:'Каталог и наценка',en:'Catalog and markup'};
+   await sendMessage(message.chat.id,allowed?{text:labels[language],reply_markup:{inline_keyboard:[[{text:labels[language],web_app:{url:getWebAppUrl('admin',language)}}]]}}:{text:`Telegram ID: <code>${message.from.id}</code>\nAdmin: ${language==='ru'?'не подключён':language==='en'?'not configured':'ulanmagan'}`});
+   return Response.json({ok:true});
+  }
   const reply=buildReply(command,message.from?.first_name,isPrivate,language);
   if(reply)await sendMessage(message.chat.id,reply);
   return Response.json({ok:true});

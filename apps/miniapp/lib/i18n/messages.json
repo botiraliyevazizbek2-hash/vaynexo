@@ -1306,5 +1306,85 @@
   "Raqam ulashilmadi. Davom etish uchun o‘z raqamingizni ulashing.": {
     "ru": "Номер не передан. Для продолжения поделитесь своим номером.",
     "en": "No number was shared. Share your own number to continue."
+  },
+  "Katalog va ustama": {
+    "ru": "Каталог и наценка",
+    "en": "Catalog and markup"
+  },
+  "Ilovaga qaytish": {
+    "ru": "Вернуться в приложение",
+    "en": "Back to app"
+  },
+  "API paketlarni avtomatik yuklaydi. Sotuv narxi uchun necha foiz ustama qo‘yamiz?": {
+    "ru": "API автоматически загружает пакеты. Какую наценку добавить к цене продажи?",
+    "en": "The API loads packages automatically. What markup should be added to the sale price?"
+  },
+  "Faqat admin kirishi mumkin.": {
+    "ru": "Доступ только для администратора.",
+    "en": "Admin access only."
+  },
+  "Katalogni yuklab bo‘lmadi.": {
+    "ru": "Не удалось загрузить каталог.",
+    "en": "Could not load the catalog."
+  },
+  "Sozlamalar o‘zgargan. Yangilab qayta urinib ko‘ring.": {
+    "ru": "Настройки изменились. Обновите страницу и повторите.",
+    "en": "Settings changed. Refresh and try again."
+  },
+  "Foiz va kursni tekshiring. Saqlanmadi.": {
+    "ru": "Проверьте процент и курс. Не сохранено.",
+    "en": "Check the markup and exchange rate. Not saved."
+  },
+  "Ustama (%)": {
+    "ru": "Наценка (%)",
+    "en": "Markup (%)"
+  },
+  "1 USD = necha UZS?": {
+    "ru": "1 USD = сколько UZS?",
+    "en": "1 USD = how many UZS?"
+  },
+  "Sotuv narxi = USD narxi × kurs × (1 + foiz / 100). Butun so‘mgacha yuqoriga yaxlitlanadi.": {
+    "ru": "Цена продажи = цена USD × курс × (1 + процент / 100). Округляется вверх до целого сума.",
+    "en": "Sale price = USD cost × exchange rate × (1 + markup / 100). Rounded up to a whole UZS."
+  },
+  "Yuklanmoqda...": {
+    "ru": "Загрузка...",
+    "en": "Loading..."
+  },
+  "Saqlash va narxlarni qo‘llash": {
+    "ru": "Сохранить и применить цены",
+    "en": "Save and apply prices"
+  },
+  "Saqlandi. Yangi narxlar katalogga qo‘llandi.": {
+    "ru": "Сохранено. Новые цены применены к каталогу.",
+    "en": "Saved. New prices applied to the catalog."
+  },
+  "Katalog ochilganda 15 daqiqada bir yangilanadi. To‘lov va yetkazish hali yoqilmagan.": {
+    "ru": "При открытии каталог обновляется раз в 15 минут. Оплата и доставка ещё не включены.",
+    "en": "The catalog refreshes on access every 15 minutes. Payments and delivery are not enabled yet."
+  },
+  "Yangilash": {
+    "ru": "Обновить",
+    "en": "Refresh"
+  },
+  "Tannarx": {
+    "ru": "Закупочная цена",
+    "en": "Cost"
+  },
+  "API katalogi": {
+    "ru": "Каталог API",
+    "en": "API catalog"
+  },
+  "To‘lov va yetkazish hali yoqilmagan.": {
+    "ru": "Оплата и доставка ещё не включены.",
+    "en": "Payments and delivery are not enabled yet."
+  },
+  "Admin ustama foizi va kursni belgilagach paketlar chiqadi.": {
+    "ru": "Пакеты появятся, когда администратор задаст наценку и курс.",
+    "en": "Packages appear once the admin sets the markup and exchange rate."
+  },
+  "Katalog vaqtincha mavjud emas. Keyinroq qayta urinib ko‘ring.": {
+    "ru": "Каталог временно недоступен. Повторите позже.",
+    "en": "The catalog is temporarily unavailable. Try again later."
   }
 }

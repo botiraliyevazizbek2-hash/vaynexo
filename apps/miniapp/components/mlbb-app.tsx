@@ -1,4 +1,5 @@
 'use client';
+import { PricingPanel } from './admin/pricing-panel';
 import { useI18n } from './language-provider';
 import { products, formatPrice, type Product } from '../lib/shop/catalog';
 import { ShopPage } from './shop/shop-page';
@@ -9,7 +10,7 @@ import type { Language } from '../lib/i18n/core';
 import { useEffect, useState } from 'react';
 import { Activity, ArrowDownLeft, ArrowRight, Bell, BookOpen, Bot, CalendarDays, Check, CheckCircle2, ChevronDown, ChevronRight, ClipboardList, Clock3, Copy, Crown, Diamond, Flame, Gamepad2, Gift, Headphones, History, Home, Info, Languages, Menu, Newspaper, Plus, Send, Settings, Shield, ShieldCheck, Sparkles, Star, Swords, Ticket, Trophy, UserRound, Users, X, Zap } from 'lucide-react';
 const heroBanner = '/images/hero-banner.jpg';
-type Tab = 'home' | 'shop' | 'coach' | 'news' | 'tournaments' | 'profile' | 'order';
+type Tab = 'home' | 'shop' | 'coach' | 'news' | 'tournaments' | 'profile' | 'order' | 'admin';
 function useTelegramWebApp() {
     useEffect(() => {
         const tg = (window as Window & {
@@ -42,7 +43,7 @@ function App() {
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     useEffect(() => {
         const requested = new URLSearchParams(window.location.search).get('tab');
-        const deepLinkTabs: Tab[] = ['home', 'shop', 'coach', 'news', 'tournaments', 'profile', 'order'];
+        const deepLinkTabs: Tab[] = ['home', 'shop', 'coach', 'news', 'tournaments', 'profile', 'order', 'admin'];
         if (requested && deepLinkTabs.includes(requested as Tab))
             setTab(requested as Tab);
     }, []);
@@ -89,7 +90,7 @@ function App() {
         { id: 'profile', label: 'Profil', icon: UserRound },
     ];
     const currentTitle: Record<Tab, string> = {
-        home: 'MLBB Uz', shop: 'Do‘kon & Olmoslar', coach: 'AI Murabbiy', news: 'Yangiliklar', tournaments: 'Turnirlar & Jamoalar', profile: 'Profil', order: 'Buyurtma holati',
+        admin: 'Katalog va ustama', home: 'MLBB Uz', shop: 'Do‘kon & Olmoslar', coach: 'AI Murabbiy', news: 'Yangiliklar', tournaments: 'Turnirlar & Jamoalar', profile: 'Profil', order: 'Buyurtma holati',
     };
     return (<div className="app-shell">
       <aside className="desktop-sidebar">
@@ -114,6 +115,7 @@ function App() {
         {showMobileMenu && <div className="mobile-menu-panel">{navItems.map((item) => <button key={item.id} onClick={() => { setTab(item.id); setShowMobileMenu(false); }}><item.icon size={17}/>{t(item.label)}</button>)}<button onClick={() => { setTab('tournaments'); setShowMobileMenu(false); }}><Trophy size={17}/>{t("Turnirlar")}</button><button onClick={() => {setTab('order');setShowMobileMenu(false);}}><ClipboardList size={17}/>{t("Buyurtmalar")}</button></div>}
 
         {syncFailed && <div role="status" className="disclaimer">{t("Til sinxronlanmadi. Qayta urinib ko‘ring.")}</div>}<div className="page-content">
+          {tab === 'admin' && <PricingPanel/>}
           {tab === 'home' && <HomePage goToShop={goToShop} setTab={setTab} buyProduct={buyProduct} notify={notify}/>}
           {tab === 'shop' && <ShopPage shop={shop} onCreate={placeDemoOrder} onOrders={() => setTab('order')}/>}
           {tab === 'coach' && <CoachPage question={coachQuestion} setQuestion={setCoachQuestion} reply={coachReply} submit={submitCoach} notify={notify}/>}
