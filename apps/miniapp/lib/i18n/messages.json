@@ -1442,5 +1442,9 @@
   "Raqam ulashilmadi. Keyinroq profil orqali qo‘shishingiz mumkin.": {
     "ru": "Номер не передан. Его можно добавить позже в профиле.",
     "en": "No number was shared. You can add it later in your profile."
+  },
+  "Profil va ilova sozlamalari.": {
+    "ru": "Профиль и настройки приложения.",
+    "en": "Profile and app settings."
   }
 }

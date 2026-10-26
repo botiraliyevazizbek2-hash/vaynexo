@@ -6,9 +6,9 @@ import { PricingPanel } from './admin/pricing-panel';
 import { useI18n } from './language-provider';
 import { formatPrice, type Product } from '../lib/shop/catalog';
 import { ShopPage } from './shop/shop-page';
-import { OrdersPage, OrderHistory } from './shop/orders-page';
+import { OrdersPage } from './shop/orders-page';
 import { ProductCard } from './shop/product-card';
-import { useDemoShop, type DemoShop } from './shop/use-demo-shop';
+import { useDemoShop } from './shop/use-demo-shop';
 import type { Language } from '../lib/i18n/core';
 import { useEffect, useState } from 'react';
 import { Activity, ArrowDownLeft, ArrowRight, Bell, BookOpen, Bot, CalendarDays, Check, CheckCircle2, ChevronDown, ChevronRight, ClipboardList, Clock3, Copy, Crown, Diamond, Flame, Gamepad2, Gift, Headphones, History, Home, Info, Languages, Menu, Newspaper, Plus, Send, Settings, Shield, ShieldCheck, Sparkles, Star, Swords, Ticket, Trophy, UserRound, Users, X, Zap } from 'lucide-react';
@@ -122,7 +122,7 @@ function App({phoneAvailable=false}:{phoneAvailable?:boolean}) {
           {tab === 'coach' && <CoachPage question={coachQuestion} setQuestion={setCoachQuestion} reply={coachReply} submit={submitCoach} notify={notify}/>}
           {tab === 'news' && <NewsPage notify={notify}/>}
           {tab === 'tournaments' && <TournamentsPage notify={notify}/>}
-          {tab === 'profile' && <ProfilePage account={account} phoneAvailable={phoneAvailable} userId={userId} serverId={serverId} copyId={copyId} copied={copied} setTab={setTab} notify={notify} shop={shop}/>}
+          {tab === 'profile' && <ProfilePage account={account} phoneAvailable={phoneAvailable} userId={userId} serverId={serverId} copyId={copyId} copied={copied} notify={notify}/>}
           {tab === 'order' && <OrdersPage shop={shop} onShop={goToShop}/>}
         </div>
         <footer className="app-footer"><div className="footer-logo"><div className="brand-mark mini-mark"><Gamepad2 size={15}/></div><b>{t("MLBB UZ")}</b></div><span>{t("Hamjamiyat konsepti \u00B7 Demo ma\u2019lumotlar")}</span><button onClick={() => notify('Maxfiylik va foydalanish shartlari backend ishga tushishidan oldin qo‘shiladi.')}><ShieldCheck size={14}/>{" " + t("Xavfsizlik")}</button></footer>
@@ -258,44 +258,25 @@ function TeamCard({ name, initials, rank, detail, color, onClick }: {
     const { t } = useI18n();
     return <button className="team-card" onClick={onClick}><div className={`team-logo ${color}`}>{initials}</div><div className="team-card-main"><b>{t(name)}</b><span><Trophy size={12}/>{rank}</span><small>{t(detail)}</small></div><ChevronRight size={17}/></button>;
 }
-function ProfilePage({ userId, serverId, copyId, copied, setTab, notify, shop, account, phoneAvailable }: {
+function ProfilePage({ userId, serverId, copyId, copied, notify, account, phoneAvailable }: {
     account: AccountState;
     phoneAvailable: boolean;
     userId: string;
     serverId: string;
     copyId: () => void;
     copied: boolean;
-    setTab: (tab: Tab) => void;
     notify: (msg: string) => void;
-    shop: DemoShop;
 }) {
     const { t, language, setLanguage } = useI18n();
     const [notifications, setNotifications] = useState(true);
     const displayName=account.user?[account.user.firstName,account.user.lastName].filter(Boolean).join(' ')||account.user.username||t('Telegram foydalanuvchisi'):t('Mehmon');
-    return <div className="content-stack"><div className="page-intro"><div><div className="eyebrow small-eyebrow"><UserRound size={13}/>{" " + t("SHAXSIY KABINET")}</div><h2>{t("Mening profilim")}</h2><p>{t("Profil, buyurtmalar va ilova sozlamalari.")}</p></div><button className="icon-button" onClick={() => notify('Sozlamalar shu oynada boshqariladi.')}><Settings size={17}/></button></div>
-    <section className="profile-hero"><div className="profile-avatar-wrap"><div className="profile-avatar">{displayName.slice(0,1).toUpperCase()}</div><span className="avatar-status"/></div><div className="profile-main"><div className="profile-name-line"><h3>{displayName}</h3></div>{account.user&&<><div className="rank-line">{account.user.username?'@'+account.user.username:'Telegram'}</div><div className="player-id-line">Telegram ID: {account.user.telegramId}</div></>}{userId&&<div className="player-id-line">MLBB ID: {userId} ({serverId})<button onClick={copyId} aria-label={t('ID ni nusxalash')}><Copy size={13}/></button>{copied&&<small>{t('Nusxalandi')}</small>}</div>}</div></section>
+    return <div className="content-stack"><div className="page-intro"><div><div className="eyebrow small-eyebrow"><UserRound size={13}/>{" " + t("SHAXSIY KABINET")}</div><h2>{t("Mening profilim")}</h2><p>{t("Profil va ilova sozlamalari.")}</p></div></div>
+    <section className="profile-hero"><div className="profile-avatar-wrap"><div className="profile-avatar">{Array.from(displayName)[0]?.toUpperCase()}</div><span className="avatar-status"/></div><div className="profile-main"><div className="profile-name-line"><h3>{displayName}</h3></div>{account.user&&<><div className="rank-line">{account.user.username?'@'+account.user.username:'Telegram'}</div><div className="player-id-line">Telegram ID: {account.user.telegramId}</div></>}{userId&&<div className="player-id-line">MLBB ID: {userId} ({serverId})<button onClick={copyId} aria-label={t('ID ni nusxalash')}><Copy size={13}/></button>{copied&&<small>{t('Nusxalandi')}</small>}</div>}</div></section>
     {account.status==='error'&&<div className="disclaimer" role="status">{t('Profilni saqlab bo‘lmadi. Qayta urinib ko‘ring.')}<button className="button secondary small" onClick={account.retry}>{t('Qayta tekshirish')}</button></div>}
     <PhoneSettings available={phoneAvailable}/>
 
-    <div className="profile-stat-grid"><ProfileStat icon={Activity} title={t("G\u2018alaba (WR)")} value="68.4%" foot={t("Demo statistika")} color="cyan"/><ProfileStat icon={CalendarDays} title={t("Weekly Pass")} value="4 kun" foot={t("Namuna muddat")} color="gold"/><ProfileStat icon={ShieldCheck} title={t("MLBB API")} value="Ulanmagan" foot={t("Integratsiya kutilmoqda")} color="purple"/></div>
-    <div className="profile-wallet-grid"><div className="wallet-card diamonds-wallet"><div><span>{t("Olmoslar")}</span><Diamond size={17}/></div><b>{t("125") + " "}<small>{t("DM")}</small></b><small>{t("Demo balans")}</small><button className="button cyan-button full" onClick={() => setTab('shop')}><Plus size={15}/>{" " + t("To\u2018ldirish")}</button></div><div className="wallet-card cashback-wallet"><div><span>{t("Bonuslar")}</span><Gift size={17}/></div><b>{t("14 500") + " "}<small>{t("UZS")}</small></b><small>{t("Namuna bonus balansi")}</small><button className="button amber-button full" onClick={() => notify('Bonus ishlatish qoidalari hali sozlanmagan.')}><Ticket size={15}/>{" " + t("Ishlatish")}</button></div></div>
-    <SectionTitle icon={Star} title={t("Sevimli qahramonlar")} aside={t("Tahrirlash")} onAside={() => notify('Qahramonlar ro‘yxati keyingi bosqichda ulanadi.')}/><div className="hero-favorites"><FavoriteHero name={t("Gusion")} role={t("Qotil \u00B7 Assassin")} win="69%" tone="hero-purple"/><FavoriteHero name={t("Fanny")} role={t("Qotil \u00B7 Assassin")} win="64%" tone="hero-blue"/><FavoriteHero name={t("Chou")} role={t("Jangchi \u00B7 Fighter")} win="71%" tone="hero-gold"/></div>
-    <SectionTitle icon={History} title={t("Xaridlar tarixi")} aside={t("Barchasi")} onAside={() => setTab('order')}/><OrderHistory orders={shop.orders.slice(0,3)} onSelect={id => {shop.setActiveId(id);setTab('order');}}/>
     <SectionTitle icon={Settings} title={t("Ilova sozlamalari")}/><div className="settings-card"><div className="setting-row"><div className="setting-icon"><Bell size={17}/></div><div className="setting-copy"><b>{t("Telegram bildirishnomalari")}</b><small>{t("Yangiliklar va buyurtma xabarlari")}</small></div><button className={`toggle ${notifications ? 'on' : ''}`} onClick={() => setNotifications(!notifications)} aria-label={t("Bildirishnomalarni almashtirish")}><span /></button></div><div className="setting-row"><div className="setting-icon"><Languages size={17}/></div><div className="setting-copy"><b>{t("Ilova tili")}</b><small>{t("Hozirgi sozlama")}</small></div><select value={language} onChange={e => setLanguage(e.target.value as Language)} aria-label={t("Ilova tili")}><option value="uz">{t("O\u2018zbekcha (Lotin)")}</option><option value="ru">{t("\u0420\u0443\u0441\u0441\u043A\u0438\u0439")}</option><option value="en">{t("English")}</option></select></div><div className="setting-row"><div className="setting-icon"><Shield size={17}/></div><div className="setting-copy"><b>{t("Ma\u2019lumotlar himoyasi")}</b><small>{t("Maxfiylik sozlamalari va shartlar")}</small></div><button className="plain-link" onClick={() => notify('Maxfiylik hujjati ishlab chiqish bosqichida.')}>{t("Ko\u2018rish") + " "}<ChevronRight size={15}/></button></div><div className="setting-row"><div className="setting-icon"><Headphones size={17}/></div><div className="setting-copy"><b>{t("24/7 qo\u2018llab-quvvatlash")}</b><small>{t("Telegram operatori")}</small></div><button className="plain-link" onClick={() => notify('Telegram operatori hali ulanmagan.')}>{t("Yordam") + " "}<ChevronRight size={15}/></button></div></div>
-    <button className="button danger-outline full logout-button" onClick={() => notify('Demo rejim: haqiqiy akkaunt ulanishi amalga oshirilmagan.')}><ArrowDownLeft size={16}/>{" " + t("Boshqa MLBB hisobga o\u2018tish")}</button>
+
   </div>;
 }
-function ProfileStat({ icon: Icon, title, value, foot, color }: {
-    icon: typeof Home;
-    title: string;
-    value: string;
-    foot: string;
-    color: string;
-}) { const { t } = useI18n(); return <div className="profile-stat"><div className={`profile-stat-icon ${color}`}><Icon size={15}/><span>{t(title)}</span></div><b>{t(value)}</b><small>{t(foot)}</small></div>; }
-function FavoriteHero({ name, role, win, tone }: {
-    name: string;
-    role: string;
-    win: string;
-    tone: string;
-}) { const { t } = useI18n(); return <div className="favorite-card"><div className={`hero-portrait ${tone}`}><span>{name.slice(0, 1)}</span><Sparkles size={18}/></div><b>{t(name)}</b><small>{t(role)}</small><div className="hero-win"><span>{win}{" " + t("WR")}</span><span className="win-track"><i style={{ width: win }}/></span></div><small className="muted-match">{t("Namuna statistika")}</small></div>; }
 export default App;
