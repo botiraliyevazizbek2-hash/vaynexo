@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "db:migrate": "node scripts/migrate.cjs",
     "test:e2e:registration": "playwright test --config=playwright.registration.config.cjs",
-    "verify:registration": "node scripts/verify-registration.cjs"
+    "verify:registration": "node scripts/verify-registration.cjs",
+    "verify:virapin": "node scripts/verify-virapin.cjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
