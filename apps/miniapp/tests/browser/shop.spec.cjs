@@ -1,50 +1,34 @@
 const {test,expect}=require('@playwright/test');
-test.beforeEach(async({page})=>{await page.route('https://telegram.org/**',r=>r.fulfill({body:''}));});
-async function choose(page){await page.goto('/?tab=shop&lang=en');await page.locator('.catalog-grid .product-card').first().getByRole('button',{name:'Buy',exact:true}).click();}
-async function fillPlayer(page){await page.locator('#mlbb-id').fill('842190334');await page.locator('#server-id').fill('5143');await page.getByRole('button',{name:'Check format',exact:true}).click();}
-test('invalid IDs, confirmation and edits gate checkout; snapshots and history survive navigation and reload',async({page})=>{
- await choose(page);
- const submit=page.getByRole('button',{name:'Create demo order',exact:true});
- await expect(page.locator('#mlbb-id')).toBeEmpty();await expect(submit).toBeDisabled();
- await page.locator('#mlbb-id').fill('1234x');await page.locator('#server-id').fill('0');
- await page.getByRole('button',{name:'Check format',exact:true}).click();
- await expect(page.locator('#mlbb-id')).toHaveAttribute('aria-invalid','true');await expect(submit).toBeDisabled();
- await fillPlayer(page);await expect(submit).toBeDisabled();
- await page.getByRole('button',{name:'Increase',exact:true}).click();await expect(page.locator('.checkout-total')).toContainText('28 000 UZS');
- await page.locator('.shop-confirm input').check();await expect(submit).toBeEnabled();
- await page.locator('#server-id').fill('5144');await expect(submit).toBeDisabled();await expect(page.locator('.shop-confirm input')).not.toBeChecked();
- await page.getByRole('button',{name:'Check format',exact:true}).click();await page.locator('.shop-confirm input').check();await submit.dblclick();
- await expect(page.locator('.demo-history .history-row')).toHaveCount(1);await expect(page.locator('.order-summary-card')).toContainText('28 000 UZS');
- await expect(page.locator('.shop-order-player')).toContainText('5144');
- const reference=await page.locator('.order-reference b').innerText();
- await page.locator('.side-nav').getByRole('button',{name:'Shop',exact:true}).click();
- await page.locator('#mlbb-id').fill('999999999');
- await page.locator('.side-nav').getByRole('button',{name:'Orders',exact:true}).click();
- await expect(page.locator('.shop-order-player')).toContainText('842190334');
- await page.reload();await page.locator('.side-nav').getByRole('button',{name:'Orders',exact:true}).click();
- await expect(page.locator('.order-reference b')).toHaveText(reference);await expect(page.locator('.demo-history .history-row')).toHaveCount(1);
- await page.locator('.side-nav').getByRole('button',{name:'Profile',exact:true}).click();await expect(page.locator('.demo-history .history-row')).toHaveCount(1);
- await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
-});
-test('translated search, empty filters and sorting work together',async({page})=>{
+const {products,mockCatalog}=require('./catalog-fixture.cjs');
+test.beforeEach(async({page})=>{await page.route('https://telegram.org/**',r=>r.fulfill({body:''}));await mockCatalog(page);});
+test('one supplier catalog supports search, filters, sorting and selection with no duplicate demo grid',async({page})=>{
  await page.goto('/?tab=shop&lang=en');
- await page.getByLabel('Sort',{exact:true}).selectOption('high');await expect(page.locator('.catalog-grid h3').first()).toHaveText('568 + 56 Diamonds');
- await page.getByPlaceholder('Search products...').fill('nonexistent');await expect(page.getByRole('heading',{name:'No products found'})).toBeVisible();
- await page.getByRole('button',{name:'Clear filters'}).click();await expect(page.locator('.catalog-grid .product-card')).toHaveCount(6);
- await page.locator('.category-pills').getByRole('button',{name:'Passes',exact:true}).click();await expect(page.locator('.catalog-grid .product-card')).toHaveCount(2);
- await page.locator('.topbar select').selectOption('ru');await expect(page.getByLabel('Сортировка')).toBeVisible();
+ await expect(page.locator('.catalog-grid')).toHaveCount(1);await expect(page.locator('.product-card')).toHaveCount(4);await expect(page.getByRole('heading',{name:'56 Diamonds',exact:true})).toHaveCount(0);await expect(page.locator('.live-catalog')).toHaveCount(0);
+ await page.getByLabel('Sort',{exact:true}).selectOption('high');await expect(page.locator('.catalog-grid h3').first()).toHaveText('Weekly Diamond Pass');
+ await page.getByPlaceholder('Search products...').fill('19');await expect(page.locator('.product-card')).toHaveCount(1);await page.getByRole('button',{name:'Select',exact:true}).click();await expect(page.locator('.selected-product-name')).toContainText('19 Diamonds');await expect(page.locator('.checkout-total')).toContainText('5 132 UZS');
+ await page.getByRole('button',{name:'Increase',exact:true}).click();await expect(page.locator('.checkout-total')).toContainText('10 264 UZS');await expect(page.getByRole('button',{name:'Payments coming soon'})).toBeDisabled();await expect(page.locator('.shop-payment')).toHaveCount(0);
+ await page.locator('#mlbb-id').fill('123x');await page.getByRole('button',{name:'Check format',exact:true}).click();await expect(page.locator('#mlbb-id')).toHaveAttribute('aria-invalid','true');
+ await page.getByPlaceholder('Search products...').fill('missing');await expect(page.getByRole('heading',{name:'No products found'})).toBeVisible();await page.getByRole('button',{name:'Clear filters'}).click();
+ await page.locator('.category-pills').getByRole('button',{name:'Passes',exact:true}).click();await expect(page.locator('.product-card')).toHaveCount(1);
+ await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+ const color=await page.locator('.product-card p').first().evaluate(e=>getComputedStyle(e).color);expect(color).toBe('rgb(138, 154, 185)');
 });
-test('storage failures are visible instead of claiming persistence',async({page})=>{
- await page.addInitScript(()=>{Storage.prototype.setItem=function(){throw new Error('blocked')};});
- await choose(page);await fillPlayer(page);await page.locator('.shop-confirm input').check();await page.getByRole('button',{name:'Create demo order',exact:true}).click();
- await expect(page.getByText('Could not save to this device. New demo orders may be lost when you close the page.')).toBeVisible();
+test('home highlights and shop use identical API offers and prices',async({page})=>{
+ await page.goto('/?lang=en');await expect(page.locator('.product-row .product-card')).toHaveCount(3);await page.locator('.product-row .product-card').first().getByRole('button',{name:'Select',exact:true}).click();await expect(page.locator('.selected-product-name')).toContainText('12 Diamonds');await expect(page.locator('.checkout-total')).toContainText('3 258 UZS');
 });
-test('local Telegram demo histories stay separate between accounts',async({page,context})=>{
- await page.addInitScript(()=>{window.Telegram={WebApp:{initDataUnsafe:{user:{id:42}},ready(){},expand(){}}};});
- await choose(page);await fillPlayer(page);await page.locator('.shop-confirm input').check();await page.getByRole('button',{name:'Create demo order',exact:true}).click();
- await expect(page.locator('.demo-history .history-row')).toHaveCount(1);
- const other=await context.newPage();await other.route('https://telegram.org/**',r=>r.fulfill({body:''}));
- await other.addInitScript(()=>{window.Telegram={WebApp:{initDataUnsafe:{user:{id:99}},ready(){},expand(){}}};});
- await other.goto('/?tab=order&lang=en');await expect(other.getByText('No demo orders yet.')).toBeVisible();await expect(other.locator('.demo-history .history-row')).toHaveCount(0);
- await page.reload();await page.locator('.side-nav').getByRole('button',{name:'Orders',exact:true}).click();await expect(page.locator('.demo-history .history-row')).toHaveCount(1);
+test('refresh updates selected retail price and clears offers removed by supplier',async({page})=>{
+ let current=products;
+ await page.route('**/api/catalog',r=>r.fulfill({json:{ok:true,status:'ready',products:current}}));
+ await page.clock.install();await page.goto('/?tab=shop&lang=en');await page.locator('.product-card').first().getByRole('button',{name:'Select',exact:true}).click();await expect(page.locator('.checkout-total')).toContainText('3 258 UZS');
+ current=products.map((p,i)=>i===0?{...p,price:4000}:p);await page.clock.fastForward(61000);await expect(page.locator('.checkout-total')).toContainText('4 000 UZS');
+ current=[];await page.clock.fastForward(61000);await expect(page.locator('.product-card')).toHaveCount(0);await expect(page.locator('.selected-product')).toHaveCount(0);
+});
+test('unconfigured, failed and empty catalog states never restore demo offers',async({page})=>{
+ for(const status of ['awaiting_pricing','unavailable','ready']){
+  await page.route('**/api/catalog',r=>r.fulfill({json:{ok:true,status,products:[]}}));await page.goto('/?tab=shop&lang=en');await expect(page.locator('.empty-state')).toBeVisible();await expect(page.locator('.product-card')).toHaveCount(0);
+ }
+});
+test('legacy demo history remains readable after catalog replacement',async({page})=>{
+ await page.addInitScript(()=>localStorage.setItem('vaynexo.demo-orders.v1.browser',JSON.stringify({version:1,orders:[{id:'5c47d67c-a6c9-4086-a932-a85567e83afa',createdAt:'2026-10-26T10:00:00Z',productId:'d56',quantity:1,unitPrice:14000,userId:'842190334',serverId:'5143',payment:'click'}]})));
+ await page.goto('/?tab=order&lang=en');await expect(page.locator('.demo-history .history-row')).toHaveCount(1);await expect(page.locator('.order-summary-card')).toContainText('14 000 UZS');
 });

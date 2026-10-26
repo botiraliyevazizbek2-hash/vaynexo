@@ -1,10 +1,11 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { products, type Product } from '../../lib/shop/catalog';
+import { type Product } from '../../lib/shop/catalog';
 import { HISTORY_LIMIT, isPayment, parseHistory, validPlayer, validQuantity, type DemoOrder, type Payment } from '../../lib/shop/checkout';
 
-export function useDemoShop() {
-  const [selectedProduct, select] = useState<Product | null>(null);
+export function useDemoShop(products: Product[]) {
+  const [selectedId, select] = useState<string | null>(null);
+  const selectedProduct = products.find(p=>p.id===selectedId)??null;
   const [userId, updateUser] = useState('');
   const [serverId, updateServer] = useState('');
   const [idVerified, confirmFormat] = useState(false);
@@ -30,7 +31,8 @@ export function useDemoShop() {
   }, []);
   function resetConfirmation() { confirmDetails(false); submittedId.current = null; }
   function buyProduct(product: Product) {
-    select(product); updateQuantity(1); confirmFormat(false); resetConfirmation();
+    if(!products.some(p=>p.id===product.id))return;
+    select(product.id); updateQuantity(1); confirmFormat(false); resetConfirmation();
   }
   function setUserId(value: string) { updateUser(value); confirmFormat(false); resetConfirmation(); }
   function setServerId(value: string) { updateServer(value); confirmFormat(false); resetConfirmation(); }
@@ -42,7 +44,7 @@ export function useDemoShop() {
     if (submittedId.current) return null;
     // Resolve the catalogue price rather than accepting a UI-provided total.
     const product = products.find(p => p.id === selectedProduct.id);
-    if (!product) return null;
+    if (!product || product.supplier === 'resellcodes') return null;
     const order: DemoOrder = {id:crypto.randomUUID(),createdAt:new Date().toISOString(),productId:product.id,quantity,unitPrice:product.price,userId,serverId,payment};
     submittedId.current = order.id;
     const next = [order,...orders].slice(0,HISTORY_LIMIT);

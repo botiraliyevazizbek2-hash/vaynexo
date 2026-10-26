@@ -1,4 +1,5 @@
 export type Product = {
+    supplier?: 'resellcodes';
     id: string;
     title: string;
     subtitle: string;
@@ -8,6 +9,7 @@ export type Product = {
     badge?: string;
     icon: 'diamond' | 'ticket' | 'crown';
 };
+// Legacy demo products are retained only to label historical local orders.
 export const products: Product[] = [
     { id: 'd56', title: '56 Olmos', subtitle: 'Tezkor to‘ldirish', diamonds: '56', price: 14000, badge: 'Mashhur', icon: 'diamond' },
     { id: 'd172', title: '172 Olmos', subtitle: 'Bonusli paket', diamonds: '172', price: 39000, oldPrice: 42000, badge: '-7%', icon: 'diamond' },

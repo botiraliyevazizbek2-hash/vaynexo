@@ -1,7 +1,8 @@
 'use client';
+import { useLiveCatalog, type LiveCatalog } from './shop/use-live-catalog';
 import { PricingPanel } from './admin/pricing-panel';
 import { useI18n } from './language-provider';
-import { products, formatPrice, type Product } from '../lib/shop/catalog';
+import { formatPrice, type Product } from '../lib/shop/catalog';
 import { ShopPage } from './shop/shop-page';
 import { OrdersPage, OrderHistory } from './shop/orders-page';
 import { ProductCard } from './shop/product-card';
@@ -33,7 +34,8 @@ function App() {
     const { t, language, setLanguage, syncFailed } = useI18n();
     useTelegramWebApp();
     const [tab, setTab] = useState<Tab>('home');
-    const shop = useDemoShop();
+    const catalog = useLiveCatalog();
+    const shop = useDemoShop(catalog.products);
     const { userId, serverId } = shop;
     const [coachQuestion, setCoachQuestion] = useState('');
     const [coachReplyQuestion, setCoachReplyQuestion] = useState('');
@@ -56,10 +58,6 @@ function App() {
     const notify = (message: string) => setToast(message);
     const goToShop = () => setTab('shop');
     const buyProduct = (product: Product) => { shop.buyProduct(product); setTab('shop'); };
-    const placeDemoOrder = () => {
-        const order = shop.createOrder();
-        if (order) { setTab('order'); notify('Demo buyurtma yaratildi. Haqiqiy to‘lov ulanmagan.'); }
-    };
     const copyId = async () => {
         if (!userId || !serverId) { notify('Avval do‘konda MLBB ID va serverni kiriting.'); return; }
         try {
@@ -116,8 +114,8 @@ function App() {
 
         {syncFailed && <div role="status" className="disclaimer">{t("Til sinxronlanmadi. Qayta urinib ko‘ring.")}</div>}<div className="page-content">
           {tab === 'admin' && <PricingPanel/>}
-          {tab === 'home' && <HomePage goToShop={goToShop} setTab={setTab} buyProduct={buyProduct} notify={notify}/>}
-          {tab === 'shop' && <ShopPage shop={shop} onCreate={placeDemoOrder} onOrders={() => setTab('order')}/>}
+          {tab === 'home' && <HomePage catalog={catalog} goToShop={goToShop} setTab={setTab} buyProduct={buyProduct} notify={notify}/>}
+          {tab === 'shop' && <ShopPage catalog={catalog} shop={shop} onOrders={() => setTab('order')}/>}
           {tab === 'coach' && <CoachPage question={coachQuestion} setQuestion={setCoachQuestion} reply={coachReply} submit={submitCoach} notify={notify}/>}
           {tab === 'news' && <NewsPage notify={notify}/>}
           {tab === 'tournaments' && <TournamentsPage notify={notify}/>}
@@ -142,14 +140,15 @@ function SectionTitle({ icon: Icon, title, aside, onAside }: {
     const { t } = useI18n();
     return <div className="section-title"><div className="section-title-main"><Icon size={18}/><h2>{t(title)}</h2></div>{aside && <button onClick={onAside}>{t(aside)}<ArrowRight size={14}/></button>}</div>;
 }
-function HomePage({ goToShop, setTab, buyProduct, notify }: {
+function HomePage({ goToShop, setTab, buyProduct, notify, catalog }: {
+    catalog: LiveCatalog;
     goToShop: () => void;
     setTab: (tab: Tab) => void;
     buyProduct: (p: Product) => void;
     notify: (msg: string) => void;
 }) {
     const { t } = useI18n();
-    const featured = products[4];
+    const featured = [...catalog.products].sort((a,b)=>a.price-b.price).slice(0,3);
     return <>
     <section className="hero-card">
       <div className="hero-copy"><div className="eyebrow"><Zap size={13} fill="currentColor"/>{" " + t("MLBB UZ COMMUNITY") + " "}<span className="eyebrow-line"/></div><h2>{t("MLBB O\u2018zbekiston")}<br /><span>{t("hamjamiyatiga")}</span><br />{t("xush kelibsiz!")}</h2><p>{t("Olmoslar, AI murabbiy, turnirlar va jamoalar \u2014 barchasi bitta joyda.")}</p><div className="hero-actions"><button className="button primary" onClick={goToShop}>{t("Do\u2018konga o\u2018tish") + " "}<ArrowRight size={16}/></button><button className="button ghost" onClick={() => setTab('tournaments')}><Trophy size={16}/>{" " + t("Turnirlar")}</button></div><div className="hero-proof"><span><ShieldCheck size={14}/>{" " + t("Xavfsiz jarayon")}</span><span><Zap size={14}/>{" " + t("Tezkor yordam")}</span></div></div>
@@ -174,11 +173,9 @@ function HomePage({ goToShop, setTab, buyProduct, notify }: {
     </div>
 
     <SectionTitle icon={Flame} title={t("Hozir trendda")} aside={t("Do\u2018konga o\u2018tish")} onAside={goToShop}/>
-    <div className="product-row">
-      <ProductCard product={featured} onBuy={() => buyProduct(featured)} featured/>
-      <ProductCard product={products[0]} onBuy={() => buyProduct(products[0])}/>
-      <ProductCard product={products[2]} onBuy={() => buyProduct(products[2])}/>
-    </div>
+    <div className="product-row">{featured.map((product,index)=><ProductCard key={product.id} product={product} onBuy={()=>buyProduct(product)} featured={index===0}/>)}</div>
+    {catalog.status==='loading'&&<p className="disclaimer" role="status">{t('Yuklanmoqda...')}</p>}
+    {catalog.status!=='loading'&&!featured.length&&<p className="disclaimer">{t(catalog.status==='awaiting_pricing'?'Admin ustama foizi va kursni belgilagach paketlar chiqadi.':'Katalog vaqtincha mavjud emas. Keyinroq qayta urinib ko‘ring.')}</p>}
 
     <section className="trust-panel"><div className="trust-heading"><div className="trust-shield"><ShieldCheck size={20}/></div><div><h3>{t("Ishonch va xavfsizlik")}</h3><p>{t("Xarid jarayoni tushunarli va kuzatiladigan bo\u2018lishi kerak.")}</p></div><span className="demo-badge">{t("DEMO")}</span></div><div className="trust-items"><TrustItem icon={Shield} title={t("ID tekshiruvi")} desc={t("Xariddan oldin ma\u2019lumotni tekshirish oqimi")}/><TrustItem icon={Zap} title={t("Buyurtma kuzatuvi")} desc={t("Holat va xatolar ochiq ko\u2018rsatiladi")}/><TrustItem icon={Headphones} title={t("Yordam xizmati")} desc={t("Muammo bo\u2018lsa, operatorga murojaat")}/></div><div className="payment-footnote"><span>{t("To\u2018lov usullari demo maketi:")}</span><div className="payment-logos"><b>{t("CLICK")}</b><b>{t("Payme")}</b><b>{t("UZCARD")}</b></div></div></section>
   </>;

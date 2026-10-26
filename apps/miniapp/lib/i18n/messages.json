@@ -1386,5 +1386,17 @@
   "Katalog vaqtincha mavjud emas. Keyinroq qayta urinib ko‘ring.": {
     "ru": "Каталог временно недоступен. Повторите позже.",
     "en": "The catalog is temporarily unavailable. Try again later."
+  },
+  "Tanlash": {
+    "ru": "Выбрать",
+    "en": "Select"
+  },
+  "To‘lov tez kunda": {
+    "ru": "Оплата скоро",
+    "en": "Payments coming soon"
+  },
+  "Narxlar avtomatik yangilanadi.": {
+    "ru": "Цены обновляются автоматически.",
+    "en": "Prices update automatically."
   }
 }

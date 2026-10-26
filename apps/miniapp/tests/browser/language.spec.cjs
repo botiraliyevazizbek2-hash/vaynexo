@@ -1,5 +1,6 @@
 const {test,expect}=require('@playwright/test');
-test.beforeEach(async({page})=>{await page.route('https://telegram.org/**',r=>r.fulfill({body:''}));});
+const {mockCatalog}=require('./catalog-fixture.cjs');
+test.beforeEach(async({page})=>{await page.route('https://telegram.org/**',r=>r.fulfill({body:''}));await mockCatalog(page);});
 test('all sections, products, checkout, notices and coach follow selected language and survive reload',async({page})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/?tab=profile');
@@ -8,19 +9,13 @@ test('all sections, products, checkout, notices and coach follow selected langua
  await expect(page.getByText('Не подключено',{exact:true})).toBeVisible();
  await page.locator('.side-nav').getByRole('button',{name:'Магазин',exact:true}).click();
  await expect(page.getByRole('heading',{name:'Магазин и алмазы',level:1})).toBeVisible();
- await expect(page.getByRole('heading',{name:'56 алмазов',exact:true})).toBeVisible();
- await page.getByPlaceholder('Поиск товаров...').fill('алмаз');
- await expect(page.locator('.catalog-grid .product-card')).toHaveCount(5);
- await page.locator('.catalog-grid').getByRole('button',{name:'Купить',exact:true}).first().click();
- await page.locator('#mlbb-id').fill('842190334');
- await page.locator('#server-id').fill('5143');
- await page.getByRole('button',{name:'Проверить формат',exact:true}).click();
- await page.locator('.shop-confirm input').check();
- await page.getByRole('button',{name:'Создать демо-заказ',exact:true}).click();
- await expect(page.getByRole('heading',{name:'Демо-заказ создан',exact:true})).toBeVisible();
- await page.locator('.topbar select').selectOption('en');
- await expect(page.getByRole('heading',{name:'Demo order created',exact:true})).toBeVisible();
- await expect(page.getByText('Demo recorded. Payments and delivery are not connected.',{exact:true})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'12 Diamonds',exact:true})).toBeVisible();
+ await page.getByPlaceholder('Поиск товаров...').fill('Diamonds');
+ await expect(page.locator('.catalog-grid .product-card')).toHaveCount(3);
+ await page.locator('.catalog-grid').getByRole('button',{name:'Выбрать',exact:true}).first().click();
+ await page.locator('#mlbb-id').fill('842190334');await page.locator('#server-id').fill('5143');await page.getByRole('button',{name:'Проверить формат',exact:true}).click();
+ await expect(page.getByRole('button',{name:'Оплата скоро',exact:true})).toBeDisabled();
+ await page.locator('.topbar select').selectOption('en');await expect(page.getByRole('button',{name:'Payments coming soon',exact:true})).toBeDisabled();
  await page.reload();
  await expect(page.locator('.topbar select')).toHaveValue('en');
  await page.locator('.side-nav').getByRole('button',{name:'News',exact:true}).click();
