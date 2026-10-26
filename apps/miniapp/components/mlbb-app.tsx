@@ -1,5 +1,7 @@
 'use client';
 import { useLiveCatalog, type LiveCatalog } from './shop/use-live-catalog';
+import { useTelegramAccount, type AccountState } from './registration/use-telegram-account';
+import { PhoneSettings } from './registration/phone-settings';
 import { PricingPanel } from './admin/pricing-panel';
 import { useI18n } from './language-provider';
 import { formatPrice, type Product } from '../lib/shop/catalog';
@@ -30,7 +32,8 @@ function useTelegramWebApp() {
         tg?.setBackgroundColor?.('#080d1b');
     }, []);
 }
-function App() {
+function App({phoneAvailable=false}:{phoneAvailable?:boolean}) {
+    const account=useTelegramAccount();
     const { t, language, setLanguage, syncFailed } = useI18n();
     useTelegramWebApp();
     const [tab, setTab] = useState<Tab>('home');
@@ -119,7 +122,7 @@ function App() {
           {tab === 'coach' && <CoachPage question={coachQuestion} setQuestion={setCoachQuestion} reply={coachReply} submit={submitCoach} notify={notify}/>}
           {tab === 'news' && <NewsPage notify={notify}/>}
           {tab === 'tournaments' && <TournamentsPage notify={notify}/>}
-          {tab === 'profile' && <ProfilePage userId={userId} serverId={serverId} copyId={copyId} copied={copied} setTab={setTab} notify={notify} shop={shop}/>}
+          {tab === 'profile' && <ProfilePage account={account} phoneAvailable={phoneAvailable} userId={userId} serverId={serverId} copyId={copyId} copied={copied} setTab={setTab} notify={notify} shop={shop}/>}
           {tab === 'order' && <OrdersPage shop={shop} onShop={goToShop}/>}
         </div>
         <footer className="app-footer"><div className="footer-logo"><div className="brand-mark mini-mark"><Gamepad2 size={15}/></div><b>{t("MLBB UZ")}</b></div><span>{t("Hamjamiyat konsepti \u00B7 Demo ma\u2019lumotlar")}</span><button onClick={() => notify('Maxfiylik va foydalanish shartlari backend ishga tushishidan oldin qo‘shiladi.')}><ShieldCheck size={14}/>{" " + t("Xavfsizlik")}</button></footer>
@@ -255,7 +258,9 @@ function TeamCard({ name, initials, rank, detail, color, onClick }: {
     const { t } = useI18n();
     return <button className="team-card" onClick={onClick}><div className={`team-logo ${color}`}>{initials}</div><div className="team-card-main"><b>{t(name)}</b><span><Trophy size={12}/>{rank}</span><small>{t(detail)}</small></div><ChevronRight size={17}/></button>;
 }
-function ProfilePage({ userId, serverId, copyId, copied, setTab, notify, shop }: {
+function ProfilePage({ userId, serverId, copyId, copied, setTab, notify, shop, account, phoneAvailable }: {
+    account: AccountState;
+    phoneAvailable: boolean;
     userId: string;
     serverId: string;
     copyId: () => void;
@@ -266,8 +271,12 @@ function ProfilePage({ userId, serverId, copyId, copied, setTab, notify, shop }:
 }) {
     const { t, language, setLanguage } = useI18n();
     const [notifications, setNotifications] = useState(true);
+    const displayName=account.user?[account.user.firstName,account.user.lastName].filter(Boolean).join(' ')||account.user.username||t('Telegram foydalanuvchisi'):t('Mehmon');
     return <div className="content-stack"><div className="page-intro"><div><div className="eyebrow small-eyebrow"><UserRound size={13}/>{" " + t("SHAXSIY KABINET")}</div><h2>{t("Mening profilim")}</h2><p>{t("Profil, buyurtmalar va ilova sozlamalari.")}</p></div><button className="icon-button" onClick={() => notify('Sozlamalar shu oynada boshqariladi.')}><Settings size={17}/></button></div>
-    <section className="profile-hero"><div className="profile-avatar-wrap"><div className="profile-avatar">{t("S")}</div><span className="avatar-status"/></div><div className="profile-main"><div className="profile-name-line"><h3>{t("Shadow_7")}</h3><span className="verified-badge"><Check size={11}/></span><span className="country-badge">{t("UZBEKISTAN")}</span></div><div className="player-id-line">{t("ID:") + " "}{userId} <span>{t("(")}{serverId}{t(")")}</span><button onClick={copyId} aria-label={t("ID ni nusxalash")}><Copy size={13}/></button>{copied && <small>{t("Nusxalandi")}</small>}</div><div className="rank-line"><Crown size={15}/>{" " + t("Mythic Immortal") + " "}<span>{t("\u00B7")}</span> <Star size={13}/>{" " + t("68")}</div></div><div className="profile-edit"><button className="button secondary small" onClick={() => notify('Profilni MLBB API orqali tasdiqlash hali ulanmagan.')}><Settings size={14}/>{" " + t("Sozlash")}</button></div></section>
+    <section className="profile-hero"><div className="profile-avatar-wrap"><div className="profile-avatar">{displayName.slice(0,1).toUpperCase()}</div><span className="avatar-status"/></div><div className="profile-main"><div className="profile-name-line"><h3>{displayName}</h3></div>{account.user&&<><div className="rank-line">{account.user.username?'@'+account.user.username:'Telegram'}</div><div className="player-id-line">Telegram ID: {account.user.telegramId}</div></>}{userId&&<div className="player-id-line">MLBB ID: {userId} ({serverId})<button onClick={copyId} aria-label={t('ID ni nusxalash')}><Copy size={13}/></button>{copied&&<small>{t('Nusxalandi')}</small>}</div>}</div></section>
+    {account.status==='error'&&<div className="disclaimer" role="status">{t('Profilni saqlab bo‘lmadi. Qayta urinib ko‘ring.')}<button className="button secondary small" onClick={account.retry}>{t('Qayta tekshirish')}</button></div>}
+    <PhoneSettings available={phoneAvailable}/>
+
     <div className="profile-stat-grid"><ProfileStat icon={Activity} title={t("G\u2018alaba (WR)")} value="68.4%" foot={t("Demo statistika")} color="cyan"/><ProfileStat icon={CalendarDays} title={t("Weekly Pass")} value="4 kun" foot={t("Namuna muddat")} color="gold"/><ProfileStat icon={ShieldCheck} title={t("MLBB API")} value="Ulanmagan" foot={t("Integratsiya kutilmoqda")} color="purple"/></div>
     <div className="profile-wallet-grid"><div className="wallet-card diamonds-wallet"><div><span>{t("Olmoslar")}</span><Diamond size={17}/></div><b>{t("125") + " "}<small>{t("DM")}</small></b><small>{t("Demo balans")}</small><button className="button cyan-button full" onClick={() => setTab('shop')}><Plus size={15}/>{" " + t("To\u2018ldirish")}</button></div><div className="wallet-card cashback-wallet"><div><span>{t("Bonuslar")}</span><Gift size={17}/></div><b>{t("14 500") + " "}<small>{t("UZS")}</small></b><small>{t("Namuna bonus balansi")}</small><button className="button amber-button full" onClick={() => notify('Bonus ishlatish qoidalari hali sozlanmagan.')}><Ticket size={15}/>{" " + t("Ishlatish")}</button></div></div>
     <SectionTitle icon={Star} title={t("Sevimli qahramonlar")} aside={t("Tahrirlash")} onAside={() => notify('Qahramonlar ro‘yxati keyingi bosqichda ulanadi.')}/><div className="hero-favorites"><FavoriteHero name={t("Gusion")} role={t("Qotil \u00B7 Assassin")} win="69%" tone="hero-purple"/><FavoriteHero name={t("Fanny")} role={t("Qotil \u00B7 Assassin")} win="64%" tone="hero-blue"/><FavoriteHero name={t("Chou")} role={t("Jangchi \u00B7 Fighter")} win="71%" tone="hero-gold"/></div>

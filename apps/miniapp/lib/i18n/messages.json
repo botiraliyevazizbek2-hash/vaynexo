@@ -1410,5 +1410,37 @@
   "Turkiya": {
     "ru": "Турция",
     "en": "Turkey"
+  },
+  "Telefon raqami": {
+    "ru": "Номер телефона",
+    "en": "Phone number"
+  },
+  "Ixtiyoriy — keyinroq qo‘shishingiz mumkin.": {
+    "ru": "Необязательно — можно добавить позже.",
+    "en": "Optional — you can add it later."
+  },
+  "Raqam qo‘shish": {
+    "ru": "Добавить номер",
+    "en": "Add phone number"
+  },
+  "Keyinroq": {
+    "ru": "Позже",
+    "en": "Later"
+  },
+  "Mehmon": {
+    "ru": "Гость",
+    "en": "Guest"
+  },
+  "Telegram foydalanuvchisi": {
+    "ru": "Пользователь Telegram",
+    "en": "Telegram user"
+  },
+  "Profilni saqlab bo‘lmadi. Qayta urinib ko‘ring.": {
+    "ru": "Не удалось сохранить профиль. Повторите попытку.",
+    "en": "Could not save your profile. Try again."
+  },
+  "Raqam ulashilmadi. Keyinroq profil orqali qo‘shishingiz mumkin.": {
+    "ru": "Номер не передан. Его можно добавить позже в профиле.",
+    "en": "No number was shared. You can add it later in your profile."
   }
 }

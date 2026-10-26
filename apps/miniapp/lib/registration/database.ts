@@ -1,8 +1,8 @@
 import { attachDatabasePool } from '@vercel/functions';
 import { Pool } from 'pg';
 import { createRegistrationService, validDataKey } from './service';
-export function registrationRequired() {return process.env.PHONE_REGISTRATION_ENABLED==='true';}
-export function registrationReady() {return registrationRequired()&&!!process.env.DATABASE_URL&&validDataKey(process.env.PHONE_DATA_KEY);}
+export function phoneLinkingEnabled() {return process.env.PHONE_REGISTRATION_ENABLED==='true';}
+export function registrationReady() {return phoneLinkingEnabled()&&!!process.env.DATABASE_URL&&validDataKey(process.env.PHONE_DATA_KEY);}
 let pool:Pool|undefined;
 export function registrationService() {
  if(!registrationReady())throw Error('Registration unavailable');

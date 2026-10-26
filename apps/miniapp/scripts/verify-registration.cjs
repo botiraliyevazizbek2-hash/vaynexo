@@ -9,7 +9,7 @@ async function verify(){
  const {DATABASE_URL,DATABASE_URL_UNPOOLED,TELEGRAM_BOT_TOKEN,TELEGRAM_WEBHOOK_SECRET,PHONE_DATA_KEY,PHONE_REGISTRATION_ENABLED}=process.env;
  assert.ok(DATABASE_URL&&TELEGRAM_BOT_TOKEN&&TELEGRAM_WEBHOOK_SECRET&&/^[a-f0-9]{64}$/.test(PHONE_DATA_KEY??'')&&PHONE_REGISTRATION_ENABLED==='true','Registration configuration is incomplete');
  const db=new Client({connectionString:DATABASE_URL_UNPOOLED||DATABASE_URL,connectionTimeoutMillis:10000,statement_timeout:10000});
- let server,created=false;
+ let server,created=false,accountCreated=false;
  const id=4000000000000000+randomInt(1000000000);
  const base='http://127.0.0.1:3197';
  function initData(userId){
@@ -40,6 +40,14 @@ async function verify(){
    await new Promise(resolve=>setTimeout(resolve,250));
   }
   assert.ok(ready,'Local application readiness failed');
+  assert.equal((await db.query('SELECT telegram_id FROM vaynexo_accounts WHERE telegram_id=$1',[id])).rowCount,0,'Test account collision');
+  accountCreated=true;
+  for(let i=0;i<2;i++){
+   const response=await fetch(base+'/api/account',{method:'POST',headers:{'X-Telegram-Init-Data':signed},signal:AbortSignal.timeout(15000)});
+   assert.equal(response.status,200);const data=await response.json();assert.equal(data.account.telegramId,id);assert.equal(data.account.firstName,'Deployment test');
+  }
+  assert.equal((await db.query('SELECT telegram_id FROM vaynexo_accounts WHERE telegram_id=$1',[id])).rowCount,1);
+  console.log('Account verification: signed HTTP request → Neon upsert → repeat login PASS; phone not required');
   assert.equal((await registration({action:'status'},'invalid')).response.status,401);
   assert.equal((await registration({action:'begin'})).response.status,400);
   assert.equal((await registration({action:'status'})).data.registered,false);
@@ -58,7 +66,7 @@ async function verify(){
   console.log('Registration verification: HTTP API → real Neon database → registered status PASS');
   console.log('Registration verification: authentication, consent, rate limit, contact ownership and encryption PASS');
  }finally{
-  try{if(created){await db.query('DELETE FROM vaynexo_phone_registrations WHERE telegram_id=$1',[id]);console.log('Registration verification: synthetic test record removed');}}
+  try{if(accountCreated)await db.query('DELETE FROM vaynexo_accounts WHERE telegram_id=$1',[id]);if(created){await db.query('DELETE FROM vaynexo_phone_registrations WHERE telegram_id=$1',[id]);console.log('Registration verification: synthetic test record removed');}}
   finally{server?.kill('SIGTERM');await db.end();}
  }
 }

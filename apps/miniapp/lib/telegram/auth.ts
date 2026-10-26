@@ -11,5 +11,5 @@ export function validateInitData(raw: string, token: string, now = Math.floor(Da
   const check = entries.filter(([k])=>k!=='hash').sort(([a],[b])=>a < b ? -1 : a > b ? 1 : 0).map(([k,v])=>`${k}=${v}`).join('\n');
   const actual = createHmac('sha256',secret).update(check).digest();
   if (!timingSafeEqual(actual,Buffer.from(hash,'hex'))) return null;
-  try { const user=JSON.parse(params.get('user') ?? '{}'); return Number.isSafeInteger(user.id) && user.id>0 ? user as {id:number; language_code?:string} : null; } catch { return null; }
+  try { const user=JSON.parse(params.get('user') ?? '{}'); return Number.isSafeInteger(user.id) && user.id>0 ? user as {id:number; language_code?:string; first_name?:string;last_name?:string;username?:string} : null; } catch { return null; }
 }
