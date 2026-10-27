@@ -17,7 +17,7 @@ test('provider limits show a clear error and preserve the unsent question',async
  await page.goto('/?tab=coach&lang=en');
  await page.getByPlaceholder('Type a message...').fill('Keep my question');
  await page.getByRole('button',{name:'Send',exact:true}).click();
- await expect(page.getByRole('alert')).toHaveText('The AI service limit has been reached. Please try again later.');
+ await expect(page.locator('.v-ai-chat').getByRole('alert')).toHaveText('The AI service limit has been reached. Please try again later.');
  await expect(page.getByPlaceholder('Type a message...')).toHaveValue('Keep my question');
  await expect(page.locator('.v-ai-message.assistant')).toHaveCount(0);
 });
