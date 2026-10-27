@@ -539,9 +539,12 @@ button:disabled { opacity: .5; cursor: not-allowed; }
   .mobile-menu-panel button:hover { color: var(--cyan); background: rgba(17,213,247,.07); }
   .page-content { padding-top: 22px; }
   .app-footer { padding-bottom: 100px; }
-  .bottom-nav { position: fixed; z-index: 50; inset: auto 0 0; display: flex; align-items: stretch; justify-content: space-around; gap: 2px; padding: 8px 8px max(8px,env(safe-area-inset-bottom)); border-top: 1px solid rgba(17,213,247,.12); background: rgba(8,13,27,.94); backdrop-filter: blur(18px); box-shadow: 0 -10px 35px rgba(0,0,0,.2); }
-  .bottom-nav button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; flex: 1; min-width: 0; min-height: 48px; padding: 3px 1px; border: 0; border-radius: 10px; color: #7f8da8; background: transparent; font-size: 8px; white-space: nowrap; }
-  .bottom-nav button.active { color: var(--cyan); background: linear-gradient(180deg,rgba(17,213,247,.08),transparent); }
+  .bottom-nav { position: fixed; z-index: 50; inset: auto 0 0; display: flex; align-items: stretch; gap: 8px; padding: 8px 12px max(8px,env(safe-area-inset-bottom)); pointer-events: none; }
+  .bottom-nav-group { display: flex; flex: 1; min-width: 0; padding: 4px; border: 1px solid rgba(99,171,220,.22); border-radius: 32px; background: rgba(12,23,43,.96); box-shadow: 0 8px 28px #0006; pointer-events: auto; }
+  .bottom-nav button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; flex: 1; min-width: 0; min-height: 58px; padding: 4px; border: 0; border-radius: 28px; color: #a3b2cd; background: transparent; font-size: 10px; white-space: nowrap; }
+  .bottom-nav button.active { color: #e8fcff; background: linear-gradient(135deg,#147ac4,#07547c); }
+  .bottom-nav .bottom-nav-ai { flex: 0 0 70px; color: #6be9f6; border: 1px solid rgba(55,208,231,.4); background: rgba(10,28,48,.97); box-shadow: 0 8px 28px #0006; pointer-events: auto; }
+  .bottom-nav .bottom-nav-ai.active { color: #eaffff; background: linear-gradient(135deg,#17adc2,#1766ae); }
   .bottom-nav button.active svg { filter: drop-shadow(0 0 7px rgba(17,213,247,.42)); }
   .toast { bottom: 82px; }
 }

@@ -120,7 +120,10 @@ function App({phoneAvailable=false}:{phoneAvailable?:boolean}) {
       </main>
 
       <nav className="bottom-nav" aria-label={t("Asosiy navigatsiya")}>
-        {navItems.map((item) => <button key={item.id} className={tab === item.id ? 'active' : ''} onClick={() => { setTab(item.id); }}><item.icon size={19}/><span>{t(item.label)}</span></button>)}
+        <div className="bottom-nav-group">
+          {navItems.filter(item => ['home', 'shop', 'profile'].includes(item.id)).map(item => <button key={item.id} className={tab === item.id ? 'active' : ''} aria-current={tab === item.id ? 'page' : undefined} onClick={() => setTab(item.id)}><item.icon size={20}/><span>{t(item.label)}</span></button>)}
+        </div>
+        <button className={`bottom-nav-ai ${tab === 'coach' ? 'active' : ''}`} aria-current={tab === 'coach' ? 'page' : undefined} onClick={() => setTab('coach')}><Bot size={21}/><span>{t('AI')}</span></button>
       </nav>
       {toast && <div className="toast" role="status"><Info size={17}/><span>{t(toast)}</span><button onClick={() => setToast('')} aria-label={t("Yopish")}><X size={15}/></button></div>}
     </div>);
