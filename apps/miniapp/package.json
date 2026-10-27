@@ -15,7 +15,8 @@
     "verify:registration": "node scripts/verify-registration.cjs",
     "verify:virapin": "node scripts/verify-virapin.cjs",
     "verify:resellcodes": "node scripts/verify-resellcodes.cjs",
-    "verify:catalog": "node scripts/verify-catalog.cjs"
+    "verify:catalog": "node scripts/verify-catalog.cjs",
+    "verify:ai": "node scripts/verify-ai.cjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",

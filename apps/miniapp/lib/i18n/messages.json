@@ -1630,5 +1630,81 @@
   "VAYNEXO ARENA": {
     "ru": "VAYNEXO АРЕНА",
     "en": "VAYNEXO ARENA"
+  },
+  "AI chati": {
+    "ru": "Чат с ИИ",
+    "en": "AI chat"
+  },
+  "Salom! Sizga qanday yordam bera olaman?": {
+    "ru": "Здравствуйте! Чем могу помочь?",
+    "en": "Hello! How can I help?"
+  },
+  "Xabar yozing...": {
+    "ru": "Напишите сообщение...",
+    "en": "Type a message..."
+  },
+  "Javob yozilmoqda...": {
+    "ru": "Пишу ответ...",
+    "en": "Writing a reply..."
+  },
+  "Chatdan foydalanish uchun ilovani Telegram ichida oching.": {
+    "ru": "Чтобы пользоваться чатом, откройте приложение в Telegram.",
+    "en": "Open the app inside Telegram to use the chat."
+  },
+  "Ilovani yopib, Telegram bot orqali qayta oching.": {
+    "ru": "Закройте приложение и снова откройте через Telegram-бота.",
+    "en": "Close the app and reopen it through the Telegram bot."
+  },
+  "Biroz kutib, qayta urinib ko‘ring.": {
+    "ru": "Немного подождите и повторите.",
+    "en": "Wait a moment and try again."
+  },
+  "AI hozir javob bera olmadi. Birozdan keyin qayta urinib ko‘ring.": {
+    "ru": "ИИ сейчас не смог ответить. Повторите позже.",
+    "en": "AI could not respond right now. Try again shortly."
+  },
+  "Reklama": {
+    "ru": "Реклама",
+    "en": "Advertisement"
+  },
+  "VAYNEXO yangiliklari": {
+    "ru": "Новости VAYNEXO",
+    "en": "VAYNEXO news"
+  },
+  "Patchlar, tadbirlar va foydali qo‘llanmalar.": {
+    "ru": "Патчи, события и полезные руководства.",
+    "en": "Patches, events and useful guides."
+  },
+  "Lentani ko‘rish": {
+    "ru": "Посмотреть ленту",
+    "en": "View feed"
+  },
+  "VAYNEXO Arena": {
+    "ru": "VAYNEXO Арена",
+    "en": "VAYNEXO Arena"
+  },
+  "Turnirlar va jamoalar uchun yagona bo‘lim.": {
+    "ru": "Раздел для турниров и команд.",
+    "en": "One section for tournaments and teams."
+  },
+  "Bo‘limni ko‘rish": {
+    "ru": "Посмотреть раздел",
+    "en": "View section"
+  },
+  "Hozircha turnirlar yo‘q": {
+    "ru": "Пока нет турниров",
+    "en": "No tournaments yet"
+  },
+  "Jamoalar hali qo‘shilmagan": {
+    "ru": "Команды ещё не добавлены",
+    "en": "No teams added yet"
+  },
+  "Reyting tayyorlanmoqda": {
+    "ru": "Рейтинг готовится",
+    "en": "Rankings are being prepared"
+  },
+  "Yangiliklar shu bo‘limda e’lon qilinadi.": {
+    "ru": "Обновления будут опубликованы в этом разделе.",
+    "en": "Updates will be posted in this section."
   }
 }

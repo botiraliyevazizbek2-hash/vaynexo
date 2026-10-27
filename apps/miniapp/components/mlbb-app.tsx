@@ -1,4 +1,6 @@
 'use client';
+import { AIChat } from './ai/ai-chat';
+import { SectionAdvertisement } from './home/section-advertisement';
 import { HomePage } from './home/home-page';
 import { ServicePage } from './home/service-page';
 import { useLiveCatalog } from './shop/use-live-catalog';
@@ -39,9 +41,6 @@ function App({phoneAvailable=false}:{phoneAvailable?:boolean}) {
     const catalog = useLiveCatalog();
     const shop = useDemoShop(catalog.regionProducts);
     const { userId, serverId } = shop;
-    const [coachQuestion, setCoachQuestion] = useState('');
-    const [coachReplyQuestion, setCoachReplyQuestion] = useState('');
-    const coachReply = coachReplyQuestion ? t('Savolingiz: “{question}”\n\nDemo yordamchi tavsiyasi: avval tanlagan rolingizni aniqlang, joriy patchga mos builddan foydalaning va raqib tarkibiga qarab counter tanlang. Bu javob hozircha demo; aniq statistika va patch manbalari AI backend ulanganda qo‘shiladi.', { question: coachReplyQuestion }) : t('Salom! Men MLBB bo‘yicha yordamchingizman. Qahramon, build, emblem yoki counter haqida so‘rashingiz mumkin.');
     const [copied, setCopied] = useState(false);
     const [toast, setToast] = useState('');
     const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -70,13 +69,6 @@ function App({phoneAvailable=false}:{phoneAvailable?:boolean}) {
             notify(`ID: ${userId} (${serverId})`);
         }
     };
-    const submitCoach = () => {
-        if (!coachQuestion.trim())
-            return;
-        const q = coachQuestion.trim();
-        setCoachReplyQuestion(q);
-        setCoachQuestion('');
-    };
     const navItems: {
         id: Tab;
         label: string;
@@ -84,12 +76,12 @@ function App({phoneAvailable=false}:{phoneAvailable?:boolean}) {
     }[] = [
         { id: 'home', label: 'Asosiy', icon: Home },
         { id: 'shop', label: 'Do‘kon', icon: Diamond },
-        { id: 'coach', label: 'AI Murabbiy', icon: Bot },
+        { id: 'coach', label: 'AI', icon: Bot },
         { id: 'news', label: 'Yangiliklar', icon: Flame },
         { id: 'profile', label: 'Profil', icon: UserRound },
     ];
     const currentTitle: Record<Tab, string> = {
-        marketplace:'Akkaunt savdosi',boost:'Boost xizmati',rental:'Akkauntlar ijarasi',telegram:'Telegram xizmatlari',admin: 'Katalog va ustama', home: 'VAYNEXO', shop: 'Do‘kon & Olmoslar', coach: 'AI Murabbiy', news: 'Yangiliklar', tournaments: 'Turnirlar & Jamoalar', profile: 'Profil', order: 'Buyurtma holati',
+        marketplace:'Akkaunt savdosi',boost:'Boost xizmati',rental:'Akkauntlar ijarasi',telegram:'Telegram xizmatlari',admin: 'Katalog va ustama', home: 'VAYNEXO', shop: 'Do‘kon & Olmoslar', coach: 'Sun’iy intellekt', news: 'Yangiliklar', tournaments: 'Turnirlar & Jamoalar', profile: 'Profil', order: 'Buyurtma holati',
     };
     return (<div className="app-shell">
       <aside className="desktop-sidebar">
@@ -115,16 +107,16 @@ function App({phoneAvailable=false}:{phoneAvailable?:boolean}) {
 
         {syncFailed && <div role="status" className="disclaimer">{t("Til sinxronlanmadi. Qayta urinib ko‘ring.")}</div>}<div className="page-content">
           {tab === 'admin' && <PricingPanel/>}
-          {(tab==='marketplace'||tab==='boost'||tab==='rental'||tab==='telegram')&&<ServicePage service={tab} onBack={()=>setTab('home')} onShop={goToShop}/>}
+          {(tab==='marketplace'||tab==='boost'||tab==='rental'||tab==='telegram')&&<ServicePage service={tab} onBack={()=>setTab('home')}/>}
           {tab === 'home' && <HomePage onNavigate={setTab}/>}
           {tab === 'shop' && <ShopPage catalog={catalog} shop={shop} onOrders={() => setTab('order')}/>}
-          {tab === 'coach' && <CoachPage question={coachQuestion} setQuestion={setCoachQuestion} reply={coachReply} submit={submitCoach} notify={notify}/>}
+          <div hidden={tab!=='coach'}><AIChat/></div>
           {tab === 'news' && <NewsPage notify={notify}/>}
-          {tab === 'tournaments' && <TournamentsPage notify={notify}/>}
+          {tab === 'tournaments' && <TournamentsPage/>}
           {tab === 'profile' && <ProfilePage account={account} phoneAvailable={phoneAvailable} userId={userId} serverId={serverId} copyId={copyId} copied={copied} notify={notify}/>}
           {tab === 'order' && <OrdersPage shop={shop} onShop={goToShop}/>}
         </div>
-        <footer className="app-footer"><div className="footer-logo"><div className="brand-mark mini-mark"><Gamepad2 size={15}/></div><b>{"VAYNEXO"}</b></div><span>{t('O‘yinlar va raqamli xizmatlar')}</span><button onClick={() => notify('Maxfiylik va foydalanish shartlari backend ishga tushishidan oldin qo‘shiladi.')}><ShieldCheck size={14}/>{" " + t("Xavfsizlik")}</button></footer>
+        {tab!=='coach'&&<footer className="app-footer"><div className="footer-logo"><div className="brand-mark mini-mark"><Gamepad2 size={15}/></div><b>{"VAYNEXO"}</b></div><span>{t('O‘yinlar va raqamli xizmatlar')}</span><button onClick={() => notify('Maxfiylik va foydalanish shartlari backend ishga tushishidan oldin qo‘shiladi.')}><ShieldCheck size={14}/>{" " + t("Xavfsizlik")}</button></footer>}
       </main>
 
       <nav className="bottom-nav" aria-label={t("Asosiy navigatsiya")}>
@@ -142,22 +134,6 @@ function SectionTitle({ icon: Icon, title, aside, onAside }: {
     const { t } = useI18n();
     return <div className="section-title"><div className="section-title-main"><Icon size={18}/><h2>{t(title)}</h2></div>{aside && <button onClick={onAside}>{t(aside)}<ArrowRight size={14}/></button>}</div>;
 }
-function CoachPage({ question, setQuestion, reply, submit, notify }: {
-    question: string;
-    setQuestion: (s: string) => void;
-    reply: string;
-    submit: () => void;
-    notify: (msg: string) => void;
-}) {
-    const { t } = useI18n();
-    const [role, setRole] = useState('Jungler');
-    const [rank, setRank] = useState('Mythic');
-    const suggestions = ['Lylia uchun build', 'Jungle counterlar', 'Solo rank maslahati', 'Emblem tanlash'];
-    return <div className="content-stack"><div className="page-intro"><div><div className="eyebrow small-eyebrow"><Sparkles size={13}/>{" " + t("SMART COACH")}</div><h2>{t("AI Murabbiy")}</h2><p>{t("O\u2018zbek tilida o\u2018yin bo\u2018yicha yordam va qo\u2018llanmalar.")}</p></div><span className="ai-status"><span className="status-dot"/>{" " + t("Demo AI")}</span></div>
-    <div className="coach-layout"><section className="coach-chat"><div className="chat-header"><div className="ai-orb"><Bot size={23}/><span /></div><div><h3>{t("MLBB Coach")}</h3><p>{t("Qahramonlar \u00B7 Build \u00B7 Macro")}</p></div><span className="available-pill">{t("Sinov")}</span></div><div className="chat-context"><div className="context-chip"><Gamepad2 size={14}/><select value={role} onChange={e => setRole(e.target.value)} aria-label={t("O\u2018yin roli")}><option value="Jungler">{t("Jungler")}</option><option value="Mid Laner">{t("Mid Laner")}</option><option value="Gold Laner">{t("Gold Laner")}</option><option value="Roamer">{t("Roamer")}</option><option value="EXP Laner">{t("EXP Laner")}</option></select><ChevronDown size={12}/></div><div className="context-chip"><Trophy size={14}/><select value={rank} onChange={e => setRank(e.target.value)} aria-label={t("Rank")}><option value="Epic">{t("Epic")}</option><option value="Legend">{t("Legend")}</option><option value="Mythic">{t("Mythic")}</option><option value="Mythical Honor">{t("Mythical Honor")}</option><option value="Mythical Glory">{t("Mythical Glory")}</option><option value="Mythical Immortal">{t("Mythical Immortal")}</option></select><ChevronDown size={12}/></div></div><div className="chat-messages"><div className="message-row"><div className="message-avatar"><Bot size={16}/></div><div className="chat-bubble assistant-bubble"><span className="message-label">{t("MLBB COACH")}</span><p>{t("Salom, o\u2018yinchi! \uD83D\uDC4B Men MLBB bo\u2018yicha yordamchingizman. Qahramonlar, buildlar, counter-pick va rank bo\u2018yicha savollaringizni yozing.")}</p><div className="bubble-meta">{t("Demo yordamchi \u00B7 hozir")}</div></div></div><div className="message-row"><div className="message-avatar"><Bot size={16}/></div><div className="chat-bubble assistant-bubble reply-bubble"><p>{t(reply)}</p><div className="bubble-meta">{t("Manba ulangan emas \u00B7 javobni tekshiring")}</div></div></div></div><div className="suggestion-row">{suggestions.map(s => <button key={s} onClick={() => setQuestion(t(s))}>{t(s)}</button>)}</div><form className="chat-composer" onSubmit={e => { e.preventDefault(); submit(); }}><input value={question} onChange={e => setQuestion(e.target.value)} placeholder={t("Savolingizni yozing...")}/><button type="submit" className="send-button" aria-label={t("Yuborish")}><Send size={17}/></button></form><div className="ai-disclaimer"><ShieldCheck size={13}/>{" " + t("Tavsiyalar hozircha demo. Patch ma\u2019lumotlari va AI API hali ulanmagan.")}</div></section>
-      <aside className="coach-side"><div className="side-info-card"><div className="side-info-icon purple"><BookOpen size={19}/></div><h3>{t("Qanday yordam beradi?")}</h3><p>{t("Tanlagan rolingiz va rankingizni hisobga olgan holda savollaringizga yo\u2018naltirilgan javob berish uchun mo\u2018ljallangan.")}</p><div className="mini-divider"/><div className="check-line"><CheckCircle2 size={15}/>{" " + t("Build va emblem tavsiyalari")}</div><div className="check-line"><CheckCircle2 size={15}/>{" " + t("Counter-pick tushuntirishlari")}</div><div className="check-line"><CheckCircle2 size={15}/>{" " + t("Patchga bog\u2018langan maslahatlar")}</div></div><div className="side-info-card meta-card"><div className="meta-top"><Activity size={17}/><span>{t("PATCH HOLATI")}</span></div><h3>{t("Ma\u2019lumot manbasi")}</h3><p>{t("Joriy patch raqami va real statistika backend orqali ulanganda ko\u2018rsatiladi.")}</p><button className="button secondary full" onClick={() => notify('Patch ma’lumotlari integratsiya bosqichida.')}>{t("Holatni ko\u2018rish") + " "}<ArrowRight size={14}/></button></div></aside></div>
-  </div>;
-}
 function NewsPage({ notify }: {
     notify: (msg: string) => void;
 }) {
@@ -170,33 +146,13 @@ function NewsPage({ notify }: {
         { tag: 'ESPORTS', color: 'blue', title: 'Mahalliy MLBB hamjamiyati', desc: 'Jamoalar, turnir e’lonlari va musobaqa natijalarini kuzating.', date: 'Hamjamiyat bo‘limi', art: 'esports' },
     ];
     const filtered = news.filter(n => filter === 'Barchasi' || n.tag.toLowerCase() === filter.toLowerCase());
-    return <div className="content-stack"><div className="page-intro"><div><div className="eyebrow small-eyebrow"><Flame size={13}/>{" " + t("YANGI MA\u2019LUMOTLAR")}</div><h2>{t("Yangiliklar & Patch")}</h2><p>{t("MLBB yangiliklari va o\u2018yin bo\u2018yicha foydali kontent.")}</p></div><button className="icon-button" onClick={() => notify('Demo kontent — yangilanish feed’i hali ulanmagan.')}><Activity size={17}/></button></div>
-    <div className="news-feature"><div className="news-feature-art"><div className="news-orbit orbit-a"/><div className="news-orbit orbit-b"/><div className="news-gem"><Sparkles size={44}/></div><span className="news-art-label">{t("VAYNEXO INSIGHTS")}</span></div><div className="news-feature-copy"><span className="tag-pill cyan-tag">{t("O\u2018YIN QO\u2018LLANMASI")}</span><h3>{t("Yaxshiroq o\u2018yna.")}<br /><span>{t("Ko\u2018proq o\u2018rgan.")}</span></h3><p>{t("Build, counter va strategiyalarni o\u2018zbek tilida o\u2018rganish uchun yagona markaz.")}</p><button className="button primary" onClick={() => notify('Qo‘llanmalar kontenti bosqichma-bosqich qo‘shiladi.')}>{t("Qo\u2018llanmalarni ko\u2018rish") + " "}<ArrowRight size={15}/></button></div></div>
-    <div className="category-pills news-filters">{['Barchasi', 'Patch', 'Event', 'Guide', 'Esports'].map(f => <button key={f} className={filter === f ? 'selected' : ''} onClick={() => setFilter(f)}>{t(f)}</button>)}</div><div className="news-grid">{filtered.map((item, i) => <article className="news-card" key={item.tag}><div className={`news-thumb ${item.art}`}><span className={`tag-pill ${item.color}-tag`}>{t(item.tag)}</span><div className="news-thumb-icon">{item.art === 'patch' ? <Swords size={27}/> : item.art === 'guide' ? <BookOpen size={27}/> : item.art === 'event' ? <CalendarDays size={27}/> : <Trophy size={27}/>}</div><span className="news-thumb-number">{t("0")}{i + 1}</span></div><div className="news-card-body"><span className="news-date"><Clock3 size={12}/>{t(item.date)}</span><h3>{t(item.title)}</h3><p>{t(item.desc)}</p><button onClick={() => notify('Bu material demo ko‘rinishida. Kontent boshqaruv tizimi keyin ulanadi.')}>{t("Batafsil") + " "}<ArrowRight size={14}/></button></div></article>)}</div>
+    return <div className="content-stack news-page"><SectionAdvertisement section="news"/>
+    <div className="category-pills news-filters" id="news-feed">{['Barchasi', 'Patch', 'Event', 'Guide', 'Esports'].map(f => <button key={f} className={filter === f ? 'selected' : ''} onClick={() => setFilter(f)}>{t(f)}</button>)}</div><div className="news-grid">{filtered.map((item, i) => <article className="news-card" key={item.tag}><div className={`news-thumb ${item.art}`}><span className={`tag-pill ${item.color}-tag`}>{t(item.tag)}</span><div className="news-thumb-icon">{item.art === 'patch' ? <Swords size={27}/> : item.art === 'guide' ? <BookOpen size={27}/> : item.art === 'event' ? <CalendarDays size={27}/> : <Trophy size={27}/>}</div><span className="news-thumb-number">{t("0")}{i + 1}</span></div><div className="news-card-body"><span className="news-date"><Clock3 size={12}/>{t(item.date)}</span><h3>{t(item.title)}</h3><p>{t(item.desc)}</p><button onClick={() => notify('Bu material demo ko‘rinishida. Kontent boshqaruv tizimi keyin ulanadi.')}>{t("Batafsil") + " "}<ArrowRight size={14}/></button></div></article>)}</div>
   </div>;
 }
-function TournamentsPage({ notify }: {
-    notify: (msg: string) => void;
-}) {
-    const { t } = useI18n();
-    const [section, setSection] = useState('Turnirlar');
-    return <div className="content-stack"><div className="page-intro"><div><div className="eyebrow small-eyebrow"><Trophy size={13}/>{" " + t("VAYNEXO ARENA")}</div><h2>{t("Turnirlar & Jamoalar")}</h2><p>{t("Mahalliy musobaqalar, jamoalar va o\u2018yinchilar uchun markaz.")}</p></div><span className="secure-chip"><Users size={14}/>{" " + t("Hamjamiyat")}</span></div>
-    <div className="segmented-tabs">{['Turnirlar', 'Jamoalar', 'Reyting'].map(s => <button key={s} className={section === s ? 'selected' : ''} onClick={() => setSection(s)}>{s === 'Turnirlar' ? <Trophy size={15}/> : s === 'Jamoalar' ? <Users size={15}/> : <Activity size={15}/>} {t(s)}</button>)}</div>
-    {section === 'Turnirlar' && <><section className="tournament-hero"><div className="tourney-overlay"><span className="tag-pill red-tag"><i />{" " + t("NAMUNA TURNIR")}</span><span className="region-tag"><Activity size={12}/>{" " + t("O\u2018zbekiston")}</span><h3>{t("UZBEKISTAN")}<br /><span>{t("MLBB CUP")}</span></h3><p>{t("Hamjamiyat uchun turnir maketi")}</p><div className="tourney-stats"><div><small>{t("FORMAT")}</small><b>{t("5v5 Draft")}</b></div><div><small>{t("HOLATI")}</small><b className="cyan-text">{t("Rejalashtirilmoqda")}</b></div><div><small>{t("SOVRIN")}</small><b>{t("Keyin e\u2019lon qilinadi")}</b></div></div><button className="button primary" onClick={() => notify('Ro‘yxatdan o‘tish backend va turnir reglamenti tayyor bo‘lganda yoqiladi.')}>{t("Qiziqish bildirish") + " "}<ArrowRight size={15}/></button></div><div className="tourney-art"><div className="trophy-glow"><Trophy size={77}/></div><div className="tourney-ring ring-1"/><div className="tourney-ring ring-2"/></div></section><SectionTitle icon={CalendarDays} title={t("Rejalashtirilgan turnirlar")} aside={t("Barchasi")} onAside={() => notify('Hozircha demo taqvim.')}/><div className="empty-state compact-empty"><div className="empty-icon"><CalendarDays size={24}/></div><h3>{t("Turnir kalendari ulanmagan")}</h3><p>{t("Haqiqiy tadbirlar, sanalar va reglamentlar tekshirilgan manbalardan qo\u2018shiladi.")}</p></div></>}
-    {section === 'Jamoalar' && <><div className="team-grid"><TeamCard name={t("Toshkent Cyber Wolves")} initials="TW" rank="Mythic" detail={t("Jamoa profili uchun namuna")} color="blue" onClick={() => notify('Jamoa profillari backendga ulanganidan keyin ochiladi.')}/><TeamCard name={t("Samarqand Titans")} initials="ST" rank="Glory" detail={t("Yangi a\u2019zolarni qidirish \u2014 demo")} color="purple" onClick={() => notify('Jamoa profillari backendga ulanganidan keyin ochiladi.')}/><TeamCard name={t("Buxoro MLBB Club")} initials="BC" rank="Mythic" detail={t("Hamjamiyat jamoasi maketi")} color="gold" onClick={() => notify('Jamoa profillari backendga ulanganidan keyin ochiladi.')}/></div><button className="button secondary full" onClick={() => notify('Jamoa yaratish funksiyasi backendga ulangach ishlaydi.')}><Plus size={16}/>{" " + t("O\u2018z jamoangni yaratish")}</button></>}
-    {section === 'Reyting' && <div className="ranking-card"><div className="ranking-heading"><div><h3>{t("O\u2018zbekiston top o\u2018yinchilari")}</h3><p>{t("Reyting interfeysi maketi")}</p></div><span className="demo-badge">{t("DEMO")}</span></div>{[{ n: 1, name: 'Apex_Slayer', rank: 'Mythic Immortal', wr: '76%', matches: '420 o‘yin' }, { n: 2, name: 'TashkentGhost', rank: 'Mythic Immortal', wr: '71%', matches: '389 o‘yin' }, { n: 3, name: 'SamarkandKing', rank: 'Mythic Glory', wr: '68%', matches: '312 o‘yin' }].map(p => <div className="rank-row" key={p.n}><div className={`rank-place place-${p.n}`}>{p.n}</div><div className="avatar rank-avatar">{t(p.name[0])}</div><div className="rank-name"><b>{t(p.name)}</b><small>{t(p.rank)}</small></div><div className="rank-score"><b>{p.wr}{" " + t("WR")}</b><small>{t(p.matches)}</small></div></div>)}<p className="ranking-note"><Info size={14}/>{" " + t("Ko\u2018rsatkichlar uydirma namuna. Haqiqiy reyting ishonchli ma\u2019lumot manbasini talab qiladi.")}</p></div>}
-  </div>;
-}
-function TeamCard({ name, initials, rank, detail, color, onClick }: {
-    name: string;
-    initials: string;
-    rank: string;
-    detail: string;
-    color: string;
-    onClick: () => void;
-}) {
-    const { t } = useI18n();
-    return <button className="team-card" onClick={onClick}><div className={`team-logo ${color}`}>{initials}</div><div className="team-card-main"><b>{t(name)}</b><span><Trophy size={12}/>{rank}</span><small>{t(detail)}</small></div><ChevronRight size={17}/></button>;
+function TournamentsPage(){
+ const {t}=useI18n();const [section,setSection]=useState('Turnirlar');
+ return <div className="content-stack arena-page"><SectionAdvertisement section="tournaments"/><div className="segmented-tabs" id="arena-tabs">{['Turnirlar','Jamoalar','Reyting'].map(s=><button key={s} className={section===s?'selected':''} onClick={()=>setSection(s)}>{s==='Turnirlar'?<Trophy size={15}/>:s==='Jamoalar'?<Users size={15}/>:<Activity size={15}/>} {t(s)}</button>)}</div><div className="empty-state compact-empty"><div className="empty-icon">{section==='Turnirlar'?<CalendarDays size={24}/>:section==='Jamoalar'?<Users size={24}/>:<Trophy size={24}/>}</div><h3>{t(section==='Turnirlar'?'Hozircha turnirlar yo‘q':section==='Jamoalar'?'Jamoalar hali qo‘shilmagan':'Reyting tayyorlanmoqda')}</h3><p>{t('Yangiliklar shu bo‘limda e’lon qilinadi.')}</p></div></div>;
 }
 function ProfilePage({ userId, serverId, copyId, copied, notify, account, phoneAvailable }: {
     account: AccountState;
