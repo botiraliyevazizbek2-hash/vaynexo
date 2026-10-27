@@ -18,3 +18,10 @@ test('shared PostgreSQL AI quota enforces cooldown and daily limit',async()=>{
 test('AI route rejects unsigned callers before provider or database work',async()=>{
  const {POST}=require('../app/api/ai/chat/route.ts');assert.equal((await POST(new Request('https://test',{method:'POST',body:'{}'}))).status,401);
 });
+
+test('provider quota and rate limits are distinct and never expose response details',async()=>{
+ for(const [body,code] of [[{error:{code:'insufficient_quota',message:'private details'}},'provider_quota'],[{error:{code:'rate_limit_exceeded',message:'private details'}},'provider_limit']]){
+ const api=createAIClient({apiKey:'test-private-key',fetchImpl:async()=>Response.json(body,{status:429})});
+ await assert.rejects(api.reply({messages:[{role:'user',content:'Hi'}],language:'en'}),e=>e.code===code&&!e.message.includes('private'));
+ }
+});

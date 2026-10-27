@@ -9,3 +9,15 @@ test('AI tab contains only a working chat and sends signed conversation history'
 test('news has a compact section advertisement and no old poster',async({page})=>{
  await page.route('https://telegram.org/**',r=>r.fulfill({body:''}));await page.goto('/?tab=news&lang=en');await expect(page.locator('.news-feature')).toHaveCount(0);await expect(page.locator('.v-section-ad.news')).toBeVisible();await expect(page.locator('.news-grid .news-card')).toHaveCount(4);
 });
+test('provider limits show a clear error and preserve the unsent question',async({page})=>{
+ await page.route('https://telegram.org/**',r=>r.fulfill({body:''}));
+ await page.addInitScript(()=>{window.Telegram={WebApp:{initData:'signed-ai-fixture',ready(){},expand(){}}};});
+ await page.route('**/api/preferences/language',r=>r.fulfill({json:{ok:true,language:'en'}}));
+ await page.route('**/api/ai/chat',r=>r.fulfill({status:503,json:{ok:false,error:'provider_quota'}}));
+ await page.goto('/?tab=coach&lang=en');
+ await page.getByPlaceholder('Type a message...').fill('Keep my question');
+ await page.getByRole('button',{name:'Send',exact:true}).click();
+ await expect(page.getByRole('alert')).toHaveText('The AI service limit has been reached. Please try again later.');
+ await expect(page.getByPlaceholder('Type a message...')).toHaveValue('Keep my question');
+ await expect(page.locator('.v-ai-message.assistant')).toHaveCount(0);
+});

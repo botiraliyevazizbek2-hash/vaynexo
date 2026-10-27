@@ -1706,5 +1706,9 @@
   "Yangiliklar shu bo‘limda e’lon qilinadi.": {
     "ru": "Обновления будут опубликованы в этом разделе.",
     "en": "Updates will be posted in this section."
+  },
+  "AI xizmatining limiti tugagan. Keyinroq qayta urinib ko‘ring.": {
+    "ru": "Лимит сервиса ИИ исчерпан. Попробуйте позже.",
+    "en": "The AI service limit has been reached. Please try again later."
   }
 }
