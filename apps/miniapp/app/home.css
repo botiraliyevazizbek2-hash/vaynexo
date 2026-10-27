@@ -20,3 +20,9 @@
 .v-service-image-card .v-service-copy p{max-width:100%;padding-right:7px}
 @media(max-width:680px){.v-service-image-card .v-service-copy{padding:14px 13px 26px}.v-service-image-card .v-service-copy h3{font-size:15px}.v-service-image-card .v-service-copy p{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.v-service-art img{transition:none}.v-service-image-card:hover .v-service-art img{transform:none}}
+
+.v-service-copy h3.v-service-name{display:flex;align-items:flex-start;gap:7px;line-height:1.4}
+.v-service-name>span{flex:1;min-width:0}
+.v-service-emoji{display:block;flex:0 0 24px;width:24px;height:24px;margin-top:-1px}
+.v-service-emoji img{display:block;width:24px;height:24px;object-fit:contain}
+@media(max-width:350px){.v-service-copy h3.v-service-name{gap:5px}.v-service-emoji{flex-basis:21px;width:21px;height:21px}.v-service-emoji img{width:21px;height:21px}}
