@@ -1,8 +1,13 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),ts=require('typescript');
 require.extensions['.ts']=(m,f)=>m._compile(ts.transpileModule(fs.readFileSync(f,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText,f);
 const {parsePricing,sellingPrice,isCatalogAdmin}=require('../lib/catalog/pricing.ts');
-const {catalogService}=require('../lib/catalog/service.ts');
+const {catalogService,selectedCatalogSupplier}=require('../lib/catalog/service.ts');
 const {PGlite}=require('@electric-sql/pglite');
+test('a stored Shop2Topup key never changes the catalogue supplier without explicit selection',()=>{
+ const key=process.env.SHOP2TOPUP_API_KEY, selected=process.env.CATALOG_SUPPLIER;
+ try {process.env.SHOP2TOPUP_API_KEY='some.secret';delete process.env.CATALOG_SUPPLIER;assert.equal(selectedCatalogSupplier(),'resellcodes');process.env.CATALOG_SUPPLIER='shop2topup';assert.equal(selectedCatalogSupplier(),'shop2topup');}
+ finally {if(key===undefined)delete process.env.SHOP2TOPUP_API_KEY;else process.env.SHOP2TOPUP_API_KEY=key;if(selected===undefined)delete process.env.CATALOG_SUPPLIER;else process.env.CATALOG_SUPPLIER=selected;}
+});
 test('exact markup and FX conversion: zero markup, fractional percentages and upward rounding',()=>{
  assert.deepEqual(parsePricing('10.25','13000.1234'),{markupBps:1025,rate:'13000.1234'});
  assert.equal(sellingPrice('1.0000',1000,'13000'),14300);

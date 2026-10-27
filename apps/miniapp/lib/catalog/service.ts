@@ -1,20 +1,25 @@
 import { createResellcodesClient } from '../suppliers/resellcodes';
+import { createShop2TopupClient } from '../suppliers/shop2topup';
 import { isMLBBCategory } from '../shop/regions';
 import { sellingPrice } from './pricing';
 export type Query=(sql:string,values?:unknown[])=>Promise<{rows:any[]}>;
-type Category=Awaited<ReturnType<ReturnType<typeof createResellcodesClient>['getTopupOffers']>>;
-export function catalogService(query:Query,client=()=>createResellcodesClient()) {
+type Category=Awaited<ReturnType<ReturnType<typeof createResellcodesClient>['getTopupOffers']>> & {supplier?: 'shop2topup'};
+// A stored key alone must not silently replace the working catalogue. Switching
+// suppliers is explicit and can happen after the new provider has been verified.
+export function selectedCatalogSupplier(): 'shop2topup'|'resellcodes' {
+ return process.env.CATALOG_SUPPLIER === 'shop2topup' ? 'shop2topup' : 'resellcodes';
+}
+export function catalogService(query:Query,client=()=>selectedCatalogSupplier()==='shop2topup' ? createShop2TopupClient() : createResellcodesClient()) {
  async function refresh() {
   // A database lease prevents concurrent Vercel instances from flooding the provider.
-  const claim=await query(`UPDATE vaynexo_catalog_cache SET lease_until=now()+interval '5 minutes' WHERE id=true AND lease_until<now() AND retry_after<now() AND (synced_at IS NULL OR synced_at<now()-interval '15 minutes') RETURNING id`);
+  const claim=await query(`UPDATE vaynexo_catalog_cache SET lease_until=now()+interval '5 minutes' WHERE id=true AND lease_until<now() AND retry_after<now() AND (synced_at IS NULL OR synced_at<now()-interval '15 minutes' OR (jsonb_array_length(payload)>0 AND COALESCE(payload->0->>'supplier','resellcodes')<>$1)) RETURNING id`,[selectedCatalogSupplier()]);
   if(!claim.rows.length)return;
   try {
    const api=client();
    if(!(await api.getProfile()).active)throw Error('inactive');
-   const cats=(await api.getTopupCategories()).filter(isMLBBCategory);
+   const cats:{id:string;name:string}[]=(await api.getTopupCategories()).filter(isMLBBCategory);
    if(!cats.length||cats.length>20)throw Error('invalid_catalog');
-   const result:Category[]=[];
-   for(const c of cats) result.push(await api.getTopupOffers(c.id));
+   const result:Category[]=await Promise.all(cats.map(c=>api.getTopupOffers(c.id)));
    // Replace one snapshot, so removed offers disappear and partial failures never publish.
    await query(`UPDATE vaynexo_catalog_cache SET payload=$1::jsonb,synced_at=now(),retry_after=now(),lease_until='1970-01-01' WHERE id=true`,[JSON.stringify(result)]);
   }catch{
@@ -25,10 +30,10 @@ export function catalogService(query:Query,client=()=>createResellcodesClient())
   const settings=(await query('SELECT * FROM vaynexo_catalog_settings WHERE id=true')).rows[0];
   const cache=(await query('SELECT *, synced_at>now()-interval \'1 hour\' AS fresh FROM vaynexo_catalog_cache WHERE id=true')).rows[0];
   const configured=settings?.markup_bps!==null&&settings?.markup_bps!==undefined&&settings?.usd_uzs;
-  const cats:Category[]=(cache?.payload??[]).filter(isMLBBCategory);
+  const cats:Category[]=(cache?.payload??[]).filter(isMLBBCategory).filter((c:Category)=>selectedCatalogSupplier()==='shop2topup' ? c.supplier==='shop2topup' : c.supplier!=='shop2topup');
   const products=configured&&cache?.fresh?cats.flatMap(c=>c.offers.filter(o=>Number(o.supplierPriceUSD)>0).map(o=>({
-   id:`rsc:${c.id}:${o.id}`,categoryId:c.id,categoryName:c.name,title:o.name,subtitle:c.name,diamonds:/pass|starlight/i.test(o.name)?'Pass':o.name,
-   icon:/pass|starlight/i.test(o.name)?'ticket':'diamond', price:sellingPrice(o.supplierPriceUSD,settings.markup_bps,String(settings.usd_uzs)),supplier:'resellcodes',
+   id:`${c.supplier==='shop2topup'?'s2t':'rsc'}:${c.id}:${o.id}`,categoryId:c.id,categoryName:c.name,title:o.name,subtitle:c.name,diamonds:/pass|starlight/i.test(o.name)?'Pass':o.name,
+   icon:/pass|starlight/i.test(o.name)?'ticket':'diamond', price:sellingPrice(o.supplierPriceUSD,settings.markup_bps,String(settings.usd_uzs)),supplier:c.supplier??'resellcodes',
    ...(admin?{supplierPriceUSD:o.supplierPriceUSD}:{}),
   }))):[];
   return {configured:!!configured,status:!configured?'awaiting_pricing':!cache?.fresh?'unavailable':'ready',syncedAt:cache?.synced_at??null,products,
