@@ -23,3 +23,17 @@ Subjects inserted after the prefix:
 Each prompt ends with:
 
 > Single still-life cinematic 3D product render, sophisticated realistic materials, not cartoon. Landscape composition 3:2. One clear centered subject, big and immediately recognizable at 160px thumbnail, generous 15 percent framing. Deep midnight navy studio background #101e34, subtle cyan rim light and restrained blue reflections. Crisp premium detail, luminous but controlled. No text, letters, UI, borders, badges, watermarks or people. No card layout outside the subject.
+
+
+## Revised boost and marketplace artwork
+
+The current cards use `public/images/services/boost-v2.webp` and `public/images/services/marketplace-v2.webp`. These were generated with built-in ImageGen and exported as 640px WebP images. Original assets are retained.
+
+### boost-v2.webp
+
+Use case: stylized-concept. Create one exceptionally elegant premium game rank boost service illustration for a navy and cyan Telegram mini app. A single luxurious sculptural crown hovering above three ascending luminous crystal steps, one clean arrow of light rising through the steps toward the crown. Materials: luminous icy cyan crystal, polished platinum, tiny restrained champagne gold accents. Strong simple silhouette, tasteful high-end esports identity. Dark midnight navy seamless studio background, soft teal halo, subtle reflective floor, cinematic product photography quality. All objects large, centered, generous safe space, landscape 3:2. Beautiful, refined and clean rather than busy. NO swords, wings, shield, cartoon, ornate filigree, text, letters, UI, watermark, borders.
+
+### marketplace-v2.webp
+
+Use case: stylized-concept. Create one exceptionally beautiful premium gaming account marketplace illustration for a navy and cyan Telegram mini app. One sculptural frosted sapphire glass profile medallion with an elegant dimensional anonymous person bust embossed inside, another smaller profile medallion behind; two exquisite flowing platinum exchange arrows gently orbit the medallions, suggesting transfer of a game account. Luxurious dark chrome edge, icy cyan light, small champagne gold highlights, subtle violet reflections. A small polished gaming controller lies at the base. Sophisticated clean 3D product rendering, realistic materials, strong uncluttered silhouette instantly clear at small size. Dark midnight navy seamless studio background, soft luminous cyan halo and subtle reflective floor. All objects large, centered, generous safe space, landscape 3:2. NO trading cards, locks, chains, hero portraits, swords, ornate filigree, cartoons, text, letters, UI, watermark, borders.
+
