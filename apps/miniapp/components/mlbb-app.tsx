@@ -12,7 +12,7 @@ import { ShopPage } from './shop/shop-page';
 import { OrdersPage } from './shop/orders-page';
 import { useDemoShop } from './shop/use-demo-shop';
 import type { Language } from '../lib/i18n/core';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Activity, ArrowDownLeft, ArrowRight, Bell, BookOpen, Bot, CalendarDays, Check, CheckCircle2, ChevronDown, ChevronRight, ClipboardList, Clock3, Copy, Crown, Diamond, Flame, Gamepad2, Gift, Headphones, History, Home, Info, Languages, Menu, Newspaper, Plus, Send, Settings, Shield, ShieldCheck, Sparkles, Star, Swords, Ticket, Trophy, UserRound, Users, X, Zap } from 'lucide-react';
 type Tab = 'home' | 'shop' | 'coach' | 'news' | 'tournaments' | 'profile' | 'order' | 'admin' | 'marketplace' | 'boost' | 'rental' | 'telegram';
 function useTelegramWebApp() {
@@ -38,6 +38,33 @@ function App({phoneAvailable=false}:{phoneAvailable?:boolean}) {
     const { t, language, setLanguage, syncFailed } = useI18n();
     useTelegramWebApp();
     const [tab, setTab] = useState<Tab>('home');
+    const [profileDash, setProfileDash] = useState(false);
+    const [profileReveal, setProfileReveal] = useState(false);
+    const transitionLock = useRef(false);
+    const transitionTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+    const dashReady = useRef(false);
+    useEffect(() => {
+        const image = new Image();
+        image.onload = () => { dashReady.current = true; };
+        image.src = '/effects/gusion-kof-dash.webp';
+        return () => {
+            image.onload = null;
+            transitionTimers.current.forEach(clearTimeout);
+        };
+    }, []);
+    const navigate = (next: Tab) => {
+        if (transitionLock.current || next === tab) return;
+        if (next !== 'profile' || !dashReady.current || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            setTab(next);
+            return;
+        }
+        transitionLock.current = true;
+        setProfileDash(true);
+        transitionTimers.current = [
+            setTimeout(() => { setTab(next); setProfileReveal(true); window.scrollTo({top: 0, behavior: 'instant'}); }, 360),
+            setTimeout(() => { setProfileDash(false); setProfileReveal(false); transitionLock.current = false; }, 980),
+        ];
+    };
     const catalog = useLiveCatalog();
     const shop = useDemoShop(catalog.regionProducts);
     const { userId, serverId } = shop;
@@ -57,7 +84,7 @@ function App({phoneAvailable=false}:{phoneAvailable?:boolean}) {
         return () => window.clearTimeout(timer);
     }, [toast]);
     const notify = (message: string) => setToast(message);
-    const goToShop = () => setTab('shop');
+    const goToShop = () => navigate('shop');
     const copyId = async () => {
         if (!userId || !serverId) { notify('Avval do‘konda MLBB ID va serverni kiriting.'); return; }
         try {
@@ -84,17 +111,18 @@ function App({phoneAvailable=false}:{phoneAvailable?:boolean}) {
         marketplace:'Akkaunt savdosi',boost:'Boost xizmati',rental:'Akkauntlar ijarasi',telegram:'Telegram xizmatlari',admin: 'Katalog va ustama', home: 'VAYNEXO', shop: 'Do‘kon & Olmoslar', coach: 'Sun’iy intellekt', news: 'Yangiliklar', tournaments: 'Turnirlar & Jamoalar', profile: 'Profil', order: 'Buyurtma holati',
     };
     return (<div className="app-shell">
+      {profileDash && <div className="vx-dash" aria-hidden="true"><div className="vx-trail"/><div className="vx-knife"/><div className="vx-runner"><img src="/effects/gusion-kof-dash.webp" alt="" decoding="async"/></div></div>}
       <aside className="desktop-sidebar">
         <div className="brand-lockup"><div className="brand-mark v-brand-mark"><img src="/vaynexo-logo-square.svg" alt=""/></div><div><b>VAYNEXO</b><small>{t("O\u2018yinchilar markazi")}</small></div></div>
         <div className="sidebar-label">{t("MENYU")}</div>
         <nav className="side-nav">
-          {navItems.map((item) => <button key={item.id} className={`side-link ${tab === item.id ? 'active' : ''}`} onClick={() => { setTab(item.id); }}><item.icon size={18}/><span>{t(item.label)}</span>{item.id === 'shop' && <i className="nav-dot"/>}</button>)}
-          <button className={`side-link ${tab === 'tournaments' ? 'active' : ''}`} onClick={() => setTab('tournaments')}><Trophy size={18}/><span>{t("Turnirlar")}</span><span className="side-tag">{t("LIVE")}</span></button>
-          <button className={`side-link ${tab === 'order' ? 'active' : ''}`} onClick={() => setTab('order')}><ClipboardList size={18}/><span>{t("Buyurtmalar")}</span></button>
+          {navItems.map((item) => <button key={item.id} className={`side-link ${tab === item.id ? 'active' : ''}`} onClick={() => { navigate(item.id); }}><item.icon size={18}/><span>{t(item.label)}</span>{item.id === 'shop' && <i className="nav-dot"/>}</button>)}
+          <button className={`side-link ${tab === 'tournaments' ? 'active' : ''}`} onClick={() => navigate('tournaments')}><Trophy size={18}/><span>{t("Turnirlar")}</span><span className="side-tag">{t("LIVE")}</span></button>
+          <button className={`side-link ${tab === 'order' ? 'active' : ''}`} onClick={() => navigate('order')}><ClipboardList size={18}/><span>{t("Buyurtmalar")}</span></button>
         </nav>
         <div className="sidebar-spacer"/>
         <div className="help-card"><div className="help-icon"><Headphones size={19}/></div><b>{t("Yordam kerakmi?")}</b><p>{t("Operatorimiz sizga yordam beradi.")}</p><button className="button secondary small" onClick={() => notify('Demo: operator chat integratsiyasi keyin ulanadi.')}>{t("Yordam olish") + " "}<ArrowRight size={14}/></button></div>
-        <button className="v-sidebar-account" onClick={()=>setTab('profile')}><UserRound size={19}/><span><b>{account.user?.firstName||t('Profil')}</b><small>{account.user?.username?'@'+account.user.username:t('Shaxsiy kabinet')}</small></span><ChevronRight size={16}/></button>
+        <button className="v-sidebar-account" onClick={()=>navigate('profile')}><UserRound size={19}/><span><b>{account.user?.firstName||t('Profil')}</b><small>{account.user?.username?'@'+account.user.username:t('Shaxsiy kabinet')}</small></span><ChevronRight size={16}/></button>
       </aside>
 
       <main className="main-area">
@@ -103,13 +131,13 @@ function App({phoneAvailable=false}:{phoneAvailable?:boolean}) {
           <div className="topbar-actions"><select aria-label={t("Ilova tili")} value={language} onChange={e => setLanguage(e.target.value as Language)}><option value="uz">UZ</option><option value="ru">RU</option><option value="en">EN</option></select><button className="icon-button notification-button" aria-label={t("Bildirishnomalar")} onClick={() => notify('Hozircha yangi bildirishnoma yo‘q.')}><Bell size={18}/><i /></button></div>
         </header>
 
-        {showMobileMenu && <div className="mobile-menu-panel">{navItems.map((item) => <button key={item.id} onClick={() => { setTab(item.id); setShowMobileMenu(false); }}><item.icon size={17}/>{t(item.label)}</button>)}<button onClick={() => { setTab('tournaments'); setShowMobileMenu(false); }}><Trophy size={17}/>{t("Turnirlar")}</button><button onClick={() => {setTab('order');setShowMobileMenu(false);}}><ClipboardList size={17}/>{t("Buyurtmalar")}</button></div>}
+        {showMobileMenu && <div className="mobile-menu-panel">{navItems.map((item) => <button key={item.id} onClick={() => { navigate(item.id); setShowMobileMenu(false); }}><item.icon size={17}/>{t(item.label)}</button>)}<button onClick={() => { navigate('tournaments'); setShowMobileMenu(false); }}><Trophy size={17}/>{t("Turnirlar")}</button><button onClick={() => {navigate('order');setShowMobileMenu(false);}}><ClipboardList size={17}/>{t("Buyurtmalar")}</button></div>}
 
-        {syncFailed && <div role="status" className="disclaimer">{t("Til sinxronlanmadi. Qayta urinib ko‘ring.")}</div>}<div className="page-content">
+        {syncFailed && <div role="status" className="disclaimer">{t("Til sinxronlanmadi. Qayta urinib ko‘ring.")}</div>}<div className={`page-content${profileReveal ? ' vx-reveal' : ''}`} aria-busy={profileDash}>
           {tab === 'admin' && <PricingPanel/>}
-          {(tab==='marketplace'||tab==='boost'||tab==='rental'||tab==='telegram')&&<ServicePage service={tab} onBack={()=>setTab('home')}/>}
-          {tab === 'home' && <HomePage onNavigate={setTab}/>}
-          {tab === 'shop' && <ShopPage catalog={catalog} shop={shop} onOrders={() => setTab('order')}/>}
+          {(tab==='marketplace'||tab==='boost'||tab==='rental'||tab==='telegram')&&<ServicePage service={tab} onBack={()=>navigate('home')}/>}
+          {tab === 'home' && <HomePage onNavigate={navigate}/>}
+          {tab === 'shop' && <ShopPage catalog={catalog} shop={shop} onOrders={() => navigate('order')}/>}
           <div hidden={tab!=='coach'}><AIChat/></div>
           {tab === 'news' && <NewsPage notify={notify}/>}
           {tab === 'tournaments' && <TournamentsPage/>}
@@ -121,9 +149,9 @@ function App({phoneAvailable=false}:{phoneAvailable?:boolean}) {
 
       <nav className="bottom-nav" aria-label={t("Asosiy navigatsiya")}>
         <div className="bottom-nav-group">
-          {navItems.filter(item => ['home', 'shop', 'profile'].includes(item.id)).map(item => <button key={item.id} className={tab === item.id ? 'active' : ''} aria-current={tab === item.id ? 'page' : undefined} onClick={() => setTab(item.id)}><item.icon size={20}/><span>{t(item.label)}</span></button>)}
+          {navItems.filter(item => ['home', 'shop', 'profile'].includes(item.id)).map(item => <button key={item.id} className={tab === item.id ? 'active' : ''} aria-current={tab === item.id ? 'page' : undefined} onClick={() => navigate(item.id)}><item.icon size={20}/><span>{t(item.label)}</span></button>)}
         </div>
-        <button className={`bottom-nav-ai ${tab === 'coach' ? 'active' : ''}`} aria-current={tab === 'coach' ? 'page' : undefined} onClick={() => setTab('coach')}><Bot size={21}/><span>{t('AI')}</span></button>
+        <button className={`bottom-nav-ai ${tab === 'coach' ? 'active' : ''}`} aria-current={tab === 'coach' ? 'page' : undefined} onClick={() => navigate('coach')}><Bot size={21}/><span>{t('AI')}</span></button>
       </nav>
       {toast && <div className="toast" role="status"><Info size={17}/><span>{t(toast)}</span><button onClick={() => setToast('')} aria-label={t("Yopish")}><X size={15}/></button></div>}
     </div>);

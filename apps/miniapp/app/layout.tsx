@@ -5,6 +5,7 @@ import Script from 'next/script'
 import './globals.css'
 import './mlbb.css'
 import './home.css'
+import './profile-transition.css'
 
 const inter = Inter({ subsets: ['latin', 'cyrillic'], variable: '--font-inter' })
 const manrope = Manrope({ subsets: ['latin', 'cyrillic'], variable: '--font-manrope' })
