@@ -18,6 +18,7 @@ import {
 import { api, money } from "./api";
 import { dictionaries } from "./i18n";
 import Admin from "./Admin";
+import "./profile-transition.css";
 
 const tabs = [
   ["home", Home],
@@ -27,6 +28,24 @@ const tabs = [
   ["help", Headphones],
 ];
 export default function App() {
+  const [dash, setDash] = useState(false);
+  const [reveal, setReveal] = useState(false);
+  const transitionLock = useRef(false);
+  const transitionTimers = useRef([]);
+  useEffect(() => () => transitionTimers.current.forEach(clearTimeout), []);
+  useEffect(() => { const image = new Image(); image.src = "/effects/gusion-kof-dash.webp"; }, []);
+  function navigate(id) {
+    if (transitionLock.current || id === tab) return;
+    if (id !== "profile" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setTab(id); return;
+    }
+    transitionLock.current = true;
+    setDash(true);
+    transitionTimers.current = [
+      setTimeout(() => { setTab(id); setReveal(true); }, 360),
+      setTimeout(() => { setDash(false); setReveal(false); transitionLock.current = false; }, 980),
+    ];
+  }
   const [lang, setLang] = useState(
     localStorage.getItem("vaynexo-lang") || "uz",
   );
@@ -240,6 +259,10 @@ export default function App() {
     return <Admin lang={lang} chooseLanguage={chooseLanguage} />;
   return (
     <div className="shell">
+      {dash && <div className="vx-dash" aria-hidden="true">
+        <div className="vx-trail" /><div className="vx-knife" />
+        <div className="vx-runner"><img src="/effects/gusion-kof-dash.webp" alt="" /></div>
+      </div>}
       <aside className="sidebar">
         <a className="brand" href="/">
           <Diamond /> VAYNEXO<span>•</span>
@@ -249,7 +272,7 @@ export default function App() {
           {tabs.map(([id, Icon]) => (
             <button
               key={id}
-              onClick={() => setTab(id)}
+              onClick={() => navigate(id)}
               className={tab === id ? "nav active" : "nav"}
             >
               <Icon size={20} />
@@ -282,7 +305,7 @@ export default function App() {
             <span className="avatar">{user?.name?.slice(0, 1) || "V"}</span>
           </div>
         </header>
-        <main>
+        <main className={reveal ? "vx-reveal" : undefined} aria-busy={dash}>
           <div className="test-banner">
             <span className="test-pill">{t.test}</span>
             <span>{t.testNote}</span>
@@ -581,7 +604,7 @@ export default function App() {
           <button
             key={id}
             className={tab === id ? "active" : ""}
-            onClick={() => setTab(id)}
+            onClick={() => navigate(id)}
           >
             <Icon size={20} />
             <span>{t[id]}</span>
