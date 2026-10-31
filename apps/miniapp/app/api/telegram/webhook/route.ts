@@ -1,3 +1,4 @@
+import { handleFxCallback } from '../../../../lib/catalog/fx-approval';
 import { isCatalogAdmin } from '../../../../lib/catalog/pricing';
 import { getWebAppUrl } from '../../../../lib/telegram/bot';
 import { registrationReady, registrationService } from '../../../../lib/registration/database';
@@ -13,6 +14,15 @@ export async function POST(request:Request){
  try{
   const callback=update.callback_query;
   if(callback){
+   if(callback.data?.startsWith('fx:')){
+    if(callback.from?.is_bot || !callback.message || callback.message.chat.type!=='private' || callback.message.chat.id!==callback.from.id){
+     await telegramCall('answerCallbackQuery',{callback_query_id:callback.id,text:'Faqat admin shaxsiy chatida',show_alert:true});
+     return Response.json({ok:true});
+    }
+    const handled=await handleFxCallback(callback.from.id,callback.id,callback.data);
+    if(!handled)await telegramCall('answerCallbackQuery',{callback_query_id:callback.id,text:'Ruxsat yo‘q yoki tugma noto‘g‘ri',show_alert:true});
+    return Response.json({ok:true});
+   }
    const message=callback.message,language=callback.data?.startsWith('lang:')?callback.data.slice(5):null;
    if(!callback.from?.is_bot&&message?.chat.type==='private'&&message.chat.id===callback.from?.id&&isLanguage(language)){
     await saveLanguage(callback.from.id,language);
