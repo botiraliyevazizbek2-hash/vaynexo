@@ -48,13 +48,27 @@ export async function telegramCall<T=unknown>(method:string,body:unknown):Promis
  if(!response.ok||data?.ok!==true)throw new Error(`Telegram request failed (${response.status})`);
  return data.result as T;
 }
+export async function resetChatMenu(chatId:number) {
+ await telegramCall('setChatMenuButton',{chat_id:chatId,menu_button:{type:'default'}});
+}
 export async function getSavedLanguage(chatId:number,fallback?:string):Promise<Language> {
  const menu=await telegramCall<{type:string;web_app?:{url:string}}>('getChatMenuButton',{chat_id:chatId});
- if(menu.type==='web_app'&&menu.web_app){try{const url=new URL(menu.web_app.url);const expected=new URL(getWebAppUrl());const language=url.searchParams.get('lang');if(url.origin===expected.origin&&isLanguage(language))return language;}catch{}}
+ // Older versions saved the language in a per-chat Web App menu button.
+ // Read it once, then remove that override so BotFather's default applies.
+ let stored:Language|undefined;
+ if(menu.type==='web_app'&&menu.web_app){
+  try{const url=new URL(menu.web_app.url);const expected=new URL(getWebAppUrl());const language=url.searchParams.get('lang');if(url.origin===expected.origin&&isLanguage(language))stored=language;}catch{}
+  await resetChatMenu(chatId);
+ }
+ if(stored)return stored;
+ // Keep language preferences without recreating a Mini App button.
+ const commands=await telegramCall<Array<{command:string;description:string}>>('getMyCommands',{scope:{type:'chat',chat_id:chatId}});
+ const appDescription=commands.find(c=>c.command==='app')?.description;
+ for(const language of ['uz','ru','en'] as Language[])if(appDescription===text[language].open)return language;
  return normalizeLanguage(fallback);
 }
 export async function saveLanguage(chatId:number,language:Language) {
  await telegramCall('setMyCommands',{scope:{type:'chat',chat_id:chatId},commands:commandList(language)});
- await telegramCall('setChatMenuButton',{chat_id:chatId,menu_button:{type:'web_app',text:text[language].open,web_app:{url:getWebAppUrl(undefined,language)}}});
+ await resetChatMenu(chatId);
 }
 export async function sendMessage(chatId:number,reply:BotReply){return telegramCall('sendMessage',{chat_id:chatId,...reply,parse_mode:'HTML',link_preview_options:{is_disabled:true}});}
