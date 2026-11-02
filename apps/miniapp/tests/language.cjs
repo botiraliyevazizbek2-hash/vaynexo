@@ -43,30 +43,33 @@ test('unauthenticated preference changes never call Telegram',async()=>{
  assert.equal((await preferences.POST(new Request('https://test/api',{method:'POST',body:JSON.stringify({action:'set',language:'ru',user_id:9})}))).status,401);
 });
 test('preference API only changes the signed user and persists through Telegram menus',async()=>{
- const menus=new Map();const calls=[];
- global.fetch=async(url,options)=>{const body=JSON.parse(options.body);calls.push({url,body});if(url.endsWith('/setChatMenuButton'))menus.set(body.chat_id,body.menu_button);return Response.json({ok:true,result:url.endsWith('/getChatMenuButton')?menus.get(body.chat_id)||{type:'default'}:true});};
+ const menus=new Map(),commands=new Map(),calls=[];
+ global.fetch=async(url,options)=>{const body=JSON.parse(options.body);calls.push({url,body});if(url.endsWith('/setChatMenuButton'))menus.set(body.chat_id,body.menu_button);if(url.endsWith('/setMyCommands'))commands.set(body.scope.chat_id,body.commands);const result=url.endsWith('/getChatMenuButton')?menus.get(body.chat_id)||{type:'default'}:url.endsWith('/getMyCommands')?commands.get(body.scope.chat_id)||[]:true;return Response.json({ok:true,result});};
  const req=b=>new Request('https://test/api',{method:'POST',headers:{'X-Telegram-Init-Data':signed()},body:JSON.stringify(b)});
  assert.equal((await preferences.POST(req({action:'set',language:'ru',user_id:999}))).status,200);
  assert.equal((await (await preferences.POST(req({action:'get'}))).json()).language,'ru');
+ assert.equal(menus.get(42).type,'default');
  assert.ok(calls.every(c=>!c.body.chat_id||c.body.chat_id===42));
  assert.equal(await bot.getSavedLanguage(99,'en'),'en');
  assert.equal((await preferences.POST(req({action:'set',language:'xx'}))).status,400);
 });
 test('webhook locale callbacks persist preference and subsequent commands retain it',async()=>{
- let menu={type:'default'};const sent=[];
- global.fetch=async(url,options)=>{const b=JSON.parse(options.body);let result=true;if(url.endsWith('/setChatMenuButton'))menu=b.menu_button;if(url.endsWith('/getChatMenuButton'))result=menu;if(url.endsWith('/sendMessage'))sent.push(b);return Response.json({ok:true,result});};
+ let menu={type:'default'},commands=[];const sent=[];
+ global.fetch=async(url,options)=>{const b=JSON.parse(options.body);let result=true;if(url.endsWith('/setChatMenuButton'))menu=b.menu_button;if(url.endsWith('/getChatMenuButton'))result=menu;if(url.endsWith('/setMyCommands'))commands=b.commands;if(url.endsWith('/getMyCommands'))result=commands;if(url.endsWith('/sendMessage'))sent.push(b);return Response.json({ok:true,result});};
  const req=b=>new Request('https://test/webhook',{method:'POST',headers:{'x-telegram-bot-api-secret-token':secret},body:JSON.stringify(b)});
  assert.equal((await webhook.POST(req({update_id:1,callback_query:{id:'c',data:'lang:ru',from:{id:42,first_name:'A'},message:{message_id:1,chat:{id:42,type:'private'}}}}))).status,200);
  await webhook.POST(req({update_id:2,message:{message_id:2,chat:{id:42,type:'private'},from:{id:42,language_code:'en'},text:'/help'}}));
  assert.ok(sent[0].text.includes('Добро пожаловать'));assert.ok(sent[1].text.includes('Помощь'));
- assert.equal(new URL(menu.web_app.url).searchParams.get('lang'),'ru');
+ assert.equal(menu.type,'default');
 });
-test('webhook accepts /start silently without calling Telegram',async()=>{
- global.fetch=()=>{throw Error('silent /start must not call Telegram');};
+test('webhook /start clears a private chat Mini App button without sending a message',async()=>{
+ const calls=[];global.fetch=async(url,options)=>{calls.push({method:String(url).split('/').pop(),body:JSON.parse(options.body)});return Response.json({ok:true,result:true});};
  for(const command of ['/start','/start@VaynexoBot']){
   const request=new Request('https://test/webhook',{method:'POST',headers:{'x-telegram-bot-api-secret-token':secret},body:JSON.stringify({update_id:7,message:{message_id:7,chat:{id:42,type:'private'},from:{id:42,first_name:'A'},text:command}})});
   assert.equal((await webhook.POST(request)).status,200);
  }
+ assert.equal(calls.length,2);
+ assert.ok(calls.every(c=>c.method==='setChatMenuButton'&&c.body.chat_id===42&&c.body.menu_button.type==='default'));
 });
 test('webhook rejects wrong secret and malformed JSON; accepts safe empty probes',async()=>{
  assert.equal((await webhook.POST(new Request('https://test',{method:'POST',body:'{}'}))).status,401);
