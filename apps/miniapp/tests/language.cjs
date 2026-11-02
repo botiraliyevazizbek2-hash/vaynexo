@@ -61,6 +61,13 @@ test('webhook locale callbacks persist preference and subsequent commands retain
  assert.ok(sent[0].text.includes('Добро пожаловать'));assert.ok(sent[1].text.includes('Помощь'));
  assert.equal(new URL(menu.web_app.url).searchParams.get('lang'),'ru');
 });
+test('webhook accepts /start silently without calling Telegram',async()=>{
+ global.fetch=()=>{throw Error('silent /start must not call Telegram');};
+ for(const command of ['/start','/start@VaynexoBot']){
+  const request=new Request('https://test/webhook',{method:'POST',headers:{'x-telegram-bot-api-secret-token':secret},body:JSON.stringify({update_id:7,message:{message_id:7,chat:{id:42,type:'private'},from:{id:42,first_name:'A'},text:command}})});
+  assert.equal((await webhook.POST(request)).status,200);
+ }
+});
 test('webhook rejects wrong secret and malformed JSON; accepts safe empty probes',async()=>{
  assert.equal((await webhook.POST(new Request('https://test',{method:'POST',body:'{}'}))).status,401);
  assert.equal((await webhook.POST(new Request('https://test',{method:'POST',headers:{'x-telegram-bot-api-secret-token':secret},body:'{'}))).status,400);
