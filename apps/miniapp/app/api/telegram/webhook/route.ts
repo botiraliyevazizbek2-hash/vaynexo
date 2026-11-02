@@ -30,6 +30,8 @@ export async function POST(request:Request){
   }
   if(!message?.text||message.from?.is_bot||!message.chat)return Response.json({ok:true});
   const isPrivate=message.chat.type==='private',command=parseCommand(message.text);
+  // Telegram still displays the user's /start command, but the bot stays silent.
+  if(command==='start')return Response.json({ok:true});
   if(!isPrivate&&!command)return Response.json({ok:true});
   let language=normalizeLanguage(message.from?.language_code);
   if(isPrivate)language=await getSavedLanguage(message.chat.id,message.from?.language_code);
