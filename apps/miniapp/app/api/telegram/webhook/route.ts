@@ -1,7 +1,7 @@
 import { isCatalogAdmin } from '../../../../lib/catalog/pricing';
 import { getWebAppUrl } from '../../../../lib/telegram/bot';
 import { registrationReady, registrationService } from '../../../../lib/registration/database';
-import { buildReply, getSavedLanguage, isValidSecret, parseCommand, saveLanguage, sendMessage, telegramCall, type TelegramUpdate } from '../../../../lib/telegram/bot';
+import { buildReply, getSavedLanguage, isValidSecret, parseCommand, resetChatMenu, saveLanguage, sendMessage, telegramCall, type TelegramUpdate } from '../../../../lib/telegram/bot';
 import { isLanguage, normalizeLanguage } from '../../../../lib/i18n/core';
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
@@ -30,8 +30,11 @@ export async function POST(request:Request){
   }
   if(!message?.text||message.from?.is_bot||!message.chat)return Response.json({ok:true});
   const isPrivate=message.chat.type==='private',command=parseCommand(message.text);
-  // Telegram still displays the user's /start command, but the bot stays silent.
-  if(command==='start')return Response.json({ok:true});
+  // /start stays silent while clearing any old per-chat Mini App menu button.
+  if(command==='start'){
+   if(isPrivate)await resetChatMenu(message.chat.id);
+   return Response.json({ok:true});
+  }
   if(!isPrivate&&!command)return Response.json({ok:true});
   let language=normalizeLanguage(message.from?.language_code);
   if(isPrivate)language=await getSavedLanguage(message.chat.id,message.from?.language_code);
